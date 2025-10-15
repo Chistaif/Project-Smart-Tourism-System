@@ -1,5 +1,5 @@
 import streamlit as st
 
-st.title("Home")
+st.title("Service")
 
 st.map()
