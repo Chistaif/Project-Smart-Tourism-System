@@ -73,5 +73,5 @@ st.link_button("💬 Tham gia Discord của chúng tôi",
 left, center, right = st.columns([2, 1, 2])
 with center:
     if st.button("Bắt đầu hành trình phiêu lưu cùng GoViet!"):
-        st.switch_page(page='pages/1_Home.py')
+        st.switch_page(page='pages/1_Trang_chủ.py')
 
