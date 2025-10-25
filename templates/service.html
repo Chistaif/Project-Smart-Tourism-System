@@ -24,7 +24,7 @@
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
                     // Tải lại trang với tọa độ mới
-                    window.location.href = '/service?lat=${lat}&lon=${lon}';
+                    window.location.href = `/service?lat=${lat}&lon=${lon}`;
                 },
                 // 2. Hàm xử lý khi bị từ chối hay thất bại
                 function(error){
