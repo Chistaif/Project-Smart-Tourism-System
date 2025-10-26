@@ -1,8 +1,24 @@
 from flask import Flask, render_template, request
+from models import db  
+from init_db import import_demo_data
 import folium
 
 # Khởi tạo ứng dụng app
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
+
+    db.init_app(app=app)
+
+    with app.app_context():
+        db.create_all()
+        from models import Festival
+        if Festival.query.count() == 0:
+                import_demo_data()
+
+    return app
+
+app = create_app()
 
 # === Định nghĩa các Routes ===
 
@@ -44,5 +60,5 @@ def user():
 def setting():
     return render_template('setting.html')
 
-if __name__ == '__name__':
+if __name__ == '__main__':
     app.run(debug=True)

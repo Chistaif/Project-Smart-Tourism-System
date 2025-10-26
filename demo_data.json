@@ -1,0 +1,53 @@
+{
+    "festivals": [
+        {
+            "name": "Lễ hội Hoa Đà Lạt",
+            "location": "Đà Lạt",
+            "datetime": "12:4:2025",
+            "brief_description": "hoa đào",
+            "detail_description": "ngắm hoa",
+            "lat": 34.0935,
+            "lon": 10.24563,
+            "tags": ["thiên nhiên", "hoa", "ngoài trời"]
+        },
+        {
+            "name": "Lễ hội Leo Núi Bà Đen",
+            "location": "Tây Ninh",
+            "datetime": "12:4:2025",
+            "brief_description": "hoa đào",
+            "detail_description": "ngắm hoa",
+            "lat": 34.0935,
+            "lon": 10.24563,
+            "tags": ["leo núi", "ngoài trời", "thử thách"]
+        },
+        {
+            "name": "Lễ hội Biển Nha Trang",
+            "location": "Khánh Hòa",
+            "datetime": "12:4:2025",
+            "brief_description": "hoa đào",
+            "detail_description": "ngắm hoa",
+            "lat": 34.0935,
+            "lon": 10.24563,
+            "tags": ["biển", "thiên nhiên", "du lịch"]
+        }
+    ],
+
+    "users": [
+        {
+            "name": "Chí Tài",
+            "password": "taidz12345",
+            "email": "taidz@gmail.com"
+        }
+    ],
+
+    "attractions": [
+        {
+            "name": "nhà nghỉ",
+            "location":"Đà Lạt",
+            "rating": 4.5,
+            "lat":34.0935,
+            "lon":10.24563,
+            "tags":["thu giãn"]
+        }
+    ]
+}

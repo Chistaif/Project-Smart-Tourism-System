@@ -2,6 +2,7 @@ streamlit
 streamlit-carousel
 streamlit_option_menu
 Flask
+flask_sqlalchemy
 numpy
 pandas
 folium
