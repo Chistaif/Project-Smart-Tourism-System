@@ -1,13 +1,10 @@
-streamlit
-streamlit-carousel
-streamlit_option_menu
 Flask
 flask_sqlalchemy
 numpy
 pandas
 folium
-requests 
-folium 
-textblob 
+requests
+folium
+textblob
 scikit-learn
 python-dotenv

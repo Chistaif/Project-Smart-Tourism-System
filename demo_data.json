@@ -1,11 +1,13 @@
 {
-    "festivals": [
+    "destinations": [
         {
             "name": "Lễ hội Hoa Đà Lạt",
             "location": "Đà Lạt",
-            "datetime": "12:4:2025",
+            "datetimeStart": "12:4:2025",
+            "datetimeEnd": "12:4:2025",
             "brief_description": "hoa đào",
             "detail_description": "ngắm hoa",
+            "ticketPrice": "Miễn phí",
             "lat": 34.0935,
             "lon": 10.24563,
             "tags": ["thiên nhiên", "hoa", "ngoài trời"]
@@ -13,9 +15,11 @@
         {
             "name": "Lễ hội Leo Núi Bà Đen",
             "location": "Tây Ninh",
-            "datetime": "12:4:2025",
+            "datetimeStart": "12:4:2025",
+            "datetimeEnd": "12:4:2025",
             "brief_description": "hoa đào",
             "detail_description": "ngắm hoa",
+            "ticketPrice": "Miễn phí",
             "lat": 34.0935,
             "lon": 10.24563,
             "tags": ["leo núi", "ngoài trời", "thử thách"]
@@ -23,9 +27,11 @@
         {
             "name": "Lễ hội Biển Nha Trang",
             "location": "Khánh Hòa",
-            "datetime": "12:4:2025",
+            "datetimeStart": "12:4:2025",
+            "datetimeEnd": "12:4:2025",
             "brief_description": "hoa đào",
             "detail_description": "ngắm hoa",
+            "ticketPrice": "Miễn phí",
             "lat": 34.0935,
             "lon": 10.24563,
             "tags": ["biển", "thiên nhiên", "du lịch"]
@@ -37,17 +43,61 @@
             "name": "Chí Tài",
             "password": "taidz12345",
             "email": "taidz@gmail.com"
+        },
+        {
+            "name": "Lan Hương",
+            "password": "huonglan2025",
+            "email": "lanhuong@travel.vn"
+        },
+        {
+            "name": "Minh Khang",
+            "password": "mk_pass123",
+            "email": "khangminh@example.com"
+        },
+        {
+            "name": "Thanh Mai",
+            "password": "maithanh_sec",
+            "email": "maithanh.tm@outlook.com"
+        },
+        {
+            "name": "Hoàng Phúc",
+            "password": "phuc_hoang_99",
+            "email": "hoangphuc@gmail.com"
         }
     ],
 
     "attractions": [
         {
-            "name": "nhà nghỉ",
-            "location":"Đà Lạt",
-            "rating": 4.5,
-            "lat":34.0935,
-            "lon":10.24563,
-            "tags":["thu giãn"]
+            "name": "Hồ Hoàn Kiếm",
+            "location": "Hà Nội",
+            "rating": 4.8,
+            "lat": 21.0280,
+            "lon": 105.8522,
+            "tags": ["lịch sử", "ngoài trời", "chụp ảnh"]
+        },
+        {
+            "name": "Chợ Bến Thành",
+            "location": "TP. Hồ Chí Minh",
+            "rating": 4.3,
+            "lat": 10.7725,
+            "lon": 106.6975,
+            "tags": ["mua sắm", "ẩm thực", "văn hóa"]
+        },
+        {
+            "name": "Vịnh Hạ Long",
+            "location": "Quảng Ninh",
+            "rating": 4.9,
+            "lat": 20.8526,
+            "lon": 107.0372,
+            "tags": ["thiên nhiên", "di sản", "du thuyền"]
+        },
+        {
+            "name": "Phố Cổ Hội An",
+            "location": "Quảng Nam",
+            "rating": 4.7,
+            "lat": 15.8794,
+            "lon": 108.3364,
+            "tags": ["kiến trúc", "lịch sử", "chụp ảnh"]
         }
     ]
 }

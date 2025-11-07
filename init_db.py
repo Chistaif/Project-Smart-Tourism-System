@@ -1,41 +1,42 @@
 import json
-from models import User, Festival, Attraction, Tag, TagAssociation, db
+from models import User, Destination, Attraction, Tag, TagAssociation, db
 from datetime import datetime
 
 def parse_datetime(date_str):
     try:
-        return datetime.strptime(date_str, "%d:%m:%Y")
+        return datetime.strptime(date_str, "%d:%m:%Y %M:%H")
     except:
         return None
     
-
 
 def import_demo_data(json_path="demo_data.json"):
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    for fes in data["festivals"]:
+    for des in data["destinations"]:
         # 1. Tạo Festival
-        festival = Festival(name=fes["name"],
-                            location=fes.get("location"),
-                            datetime=parse_datetime(fes["datetime"]),
-                            brief_description=fes["brief_description"],
-                            detail_description=fes["detail_description"],
-                            lat=fes.get("lat"),
-                            lon=fes.get("lon")
+        destination = Destination(name=des["name"],
+                            location=des.get("location"),
+                            datetime_start=parse_datetime(des["datetimeStart"]),
+                            datetime_end=parse_datetime(des["datetimeEnd"]),
+                            brief_description=des["brief_description"],
+                            detail_description=des["detail_description"],
+                            ticket_price=des["ticketPrice"],
+                            lat=des.get("lat"),
+                            lon=des.get("lon")
                             )
-        db.session.add(festival)
+        db.session.add(destination)
         db.session.flush()  # để lấy được id ngay lập tức
 
         # 2. Xử lý tag
-        for tag_name in fes.get("tags", []):
+        for tag_name in des.get("tags", []):
             tag = Tag.query.filter_by(name=tag_name).first()
             if not tag:
                 tag = Tag(name=tag_name)
                 db.session.add(tag)
                 db.session.flush()  # để có id
 
-            assoc = TagAssociation(tag_id=tag.id, object_id=festival.id, object_type="Festival")
+            assoc = TagAssociation(tag_id=tag.id, object_id=destination.id, object_type="Destination")
             db.session.add(assoc)
 
     for u in data["users"]:

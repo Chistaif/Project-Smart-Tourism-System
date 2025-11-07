@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -6,30 +8,61 @@ db = SQLAlchemy()
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    password = db.Column(db.String(50))
-    email = db.Column(db.String(50))
+    name = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50),nullable=False)
+    email = db.Column(db.String(1000), unique=True, nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def to_json(self):
+        return jsonify({
+            "id": self.id,
+            "name": self.name,
+            "password": self.password,
+            "email": self.email
+        })
 
 
-class Festival(db.Model):
-    __tablename__ = 'festival'
+class Destination(db.Model):
+    __tablename__ = 'Destination'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     location = db.Column(db.String(16))
-    datetime = db.Column(db.DateTime)
+    datetime_start = db.Column(db.DateTime)
+    datetime_end = db.Column(db.DateTime)
     brief_description = db.Column(db.String(100))
     detail_description = db.Column(db.String(200))
+    ticket_price = db.Column(db.String(50))
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
     # Relationship đến Tag thông qua TagAssociation
     tags = db.relationship(
         "Tag",
         secondary="tag_association",
-        primaryjoin="and_(Festival.id==TagAssociation.object_id, "
-                    "TagAssociation.object_type=='Festival')",
+        primaryjoin="and_(Destination.id==TagAssociation.object_id, "
+                    "TagAssociation.object_type=='Destination')",
         secondaryjoin="Tag.id==TagAssociation.tag_id",
         viewonly=True
     )
+
+    def to_json(self):
+        return jsonify({
+            "id": self.id,
+            "name": self.name,
+            "tags": self.tags,
+            "briefDescription": self.brief_description,
+            "datetimeStart": self.datetime_start,
+            "datetimeEnd": self.datetime_end,
+            "location": self.location,
+            "ticketPrice": self.ticket_price,
+            "detailDescription": self.detail_description,
+            "lat": self.lat,
+            "lon": self.lon
+        })
 
 
 class Attraction(db.Model):
@@ -49,6 +82,16 @@ class Attraction(db.Model):
         secondaryjoin="Tag.id==TagAssociation.tag_id",
         viewonly=True
     )
+
+    def to_json(self):
+        return jsonify({
+            "id": self.id,
+            "name": self.name,
+            "location": self.location,
+            "rating": self.rating,
+            "lat": self.lat,
+            "lon": self.lon
+        })
 
 
 # ======================================================================
