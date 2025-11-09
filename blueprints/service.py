@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+import pandas as pd
 from models import db
 import folium
 
@@ -18,7 +19,7 @@ def service():
     # Tạo bản đồ với tọa độ 
     m = folium.Map(location=user_coords, zoom_start=15)
     # Thêm điểm đánh dấu vào vị trí đó
-    folium.Marker(user_coords, popup="<i>Vị trí của bạn<i>", tooltip="Bạn đang ở đây").add_to(m)
+    folium.Marker(user_coords, popup="<i>Vị trí của bạn</i>", tooltip="Bạn đang ở đây").add_to(m)
 
     # Chuyển bản đồ thành mã HTML
     map_html = m._repr_html_()

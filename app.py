@@ -1,5 +1,5 @@
 from flask import Flask
-from models import db  
+from models import db 
 from init_db import import_demo_data
 
 from blueprints import all_blueprints
@@ -15,8 +15,8 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-        from models import Destination
-        if Destination.query.count() == 0:
+        from models import Attraction
+        if Attraction.query.count() == 0:
                 import_demo_data()
 
     return app
