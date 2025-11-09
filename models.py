@@ -26,7 +26,8 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256))
+    password_hash = db.Column(db.String(256), nullable=False)
+    avatar_url = db.Column(db.String(100), nullable=True, default='default_avatar.png') 
 
     # Relationships
     reviews = db.relationship('Review', back_populates='user', lazy=True)
@@ -39,6 +40,12 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def to_json(self):
+        return {
+            "username": self.username,
+            "avatar_url": self.avatar_url,
+            "email": self.email
+        }
 
 # ======================================================================
 # ===                                                                ===
@@ -74,6 +81,24 @@ class Attraction(db.Model):
     favorited_by = db.relationship('FavoriteAttraction', back_populates='attraction', cascade="all, delete-orphan")
     tours = db.relationship('SavedTour', secondary=tour_attractions, back_populates='attractions', lazy='dynamic')
 
+    def to_json(self):
+        tag_list = [tag.tag_name for tag in self.tags]
+
+        return {
+            "id": self.id,
+            "name": self.name,
+            "location": self.location,
+            "briefDescription": self.brief_description,
+            "detailDescription": self.detail_description,
+            "averageRating": self.average_rating,
+            "visitDuration": self.visit_duration,
+            "url": self.url,
+            "url1": self.url1,
+            "url2": self.url2,
+            "url3": self.url3,
+            "tags": tag_list
+        }
+
 class Festival(Attraction):
     __tablename__ = 'festival'
     id = db.Column(db.Integer, db.ForeignKey('attraction.id'), primary_key=True) 
@@ -83,6 +108,15 @@ class Festival(Attraction):
     __mapper_args__ = {
         'polymorphic_identity': 'festival', # Giá trị của cột 'type'
     }
+
+    def to_json(self):
+        data = super().to_json()
+        data.update({
+            "timeStart": self.time_start.isoformat() if self.time_start else None,
+            "timeEnd": self.time_end.isoformat() if self.time_end else None,
+            "type": "festival"
+        })
+        return data
 
 class CulturalSpot(Attraction):
     __tablename__ = 'cultural_spot'
@@ -94,6 +128,16 @@ class CulturalSpot(Attraction):
     __mapper_args__ = {
         'polymorphic_identity': 'cultural_spot', # Giá trị của cột 'type'
     }
+
+    def to_json(self):
+        data = super().to_json()
+        data.update({
+            "openingHours": self.opening_hours,
+            "ticketPrice": self.ticket_price,
+            "spotType": self.spot_type,
+            "type": "cultural_spot"
+        })
+        return data
     
 
 # ======================================================================
@@ -121,6 +165,14 @@ class Review(db.Model):
 
     user = db.relationship('User', back_populates='reviews')
     attraction = db.relationship('Attraction', back_populates='reviews')
+
+    def to_json(self):
+        return {
+            "rating": self.rating_score,
+            "content": self.content,
+            "createdAt": self.created_at,
+            "user": self.user.to_json() if self.user else None
+        }
 
 class SavedTour(db.Model):
     __tablename__ = 'saved_tour'
