@@ -10,6 +10,12 @@ from sqlalchemy import or_
 
 service_bp = Blueprint('service', __name__, url_prefix='/service')
 
+
+# =====================================================================================
+# ===                                                                               ===
+# ===                              Page /service                                    ===
+# ===                                                                               ===
+# =====================================================================================
 @service_bp.route('/', methods=['GET','POST'])
 def service():
     if request.method == 'POST':
@@ -44,7 +50,7 @@ def service():
     return render_template('service.html', map_html=map_html)
 
 # Hàm truy vấn các attraction bằng thanh search
-def search_attractions(date=datetime.now(), tags=[], name=""):
+def search_attractions(date=datetime.now(), types_list=[], search_term=""):
     query = db.session.query(
         Attraction.id,
         Attraction.name,
@@ -52,20 +58,41 @@ def search_attractions(date=datetime.now(), tags=[], name=""):
         Attraction.type,
         Attraction.average_rating
     )
-
-    # 1. Lọc theo tên (nếu có)
-    if name:
-        query = query.filter(Attraction.name.ilike(f"%{name}%"))
-    # 2. Lọc theo tags (nếu có) (tags có thể là 'Hà Nội', 'BRVT', 'Văn hóa',...)
-    if tags:
-        query = query.join(Attraction.tags).filter(Tag.tag_name.in_(tags)).distinct()
-
     query = query.outerjoin(Festival, Festival.id == Attraction.id)
-    
-    # Thêm điều kiện lọc:
-    # Hoặc (OR) là:
-    # 1. Địa điểm không phải là 'festival' (luôn lấy)
-    # 2. Địa điểm là 'festival' VÀ time_end >= ngày hiện tại (chưa kết thúc)
+    query = query.outerjoin(CulturalSpot, CulturalSpot.id == Attraction.id)
+    query = query.outerjoin(Attraction.tags)
+
+    # Lọc theo nội dung tìm kiếm (tên địa điểm / tên tỉnh tp / tag)
+    if search_term:
+        search_pattern = f"%{search_term}%"
+        query = query.filter(
+            or_(
+                Attraction.name.ilike(search_pattern),
+                Attraction.location.ilike(search_pattern),
+                Tag.tag_name.ilike(search_pattern)
+            )
+        )
+
+    if types_list:
+        type_conditions = []
+        
+        # Tách các loại CulturalSpot (Bảo tàng, Làng nghề, v.v.)
+        spot_types_from_list = [t for t in types_list if t != 'Lễ hội']
+
+        # Nếu người dùng check "Lễ hội"
+        if 'Lễ hội' in types_list:
+            type_conditions.append(Attraction.type == 'festival')
+        
+        # Nếu người dùng check các loại khác
+        if spot_types_from_list:
+            type_conditions.append(CulturalSpot.spot_type.in_(spot_types_from_list))
+        
+        # (Lấy những điểm LÀ 'Lễ hội' HOẶC CÓ 'spot_type' nằm trong danh sách)
+        if type_conditions:
+            query = query.filter(or_(*type_conditions))
+
+    # Bộ lọc Ngày
+    # Chỉ lấy (Attraction.type != 'festival') HOẶC (Festival.time_end >= date)
     query = query.filter(
         or_(
             Attraction.type != 'festival',
@@ -78,29 +105,31 @@ def search_attractions(date=datetime.now(), tags=[], name=""):
     cultural_spots_list = []
     other_attractions_list = []
     for r in results:
-        # Tạo dict dữ liệu
         item_data = {
-            "id": r[0],
-            "name": r[1],
-            "url": r[2]
+            "id": r[0], "name": r[1], "url": r[2], 
+            "type": r[3], "average_rating": r[4]
         }
-        
-        # Phân loại dựa trên 'type' (nằm ở vị trí r[3])
-        if r[3] == 'festival':
-            festivals_list.append(item_data)
-        elif r[3] == 'cultural_spot':
-            cultural_spots_list.append(item_data)
-        else: # (type == 'attraction')
-            other_attractions_list.append(item_data)
+        if r[3] == 'festival': festivals_list.append(item_data)
+        elif r[3] == 'cultural_spot': cultural_spots_list.append(item_data)
+        else: other_attractions_list.append(item_data)
+
+    # Có thể thêm logic đưa những địa điểm hot hit lên trên đầu danh sách ở đây
+    # dựa vào rating hoặc các thuật toán RS 
 
     result_data = {
         "festivals": festivals_list,
         "cultural_spots": cultural_spots_list,
         "other_attractions": other_attractions_list
     }
-
     return jsonify(result_data)
 
+
+
+# =====================================================================================
+# ===                                                                               ===
+# ===          Page /service/api/attraction-detail/<int: attraction_id>             ===
+# ===                                                                               ===
+# =====================================================================================
 
 # cần xem xét thay đổi tên key attraction_id
 @service_bp.route('/api/attraction-detail/<int:attraction_id>', methods=["GET", "POST"])
