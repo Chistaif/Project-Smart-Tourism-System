@@ -1,70 +1,114 @@
-# Getting Started with Create React App
+Chào bạn,
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Chắc chắn rồi\! Dựa trên thông tin chi tiết bạn đã cung cấp, dưới đây là một file `README.md` hoàn chỉnh cho dự án "AI Smart Tour Guide" của bạn.
 
-## Available Scripts
+Bạn có thể sao chép và dán nội dung này trực tiếp vào file `README.md` trong thư mục gốc của dự án.
 
-In the project directory, you can run:
+-----
 
-### `npm start`
+# 🤖 Hệ Thống Du Lịch Thông Minh (AI Smart Tour Guide)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Dự án này là một ứng dụng web du lịch thông minh, được xây dựng bằng Python (Flask), ứng dụng tư duy tính toán để giúp người dùng lên kế hoạch du lịch tại Việt Nam một cách cá nhân hóa và hiệu quả.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🎯 Giới thiệu về Dự án
 
-### `npm test`
+### 1\. Mục tiêu
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Mục tiêu chính của hệ thống là phát triển một trang web giúp người dùng tự động tạo ra một kế hoạch du lịch chi tiết. Hệ thống phân tích các yếu tố cá nhân hóa như **ngân sách**, **sở thích**, và **thời gian** để đề xuất một lịch trình tối ưu.
 
-### `npm run build`
+### 2\. Đối tượng người dùng
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Dự án hướng đến đối tượng khách du lịch tự túc, đặc biệt là người trẻ trong độ tuổi 18-35, đi một mình hoặc theo nhóm nhỏ.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ✨ Các tính năng chính
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Hệ thống được xây dựng xoay quanh 4 trang chức năng chính:
 
-### `npm run eject`
+  * **Trang Chủ (Home):** Giao diện giới thiệu tổng quan về dự án và các tính năng.
+  * **Trang Dịch Vụ (Service):** Đây là chức năng cốt lõi của hệ thống.
+      * **Tiếp nhận đầu vào:** Người dùng cung cấp thông tin về điểm đến, ngân sách, thời gian, loại hình du lịch (thiên nhiên, mạo hiểm...) và sở thích (ẩm thực, chụp ảnh...).
+      * **Xử lý & Gợi ý:** Hệ thống phân tích thông tin đầu vào để đề xuất một lịch trình tối ưu, bao gồm các điểm tham quan, nhà hàng, và khách sạn.
+      * **Bản đồ tương tác:** Lịch trình gợi ý được hiển thị trực quan trên bản đồ (sử dụng thư viện `folium`) và có khả năng lấy vị trí GPS của người dùng để cá nhân hóa lộ trình.
+  * **Trang Người Dùng (User):** Quản lý thông tin tài khoản và lịch sử các chuyến đi đã tạo.
+  * **Trang Cài Đặt (Setting):** Cho phép người dùng tùy chỉnh các cài đặt của tài khoản.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🛠️ Công nghệ sử dụng
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Dự án được phát triển với các công nghệ sau:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  * **Backend:** **Python** (Ngôn ngữ chính) và **Flask** (Web Framework).
+  * **Frontend:** **HTML** và **CSS** cơ bản.
+  * **Thư viện Python hỗ trợ:**
+      * `folium`: Để tạo và hiển thị bản đồ tương tác.
+      * `pandas` & `numpy`: Để xử lý và phân tích dữ liệu đầu vào.
+      * `geopy`: Để xử lý các tác vụ liên quan đến vị trí địa lý (ví dụ: tính toán khoảng cách).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🚀 Cài đặt và Chạy dự án
 
-## Learn More
+Để chạy dự án này trên máy local của bạn, hãy làm theo các bước sau:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**1. Clone repository:**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+git clone https://github.com/[ten-tai-khoan-cua-ban]/smart-tourism-project.git
+cd smart-tourism-project
+```
 
-### Code Splitting
+**2. Tạo và kích hoạt môi trường ảo (virtual environment):**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+# Đối với Windows
+python -m venv venv
+.\venv\Scripts\activate
 
-### Analyzing the Bundle Size
+# Đối với macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**3. Cài đặt các thư viện cần thiết:**
 
-### Making a Progressive Web App
+*(Bạn nên tạo một file `requirements.txt` bao gồm các dòng sau):*
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+Flask
+folium
+pandas
+numpy
+geopy
+```
 
-### Advanced Configuration
+*Chạy lệnh cài đặt:*
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+pip install -r requirements.txt
+```
 
-### Deployment
+**4. Chạy ứng dụng:**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+python app.py
+```
 
-### `npm run build` fails to minify
+Sau khi chạy lệnh trên, ứng dụng sẽ có sẵn tại địa chỉ `http://127.0.0.1:5000/` trên trình duyệt của bạn.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 📂 Cấu trúc thư mục
+
+```
+/smart-tourism-project/
+|
+|-- app.py               # File Python chính của Flask, chứa logic backend
+|
+|-- /templates/          # Thư mục chứa các file HTML
+|   |-- base.html        # Template cơ sở (chứa navbar, footer)
+|   |-- home.html        # Giao diện trang chủ
+|   |-- service.html     # Giao diện trang dịch vụ (chứa bản đồ)
+|   |-- user.html        # Giao diện trang người dùng
+|   `-- setting.html     # Giao diện trang cài đặt
+|
+`-- /static/             # Thư mục chứa các file tĩnh
+    |-- /css/
+    |   `-- style.css    # File CSS để tùy chỉnh giao diện
+    `-- /images/
+        `-- banner-image.jpg # Nơi lưu trữ hình ảnh
+```
