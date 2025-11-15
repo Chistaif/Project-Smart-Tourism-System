@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from models import db  
 from init_db import import_demo_data
 
@@ -10,6 +11,9 @@ def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Enable CORS for React frontend
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
     db.init_app(app=app)
 

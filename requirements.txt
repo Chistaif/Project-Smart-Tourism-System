@@ -1,10 +1,10 @@
 Flask
 flask_sqlalchemy
+flask-cors
 numpy
 pandas
 folium
 requests
-folium
 textblob
 scikit-learn
 python-dotenv
