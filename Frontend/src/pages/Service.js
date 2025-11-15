@@ -11,7 +11,7 @@ export default function Service() {
     const fetchAttractions = async () => {
       try {
         setLoading(true);
-        const response = await attractionsAPI.getAll();
+        const response = await attractionsAPI.search("");
         if (response.success) {
           setAttractions(response.data);
         } else {

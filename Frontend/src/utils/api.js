@@ -32,19 +32,19 @@ async function apiRequest(endpoint, options = {}) {
 // API functions for destinations
 export const destinationsAPI = {
   // Get all destinations
-  getAll: () => apiRequest('/destinations'),
+  getAll: () => apiRequest('/search'),
   
   // Get a single destination by ID
-  getById: (id) => apiRequest(`/destinations/${id}`),
+  getById: (id) => apiRequest(`/attraction/${id}`),
 };
 
 // API functions for attractions
 export const attractionsAPI = {
   // Get all attractions
-  getAll: () => apiRequest('/attractions'),
+  getAll: () => apiRequest('/search'),
   
   // Search attractions by location
-  search: (location) => apiRequest(`/attractions/search?location=${encodeURIComponent(location)}`),
+  search: (location) => apiRequest(`/search?searchTerm=${encodeURIComponent(location)}`),
 };
 
 // Health check
