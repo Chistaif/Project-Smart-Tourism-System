@@ -1,9 +1,3 @@
-Chào bạn,
-
-Chắc chắn rồi\! Dựa trên thông tin chi tiết bạn đã cung cấp, dưới đây là một file `README.md` hoàn chỉnh cho dự án "AI Smart Tour Guide" của bạn.
-
-Bạn có thể sao chép và dán nội dung này trực tiếp vào file `README.md` trong thư mục gốc của dự án.
-
 -----
 
 # 🤖 Hệ Thống Du Lịch Thông Minh (AI Smart Tour Guide)
