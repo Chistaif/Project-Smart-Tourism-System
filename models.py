@@ -8,22 +8,33 @@ db = SQLAlchemy()
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(50),nullable=False)
-    email = db.Column(db.String(1000), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)  # Increased size for hashed passwords
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     def set_password(self, password):
+        """Hash and set the user's password"""
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+        """Check if the provided password matches the hashed password"""
         return check_password_hash(self.password_hash, password)
 
-    def to_json(self):
-        return jsonify({
+    def to_dict(self):
+        """Convert user to dictionary (safe - no password)"""
+        return {
             "id": self.id,
             "name": self.name,
-            "password": self.password,
-            "email": self.email
+            "email": self.email,
+            "created_at": self.created_at.isoformat() if self.created_at else None
+        }
+
+    def to_json(self):
+        """Convert user to JSON response"""
+        return jsonify({
+            "success": True,
+            "user": self.to_dict()
         })
 
 

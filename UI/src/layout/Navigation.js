@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Navigation({ openPopup }) {
+export default function Navigation({ openPopup, openLogin, openSignup }) {
   return (
     <header>
       <div className="logo">Culture Compass</div>
@@ -14,8 +14,8 @@ export default function Navigation({ openPopup }) {
       </nav>
 
       <div className="auth">
-        <button className="btn" onClick={openPopup}>Sign up</button>
-        <button className="btn">Login</button>
+        <button className="btn" onClick={openSignup || openPopup}>Sign up</button>
+        <button className="btn" onClick={openLogin || openPopup}>Login</button>
       </div>
     </header>
   );

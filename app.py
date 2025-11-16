@@ -6,14 +6,20 @@ from init_db import import_demo_data
 from blueprints import all_blueprints
 
 
-# Khởi tạo ứng dụng app
+# Tạo app
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
-    # Enable CORS for React frontend
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+    # Bật cors cho frontend
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
 
     db.init_app(app=app)
 

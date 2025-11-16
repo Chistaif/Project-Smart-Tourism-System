@@ -41,9 +41,9 @@ def import_demo_data(json_path="demo_data.json"):
 
     for u in data["users"]:
         user = User(name=u["name"],
-                    password=u["password"],
                     email=u["email"]
                     )
+        user.set_password(u["password"])  # Use set_password to hash the password
         db.session.add(user)
         db.session.flush()
 

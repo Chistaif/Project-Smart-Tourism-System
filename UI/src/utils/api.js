@@ -16,6 +16,13 @@ async function apiRequest(endpoint, options = {}) {
 
   try {
     const response = await fetch(url, config);
+    
+    // Check if response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error(`Expected JSON response, got ${contentType}`);
+    }
+    
     const data = await response.json();
     
     if (!response.ok) {
@@ -24,6 +31,11 @@ async function apiRequest(endpoint, options = {}) {
     
     return data;
   } catch (error) {
+    // More detailed error logging
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      console.error('Network error - Is the backend server running?', error);
+      throw new Error('Cannot connect to server. Please make sure the backend is running on http://localhost:5000');
+    }
     console.error('API request failed:', error);
     throw error;
   }
@@ -50,9 +62,28 @@ export const attractionsAPI = {
 // Health check
 export const healthCheck = () => apiRequest('/health');
 
+// API functions for authentication
+export const authAPI = {
+  // Sign up a new user
+  signup: (userData) => apiRequest('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+  }),
+  
+  // Login user
+  login: (credentials) => apiRequest('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(credentials),
+  }),
+  
+  // Get user by ID
+  getUser: (userId) => apiRequest(`/auth/user/${userId}`),
+};
+
 export default {
   destinationsAPI,
   attractionsAPI,
+  authAPI,
   healthCheck,
 };
 
