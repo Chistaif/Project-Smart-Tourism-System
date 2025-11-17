@@ -14,6 +14,62 @@
 
     "festivals":  [
         {
+            "name": "Festival Huế",
+            "location": "Thành phố Huế, Thừa Thiên Huế (Đặc biệt là khu vực Đại Nội và các sân khấu lớn)",
+            "briefDescription": "Lễ hội văn hóa, nghệ thuật quốc tế lớn nhất Việt Nam, tôn vinh các giá trị di sản văn hóa Cố đô Huế và hội tụ các đoàn nghệ thuật quốc tế.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động và chương trình đặc sắc",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Tái hiện Nghi thức Cung đình và Nhã nhạc",
+                        "imageUrl": "https://example.com/images/festival-hue-cung-dinh-nhã-nhạc.jpg",
+                        "content": "Các nghi thức cung đình xưa được tái hiện hoành tráng như **Lễ Tế Giao**, **Đêm Hoàng Cung**, và các buổi trình diễn **Nhã nhạc cung đình Huế** (Di sản Văn hóa Phi vật thể của UNESCO). Đây là cơ hội để du khách trải nghiệm không khí cổ xưa của triều Nguyễn."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Chương trình Nghệ thuật Quốc tế và Dân gian",
+                        "imageUrl": "https://example.com/images/festival-hue-nghe-thuat-quoc-te.jpg",
+                        "content": "Sự kiện quy tụ hàng chục đoàn nghệ thuật từ khắp nơi trên thế giới, trình diễn nhiều loại hình nghệ thuật từ truyền thống đến hiện đại. Các chương trình ca múa nhạc dân gian Việt Nam cũng được tổ chức tại các sân khấu cộng đồng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Lễ hội đường phố và Cộng đồng",
+                        "imageUrl": "https://example.com/images/festival-hue-carnaval-đường-phố.jpg",
+                        "content": "Các đoàn nghệ thuật trong nước và quốc tế tham gia **Carnaval đường phố** sôi động, diễu hành qua các tuyến phố chính, tạo nên không khí lễ hội tưng bừng. Các sân khấu cộng đồng tại các huyện/thị xã cũng tổ chức nhiều chương trình miễn phí."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 4,
+                        "title": "IV. Hoạt động Ẩm thực, Triển lãm và Hội chợ",
+                        "imageUrl": "https://example.com/images/festival-hue-ẩm-thực.jpg",
+                        "content": "Festival là dịp để thưởng thức **ẩm thực cung đình** và **ẩm thực đường phố Huế** đặc sắc. Ngoài ra, còn có các hoạt động trưng bày sản phẩm làng nghề truyền thống, **Triển lãm thư pháp, hội họa** và các hội chợ thương mại."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thời gian và Gợi ý tham quan",
+                        "items": [
+                            "Tính chu kỳ: Lễ hội được tổ chức hai năm một lần.",
+                            "Thời gian: Thường diễn ra trong khoảng 6-9 ngày (cần tra cứu lịch chính thức của kỳ gần nhất).",
+                            "Nên mua vé trước cho các chương trình đặc biệt trong khu vực Đại Nội.",
+                            "Khám phá các hoạt động bên lề như **Lễ hội Áo dài**, **Lễ hội Bia**, và các hoạt động trải nghiệm tại các làng nghề truyền thống."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.4678, 
+            "lon": 107.5793, 
+            "rating": 4.9,
+            "visitDuration": 720, 
+            "imageUrl": "https://example.com/images/festival-hue-tong-quan.jpg",
+            "tags": ["Lễ hội", "Văn hóa", "Di sản", "Cung đình", "Huế", "Nghệ thuật quốc tế", "Ẩm thực"],
+            "datetimeStart": "01:06:YYYY", 
+            "datetimeEnd": "09:06:YYYY" 
+        },
+        {
             "name": "Lễ hội Pháo hoa Quốc tế Đà Nẵng",
             "location": "Đà Nẵng",
             "briefDescription": "Lễ hội pháo hoa thường niên tại Đà Nẵng.",
@@ -143,6 +199,92 @@
             "tags": ["Lễ hội", "Tâm linh", "Hà Nội", "Leo núi"],
             "datetimeStart": "15:02:2024",
             "datetimeEnd": "15:04:2024"
+        },
+        {
+            "name": "Lễ hội Tháp Bà Ponagar",
+            "location": "Tháp Bà Ponagar, Nha Trang, Khánh Hòa",
+            "briefDescription": "Lễ hội tưởng nhớ Thánh Mẫu Thiên Y A Na (Dương danh là Bà Chúa Ngọc), mang đậm nét văn hóa tâm linh Chăm-Việt.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động và nghi thức chính",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Nghi thức Mộc Dục và Tế lễ",
+                        "imageUrl": "https://example.com/images/le-hoi-thap-ba-moc-duc.jpg",
+                        "content": "Đây là nghi thức quan trọng nhất, diễn ra vào đêm trước ngày chính lễ. Trong nghi thức Mộc Dục (Tắm tượng), các tượng Bà được lau rửa sạch sẽ bằng nước hoa và các loại rượu, tượng trưng cho việc tôn kính Thánh Mẫu."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Múa Bóng và Hát Văn (Lên Đồng)",
+                        "imageUrl": "https://example.com/images/le-hoi-thap-ba-mua-bong.jpg",
+                        "content": "Hoạt động nghệ thuật đặc sắc, với các điệu múa bóng truyền thống (thể hiện sự tôn kính và ước nguyện) và các giá Hát Văn, thu hút đông đảo người dân và du khách tham gia hành hương."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý và Lưu ý khi tham gia Lễ hội",
+                        "items": [
+                            "Thời gian tổ chức chính thức là từ ngày 20 đến ngày 23 tháng 3 Âm lịch hàng năm.",
+                            "Lễ hội thu hút rất đông du khách từ các tỉnh miền Trung và Tây Nguyên.",
+                            "Trang phục cần gọn gàng, lịch sự khi vào khu vực tế lễ chính.",
+                            "Hạn chế xả rác và giữ trật tự chung để bảo tồn không khí linh thiêng của di tích.",
+                            "Nên đi sớm để tránh tắc nghẽn giao thông và tìm được vị trí thuận lợi để xem các nghi thức."
+                        ]
+                    }
+                ]
+            },
+            "lat": 12.2612, 
+            "lon": 109.2017, 
+            "rating": 4.7,
+            "visitDuration": 180, 
+            "imageUrl": "https://example.com/images/thap-ba-ponagar.jpg", 
+            "tags": ["Lễ hội", "Văn hóa Chăm", "Tâm linh", "Nha Trang", "Di tích"],
+            "datetimeStart": "20:03:YYYY_âm lịch",
+            "datetimeEnd": "23:03:YYYY_âm lịch"
+        },
+        {
+            "name": "Lễ hội Chôl Chnăm Thmây",
+            "location": "Các tỉnh Đồng bằng sông Cửu Long (Sóc Trăng, Trà Vinh, An Giang...)",
+            "briefDescription": "Tết cổ truyền mừng năm mới của đồng bào dân tộc Khmer, đánh dấu sự kết thúc của mùa khô và sự khởi đầu của mùa mưa.",
+            "detailDescription": {
+                "mainTitle": "Ý nghĩa và các nghi lễ chính",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Nghi thức Đón mừng Năm mới (Chôl Chnăm Thmây)",
+                        "imageUrl": "https://example.com/images/kmer-chol-chnam-thmey-nghi-le.jpg",
+                        "content": "Lễ hội thường diễn ra trong ba ngày, thể hiện lòng biết ơn đối với trời đất, tổ tiên và thần linh. Ngày đầu tiên, người dân tổ chức lễ rước đại lịch (Môha Songkran) vào chùa, cúng dường, cầu phúc và rửa mặt bằng nước thiêng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Lễ đắp núi cát và Tắm Phật",
+                        "imageUrl": "https://example.com/images/kmer-chol-chnam-thmey-dap-nui-cat.jpg",
+                        "content": "Một trong những hoạt động đặc sắc là lễ đắp núi cát (Chôl Chnăm Thmây Cát), thể hiện lòng thành kính và cầu mong những điều tốt lành cho năm mới. Nghi thức Tắm Phật (Bon Tép Prêk) diễn ra trong chùa, mang ý nghĩa xua đuổi điều xấu, cầu mong mưa thuận gió hòa."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Hoạt động văn hóa và Lưu ý",
+                        "items": [
+                            "Lễ hội diễn ra vào khoảng giữa tháng 4 Dương lịch hàng năm (theo lịch của người Khmer).",
+                            "Hoạt động dân gian: Múa Lâm Thôn, hát Aday, Rô-băm, các trò chơi như kéo co, đẩy gậy.",
+                            "Trang phục truyền thống được ưu tiên trong các ngày lễ.",
+                            "Nên tham gia Lễ đắp núi cát và Tắm Phật tại các chùa Khmer để hiểu rõ hơn về văn hóa.",
+                            "Giữ thái độ tôn nghiêm, lịch sự khi tham quan khu vực chùa chiền và các nghi lễ."
+                        ]
+                    }
+                ]
+            },
+            "lat": 9.6053, 
+            "lon": 105.9754, 
+            "rating": 4.9,
+            "visitDuration": 720, 
+            "imageUrl": "https://example.com/images/le-hoi-chol-chnam-thmey-tong-quan.jpg",
+            "tags": ["Lễ hội", "Văn hóa Khmer", "Tết cổ truyền", "Miền Tây", "Sóc Trăng"],
+            "datetimeStart": "13:04:YYYY", 
+            "datetimeEnd": "15:04:YYYY"
         }
     ],
 
