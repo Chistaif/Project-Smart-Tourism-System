@@ -58,6 +58,49 @@
             "datetimeEnd": "13:07:2024"
         },
         {
+            "name": "Hội Lim Bắc Ninh",
+            "location": "Tiên Du, Bắc Ninh",
+            "briefDescription": "Lễ hội văn hóa truyền thống đặc sắc của xứ Kinh Bắc, nổi tiếng với các làn điệu Quan họ.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động và ý nghĩa chính",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Hát Quan Họ - Linh hồn của Hội Lim",
+                        "imageUrl": "https://example.com/images/quan-ho-bac-ninh.jpg",
+                        "content": "Hát Quan họ là di sản văn hóa phi vật thể của UNESCO, là hoạt động trung tâm và nổi bật nhất tại Hội Lim. Các liền anh, liền chị sẽ hát giao duyên trên thuyền rồng ở hồ, hoặc đối đáp trên đồi Lim và các lán trại."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Các trò chơi dân gian truyền thống",
+                        "imageUrl": "https://example.com/images/hoi-lim-tro-choi.jpg",
+                        "content": "Bên cạnh Quan họ, Hội Lim còn tổ chức nhiều trò chơi dân gian thu hút du khách như đấu vật, chọi gà, đánh đu, và thi dệt cửi. Đây là dịp để người dân địa phương và du khách cùng nhau vui xuân."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý và Lưu ý khi tham gia Hội Lim",
+                        "items": [
+                            "Thời gian tổ chức chính thường là ngày 13 tháng Giêng (âm lịch) hàng năm.",
+                            "Địa điểm chính: Đồi Lim và các làng xã quanh vùng Lim, Tiên Du, Bắc Ninh.",
+                            "Nên mặc trang phục lịch sự, kín đáo khi vào khu vực đình, chùa.",
+                            "Nên đến sớm để chọn chỗ xem hát Quan họ trên thuyền.",
+                            "Tuyệt đối không có hành vi làm phiền hoặc xúc phạm các liền anh, liền chị Quan họ."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.1444, 
+            "lon": 106.0142, 
+            "rating": 4.8,
+            "visitDuration": 240, 
+            "imageUrl": "https://example.com/images/hoi-lim-bac-ninh.jpg",
+            "tags": ["Lễ hội", "Văn hóa", "Quan họ", "Bắc Ninh", "Di sản"],
+            "datetimeStart": "13:01:YYYY_âm lịch", 
+            "datetimeEnd": "15:01:YYYY_âm lịch"
+        },
+        {
             "name": "Lễ hội Chùa Hương",
             "location": "Mỹ Đức, Hà Nội",
             "briefDescription": "Lễ hội hành hương lớn nhất miền Bắc.",
