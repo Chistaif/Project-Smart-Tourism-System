@@ -51,7 +51,6 @@
             },
             "lat": 16.0618,
             "lon": 108.2220,
-            "rating": 4.8,
             "visitDuration": 180,
             "imageUrl": "https://example.com/images/danang-fireworks.jpg",
             "tags": ["Lễ hội", "Văn hóa", "Sự kiện", "Đà Nẵng"],
@@ -96,7 +95,6 @@
             },            
             "lat": 20.6186,
             "lon": 105.7460,
-            "rating": 4.5,
             "visitDuration": 480,
             "imageUrl": "https://example.com/images/chua-huong.jpg", 
             "tags": ["Lễ hội", "Tâm linh", "Hà Nội", "Leo núi"],
@@ -144,7 +142,6 @@
             },            
             "lat": 21.0390,
             "lon": 105.7997,
-            "rating": 4.7,
             "visitDuration": 120,
             "imageUrl": "https://example.com/images/bao-tang-dan-toc-hoc.jpg",
             "tags": ["Văn hóa", "Bảo tàng", "Hà Nội", "Lịch sử"],
@@ -190,7 +187,6 @@
             },            
             "lat": 15.8801,
             "lon": 108.3380,
-            "rating": 4.6,
             "visitDuration": 240,
             "imageUrl": "https://example.com/images/hoi-an.jpg",
             "tags": ["Di sản", "Kiến trúc", "Văn hóa", "Chụp ảnh", "Ẩm thực"],
@@ -239,10 +235,35 @@
             },            
             "lat": 16.0551,
             "lon": 108.2497,
-            "rating": 4.5,
             "visitDuration": 180,
             "imageUrl": "https://example.com/images/my-khe-beach.jpg",
             "tags": ["Biển", "Thiên nhiên", "Thư giãn", "Đà Nẵng"]
+        }
+    ],
+    "reviews": [
+        {
+            "userEmail": "chitai@gmail.com",
+            "attractionName": "Phố cổ Hội An",
+            "rating": 5,
+            "content": "Tuyệt vời! Nơi này thực sự cổ kính và đẹp. Đồ ăn cũng rất ngon."
+        },
+        {
+            "userEmail": "test@example.com",
+            "attractionName": "Phố cổ Hội An",
+            "rating": 4,
+            "content": "Hội An rất đẹp, tuy nhiên hơi đông đúc vào cuối tuần."
+        },
+        {
+            "userEmail": "chitai@gmail.com",
+            "attractionName": "Bảo tàng Dân tộc học Việt Nam",
+            "rating": 5,
+            "content": "Rất nhiều thông tin bổ ích. Khu trưng bày ngoài trời rất thú vị, nên dành ít nhất 2 tiếng ở đây."
+        },
+        {
+            "userEmail": "test@example.com",
+            "attractionName": "Lễ hội Chùa Hương",
+            "rating": 4,
+            "content": "Lễ hội rất đông vui và trang nghiêm. Đi thuyền trên suối Yến cảnh cũng đẹp."
         }
     ]
 }

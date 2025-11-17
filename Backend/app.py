@@ -73,34 +73,6 @@ def search():
 '''
 === Chức năng lấy thông tin chi tiết attraction ===
 /api/attraction/<id>                => lấy đầy đủ thông tin của attraction
-{
-  "data": {
-    "infomation": {
-      "averageRating": 4.5,
-      "briefDescription": null,
-      "detailDescription": "Lễ hội Chùa Hương diễn ra hàng năm, thu hút hàng triệu phật tử và du khách tham gia hành hương về miền đất Phật.",
-      "id": 2,
-      "location": "Mỹ Đức, Hà Nội",
-      "name": "Lễ hội Chùa Hương",
-      "tags": [
-        "Lễ hội",
-        "Tâm linh",
-        "Hà Nội",
-        "Leo núi"
-      ],
-      "timeEnd": "2024-04-15T00:00:00",
-      "timeStart": "2024-02-15T00:00:00",
-      "type": "festival",
-      "url": "https://example.com/images/chua-huong.jpg",
-      "url1": null,
-      "url2": null,
-      "url3": null,
-      "visitDuration": 480
-    },
-    "reviews": []
-  },
-  "success": true
-}
 '''
 @app.route('/api/attraction/<int:attraction_id>', methods=["GET"])
 def get_attraction_detail(attraction_id):

@@ -1,7 +1,8 @@
 import json
 from datetime import datetime
 
-from models import db, User, Festival, CulturalSpot, Attraction, Tag
+from models import db, User, Festival, CulturalSpot, Attraction, Tag, Review
+from service.attraction_service import update_attraction_rating_service
 
 def parse_datetime(date_str):
     """
@@ -80,7 +81,6 @@ def import_demo_data(json_path="demo_data.json"):
                 detail_description=fes.get("detailDescription"),
                 lat=fes.get("lat"),
                 lon=fes.get("lon"),
-                average_rating=fes.get("rating"),
                 visit_duration=fes.get("visitDuration"),
                 image_url=fes.get("imageUrl"),
             )
@@ -102,7 +102,6 @@ def import_demo_data(json_path="demo_data.json"):
             new_spot = CulturalSpot(
                 name=cul["name"],
                 location=cul.get("location"),
-                average_rating=cul.get("rating"),
                 lat=cul.get("lat"),
                 lon=cul.get("lon"),
                 brief_description=cul.get("briefDescription"),
@@ -130,7 +129,6 @@ def import_demo_data(json_path="demo_data.json"):
             new_attr = Attraction(
                 name=a["name"],
                 location=a.get("location"),
-                average_rating=a.get("rating"),
                 brief_description=a.get("briefDescription"),
                 detail_description=a.get("detailDescription"),
                 lat=a.get("lat"),
@@ -146,7 +144,47 @@ def import_demo_data(json_path="demo_data.json"):
                 if tag:
                     new_attr.tags.append(tag)
 
-        # --- 5. Commit ---
+        # --- 5. Nạp Reviews ---
+        # (Chúng ta nạp review SAU KHI đã nạp User và Attraction)
+        for r_data in data.get("reviews", []):
+            # 1. Tìm user bằng email
+            user = User.query.filter_by(email=r_data.get("userEmail")).first()
+            
+            # 2. Tìm attraction bằng name
+            attraction = Attraction.query.filter_by(name=r_data.get("attractionName")).first()
+
+            # 3. Chỉ tạo review nếu tìm thấy cả user và attraction
+            if user and attraction:
+                # Kiểm tra xem review này đã tồn tại chưa
+                existing_review = Review.query.filter_by(
+                    user_id=user.user_id,
+                    attraction_id=attraction.id,
+                    content=r_data.get("content") # Thêm kiểm tra content để tránh trùng
+                ).first()
+
+                if not existing_review:
+                    new_review = Review(
+                        content=r_data.get("content"),
+                        rating_score=r_data.get("rating"),
+                        user_id=user.user_id,
+                        attraction_id=attraction.id
+                        # created_at sẽ tự động được gán giá trị default
+                    )
+                    db.session.add(new_review)
+            else:
+                if not user:
+                    print(f"Warning: (Review) Không tìm thấy user với email '{r_data.get('userEmail')}'")
+                if not attraction:
+                    print(f"Warning: (Review) Không tìm thấy attraction với tên '{r_data.get('attractionName')}'")
+
+        db.session.flush()
+
+        all_attractions = Attraction.query.all()
+        for att in all_attractions:
+            # Gọi hàm service mới, nhưng KHÔNG commit
+            update_attraction_rating_service(att.id, commit_now=False)
+            
+        # --- 6. Commit --- (Đổi số thứ tự)
         # Sau khi thêm tất cả, commit một lần duy nhất
         db.session.commit()
         print("Import demo data (mới) hoàn tất!")
