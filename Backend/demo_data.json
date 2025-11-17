@@ -17,15 +17,43 @@
             "name": "Lễ hội Pháo hoa Quốc tế Đà Nẵng",
             "location": "Đà Nẵng",
             "briefDescription": "Lễ hội pháo hoa thường niên tại Đà Nẵng.",
-            "detailDescription": "Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF) là một sự kiện văn hóa du lịch quy mô lớn, thu hút hàng triệu du khách trong và ngoài nước.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động chính",
+                "sections": [
+                    {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
+                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
+                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                    },
+                    {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
+                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
+                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                    },
+                    {
+                    "type": "list",
+                    "title": "Gợi ý cho Du khách",
+                    "items": [
+                        "Phải mặc trang phục gọn gàng, lịch sự.",
+                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
+                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
+                        "Không phá hoại cây cối trong khuôn viên.",
+                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
+                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
+                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
+                    ]
+                    }
+                ]
+            },
             "lat": 16.0618,
             "lon": 108.2220,
             "rating": 4.8,
             "visitDuration": 180,
-            "url": "https://example.com/images/danang-fireworks.jpg",
-            "url1": null,
-            "url2": null,
-            "url3": null,
+            "imageUrl": "https://example.com/images/danang-fireworks.jpg",
             "tags": ["Lễ hội", "Văn hóa", "Sự kiện", "Đà Nẵng"],
             "datetimeStart": "08:06:2024",
             "datetimeEnd": "13:07:2024"
@@ -34,15 +62,43 @@
             "name": "Lễ hội Chùa Hương",
             "location": "Mỹ Đức, Hà Nội",
             "briefDescription": "Lễ hội hành hương lớn nhất miền Bắc.",
-            "detailDescription": "Lễ hội Chùa Hương diễn ra hàng năm, thu hút hàng triệu phật tử và du khách tham gia hành hương về miền đất Phật.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động chính",
+                "sections": [
+                    {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
+                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
+                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                    },
+                    {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
+                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
+                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                    },
+                    {
+                    "type": "list",
+                    "title": "Gợi ý cho Du khách",
+                    "items": [
+                        "Phải mặc trang phục gọn gàng, lịch sự.",
+                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
+                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
+                        "Không phá hoại cây cối trong khuôn viên.",
+                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
+                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
+                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
+                    ]
+                    }
+                ]
+            },            
             "lat": 20.6186,
             "lon": 105.7460,
             "rating": 4.5,
             "visitDuration": 480,
-            "url": "https://example.com/images/chua-huong.jpg",
-            "url1": null,
-            "url2": null,
-            "url3": null,
+            "imageUrl": "https://example.com/images/chua-huong.jpg", 
             "tags": ["Lễ hội", "Tâm linh", "Hà Nội", "Leo núi"],
             "datetimeStart": "15:02:2024",
             "datetimeEnd": "15:04:2024"
@@ -54,15 +110,43 @@
             "name": "Bảo tàng Dân tộc học Việt Nam",
             "location": "Cầu Giấy, Hà Nội",
             "briefDescription": "Nơi trưng bày và lưu giữ di sản văn hóa các dân tộc Việt Nam.",
-            "detailDescription": "Bảo tàng Dân tộc học Việt Nam là một trung tâm nghiên cứu và trưng bày văn hóa đa dạng của 54 dân tộc anh em trên khắp đất nước.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động chính",
+                "sections": [
+                    {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
+                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
+                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                    },
+                    {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
+                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
+                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                    },
+                    {
+                    "type": "list",
+                    "title": "Gợi ý cho Du khách",
+                    "items": [
+                        "Phải mặc trang phục gọn gàng, lịch sự.",
+                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
+                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
+                        "Không phá hoại cây cối trong khuôn viên.",
+                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
+                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
+                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
+                    ]
+                    }
+                ]
+            },            
             "lat": 21.0390,
             "lon": 105.7997,
             "rating": 4.7,
             "visitDuration": 120,
-            "url": "https://example.com/images/bao-tang-dan-toc-hoc.jpg",
-            "url1": null,
-            "url2": null,
-            "url3": null,
+            "imageUrl": "https://example.com/images/bao-tang-dan-toc-hoc.jpg",
             "tags": ["Văn hóa", "Bảo tàng", "Hà Nội", "Lịch sử"],
             "spotType": "Bảo tàng",
             "ticketPrice": 40000.0,
@@ -72,15 +156,43 @@
             "name": "Phố cổ Hội An",
             "location": "Hội An, Quảng Nam",
             "briefDescription": "Đô thị cổ được UNESCO công nhận là Di sản Văn hóa Thế giới.",
-            "detailDescription": "Hội An là một ví dụ điển hình về một cảng thị Đông Nam Á truyền thống được bảo tồn tốt, với những ngôi nhà cổ, chùa chiền và đèn lồng đặc trưng.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động chính",
+                "sections": [
+                    {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
+                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
+                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                    },
+                    {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
+                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
+                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                    },
+                    {
+                    "type": "list",
+                    "title": "Gợi ý cho Du khách",
+                    "items": [
+                        "Phải mặc trang phục gọn gàng, lịch sự.",
+                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
+                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
+                        "Không phá hoại cây cối trong khuôn viên.",
+                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
+                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
+                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
+                    ]
+                    }
+                ]
+            },            
             "lat": 15.8801,
             "lon": 108.3380,
             "rating": 4.6,
             "visitDuration": 240,
-            "url": "https://example.com/images/hoi-an.jpg",
-            "url1": null,
-            "url2": null,
-            "url3": null,
+            "imageUrl": "https://example.com/images/hoi-an.jpg",
             "tags": ["Di sản", "Kiến trúc", "Văn hóa", "Chụp ảnh", "Ẩm thực"],
             "spotType": "Di tích",
             "ticketPrice": 120000.0,
@@ -93,15 +205,43 @@
             "name": "Bãi biển Mỹ Khê",
             "location": "Đà Nẵng",
             "briefDescription": "Một trong những bãi biển quyến rũ nhất hành tinh.",
-            "detailDescription": "Bãi biển Mỹ Khê nổi tiếng với bãi cát trắng mịn, nước biển trong xanh và sóng ôn hòa, rất lý tưởng cho các hoạt động thể thao biển và nghỉ dưỡng.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động chính",
+                "sections": [
+                    {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
+                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
+                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                    },
+                    {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
+                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
+                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                    },
+                    {
+                    "type": "list",
+                    "title": "Gợi ý cho Du khách",
+                    "items": [
+                        "Phải mặc trang phục gọn gàng, lịch sự.",
+                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
+                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
+                        "Không phá hoại cây cối trong khuôn viên.",
+                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
+                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
+                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
+                    ]
+                    }
+                ]
+            },            
             "lat": 16.0551,
             "lon": 108.2497,
             "rating": 4.5,
             "visitDuration": 180,
-            "url": "https://example.com/images/my-khe-beach.jpg",
-            "url1": null,
-            "url2": null,
-            "url3": null,
+            "imageUrl": "https://example.com/images/my-khe-beach.jpg",
             "tags": ["Biển", "Thiên nhiên", "Thư giãn", "Đà Nẵng"]
         }
     ]

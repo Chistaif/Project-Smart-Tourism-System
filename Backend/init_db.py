@@ -58,7 +58,8 @@ def import_demo_data(json_path="demo_data.json"):
                 
             new_user = User(
                 username=u["name"], # Dùng "name" làm "username"
-                email=u["email"]
+                email=u["email"],
+                avatar_url=u.get("avatarUrl") 
             )
             # Dùng hàm set_password để băm mật khẩu
             new_user.set_password(u["password"])
@@ -75,15 +76,13 @@ def import_demo_data(json_path="demo_data.json"):
                 location=fes.get("location"),
                 time_start=parse_datetime(fes.get("datetimeStart")),
                 time_end=parse_datetime(fes.get("datetimeEnd")),
-                detail_description=fes.get("detailDescription", fes.get("briefDescription")),
+                brief_description=fes.get("briefDescription"),
+                detail_description=fes.get("detailDescription"),
                 lat=fes.get("lat"),
                 lon=fes.get("lon"),
                 average_rating=fes.get("rating"),
                 visit_duration=fes.get("visitDuration"),
-                url=fes.get("url"),
-                url1=fes.get("url1"),
-                url2=fes.get("url2"),
-                url3=fes.get("url3")
+                image_url=fes.get("imageUrl"),
             )
             db.session.add(new_festival)
 
@@ -106,15 +105,13 @@ def import_demo_data(json_path="demo_data.json"):
                 average_rating=cul.get("rating"),
                 lat=cul.get("lat"),
                 lon=cul.get("lon"),
-                detail_description=cul.get("detailDescription", cul.get("briefDescription")),
+                brief_description=cul.get("briefDescription"),
+                detail_description=cul.get("detailDescription"),
                 spot_type=cul.get("spotType"),
                 ticket_price=cul.get("ticketPrice"),
                 opening_hours=cul["openHours"],
                 visit_duration=cul.get("visitDuration"),
-                url=cul.get("url"),
-                url1=cul.get("url1"),
-                url2=cul.get("url2"),
-                url3=cul.get("url3")
+                image_url=cul.get("imageUrl")
             )
             db.session.add(new_spot)
 
@@ -134,14 +131,12 @@ def import_demo_data(json_path="demo_data.json"):
                 name=a["name"],
                 location=a.get("location"),
                 average_rating=a.get("rating"),
-                detail_description=a.get("detailDescription", a.get("briefDescription")),
+                brief_description=a.get("briefDescription"),
+                detail_description=a.get("detailDescription"),
                 lat=a.get("lat"),
                 lon=a.get("lon"),
                 visit_duration=a.get("visitDuration"),
-                url=a.get("url"),
-                url1=a.get("url1"),
-                url2=a.get("url2"),
-                url3=a.get("url3")
+                image_url=a.get("imageUrl")
             )
             db.session.add(new_attr)
 
