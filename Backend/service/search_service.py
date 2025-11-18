@@ -1,5 +1,5 @@
 from sqlalchemy import or_
-from models import db, Attraction, Festival, CulturalSpot, Tag
+from models import db, Attraction, Festival, CulturalSpot, Tag, FavoriteAttraction
 
 def search_service(types_list, search_term):
     query = db.session.query(Attraction)
@@ -53,9 +53,9 @@ def search_service(types_list, search_term):
         item_data = {
             "id": r.id,
             "name": r.name,
-            "url": r.url, 
+            "imageUrl": r.image_url, 
             # "type": r.type,
-            # "averageRating": r.average_rating
+            "averageRating": r.average_rating
         }
         if r.type == 'festival': 
             festivals_list.append(item_data)
@@ -66,9 +66,9 @@ def search_service(types_list, search_term):
     # Có thể thêm logic đưa những địa điểm hot hit lên trên đầu danh sách ở đây dựa vào các thuật toán RS
 
     # Sắp xếp các danh sách dựa trên rating, từ cao đến thấp
-    festivals_list.sort(key=lambda item: item.get('average_rating', 0) or 0, reverse=True)
-    cultural_spots_list.sort(key=lambda item: item.get('average_rating', 0) or 0, reverse=True)
-    other_attractions_list.sort(key=lambda item: item.get('average_rating', 0) or 0, reverse=True)
+    festivals_list.sort(key=lambda item: item.get('averageRating', 0) or 0, reverse=True)
+    cultural_spots_list.sort(key=lambda item: item.get('averageRating', 0) or 0, reverse=True)
+    other_attractions_list.sort(key=lambda item: item.get('averageRating', 0) or 0, reverse=True)
 
     result_data = {
         "festivals": festivals_list,

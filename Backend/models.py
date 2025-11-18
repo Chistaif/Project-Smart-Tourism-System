@@ -59,15 +59,12 @@ class Attraction(db.Model):
     name = db.Column(db.String(100))
     location = db.Column(db.String(100))
     brief_description = db.Column(db.String(200))
-    detail_description = db.Column(db.String(1000))
+    detail_description = db.Column(db.JSON)
     average_rating = db.Column(db.Float, default=0.0)
     visit_duration = db.Column(db.Integer)
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
-    url = db.Column(db.String(200))
-    url1 = db.Column(db.String(200))
-    url2 = db.Column(db.String(200))
-    url3 = db.Column(db.String(200))
+    image_url = db.Column(db.String(200))
 
     type = db.Column(db.String(50))
 
@@ -93,10 +90,7 @@ class Attraction(db.Model):
             "detailDescription": self.detail_description,
             "averageRating": self.average_rating,
             "visitDuration": self.visit_duration,
-            "url": self.url,
-            "url1": self.url1,
-            "url2": self.url2,
-            "url3": self.url3,
+            "imageUrl": self.image_url,
             "tags": tag_list
         }
 

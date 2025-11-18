@@ -79,7 +79,11 @@ def search():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-# === Chức năng lấy thông tin chi tiết attraction ===
+
+'''
+=== Chức năng lấy thông tin chi tiết attraction ===
+/api/attraction/<id>                => lấy đầy đủ thông tin của attraction
+'''
 @app.route('/api/attraction/<int:attraction_id>', methods=["GET"])
 def get_attraction_detail(attraction_id):
     try:
@@ -89,6 +93,7 @@ def get_attraction_detail(attraction_id):
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
     
+
 
 
 # === Chức năng tạo tour ===
