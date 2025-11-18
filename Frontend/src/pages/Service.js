@@ -13,13 +13,20 @@ export default function Service() {
         setLoading(true);
         const response = await attractionsAPI.search("");
         if (response.success) {
-          setAttractions(response.data);
+          // API returns data in format: { festivals: [], culturalSpots: [], otherAttractions: [] }
+          // Combine all into one array
+          const allAttractions = [
+            ...(response.data.festivals || []),
+            ...(response.data.culturalSpots || []),
+            ...(response.data.otherAttractions || [])
+          ];
+          setAttractions(allAttractions);
         } else {
-          setError('Failed to load attractions');
+          setError('Không thể tải danh sách điểm tham quan');
         }
       } catch (err) {
         console.error('Error fetching attractions:', err);
-        setError('Error connecting to server. Make sure Flask is running on port 5000.');
+        setError('Lỗi kết nối đến máy chủ. Vui lòng đảm bảo Flask đang chạy trên cổng 5000.');
       } finally {
         setLoading(false);
       }
@@ -33,20 +40,24 @@ export default function Service() {
       <h1>Service Page</h1>
       <p>Đây là trang dịch vụ.</p>
       
-      {loading && <p>Loading attractions...</p>}
+      {loading && <p>Đang tải điểm tham quan...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
       {!loading && !error && (
         <div style={{ marginTop: '20px' }}>
-          <h2>Attractions from API ({attractions.length})</h2>
-          <ul>
-            {attractions.map(attr => (
-              <li key={attr.id}>
-                <strong>{attr.name}</strong> - {attr.location} 
-                {attr.rating && ` (Rating: ${attr.rating})`}
-              </li>
-            ))}
-          </ul>
+          <h2>Điểm tham quan từ API ({attractions.length})</h2>
+          {attractions.length > 0 ? (
+            <ul>
+              {attractions.map(attr => (
+                <li key={attr.id}>
+                  <strong>{attr.name}</strong>
+                  {attr.url && <img src={attr.url} alt={attr.name} style={{ width: '100px', marginLeft: '10px' }} />}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Không có điểm tham quan nào.</p>
+          )}
         </div>
       )}
     </div>

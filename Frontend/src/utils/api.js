@@ -16,6 +16,13 @@ async function apiRequest(endpoint, options = {}) {
 
   try {
     const response = await fetch(url, config);
+    
+    // Check if response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error(`Expected JSON response, got ${contentType}`);
+    }
+    
     const data = await response.json();
     
     if (!response.ok) {
@@ -24,6 +31,11 @@ async function apiRequest(endpoint, options = {}) {
     
     return data;
   } catch (error) {
+    // More detailed error logging
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      console.error('Lỗi kết nối - Máy chủ backend có đang chạy không?', error);
+      throw new Error('Không thể kết nối đến máy chủ. Vui lòng đảm bảo backend đang chạy trên http://localhost:5000');
+    }
     console.error('API request failed:', error);
     throw error;
   }
@@ -50,9 +62,64 @@ export const attractionsAPI = {
 // Health check
 export const healthCheck = () => apiRequest('/health');
 
+// API functions for authentication
+export const authAPI = {
+  // Đăng ký tài khoản mới
+  signup: (userData) => apiRequest('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+  }),
+  
+  // Đăng nhập
+  login: (credentials) => apiRequest('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(credentials),
+  }),
+  
+  // Lấy thông tin người dùng theo ID
+  getUser: (userId) => apiRequest(`/auth/user/${userId}`),
+};
+
+// API functions for blogs
+export const blogsAPI = {
+  // Lấy tất cả blogs
+  getAll: () => apiRequest('/blogs'),
+  
+  // Lấy blog theo ID
+  getById: (blogId) => apiRequest(`/blogs/${blogId}`),
+  
+  // Tạo blog mới (với FormData để upload hình ảnh)
+  create: (formData) => {
+    const url = `${API_BASE_URL}/blogs`;
+    return fetch(url, {
+      method: 'POST',
+      body: formData, // FormData không cần Content-Type header
+    })
+    .then(response => {
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error(`Expected JSON response, got ${contentType}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to create blog');
+      }
+      return data;
+    })
+    .catch(error => {
+      console.error('API request failed:', error);
+      throw error;
+    });
+  },
+};
+
 export default {
   destinationsAPI,
   attractionsAPI,
+  authAPI,
+  blogsAPI,
   healthCheck,
 };
 

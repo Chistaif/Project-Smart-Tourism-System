@@ -42,6 +42,7 @@ class User(db.Model):
 
     def to_json(self):
         return {
+            "user_id": self.user_id,
             "username": self.username,
             "avatar_url": self.avatar_url,
             "email": self.email
@@ -194,3 +195,35 @@ class FavoriteAttraction(db.Model):
     
     user = db.relationship('User', back_populates='favorite_attractions')
     attraction = db.relationship('Attraction', back_populates='favorited_by')
+
+# ======================================================================
+# ===                                                                ===
+# ===                    Thong tin blog                               ===
+# ===                                                                ===
+# ======================================================================
+class Blog(db.Model):
+    __tablename__ = 'blog'
+    blog_id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(500), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Foreign key to User
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user = db.relationship('User', backref='blogs')
+
+    def to_json(self):
+        return {
+            "blog_id": self.blog_id,
+            "title": self.title,
+            "content": self.content,
+            "image_url": self.image_url,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "user": {
+                "username": self.user.username if self.user else None,
+                "avatar_url": self.user.avatar_url if self.user else None
+            }
+        }

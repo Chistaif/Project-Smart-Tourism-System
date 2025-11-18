@@ -1,22 +1,47 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function Navigation({ openPopup }) {
+export default function Navigation({ openPopup, openLogin, openSignup, user, onLogout }) {
+  const location = useLocation();
+
+  const isActive = (path) => (location.pathname === path ? 'active' : '');
+
+  const getInitials = (name = '') => {
+    if (!name) return 'U';
+    return name
+      .split(' ')
+      .map(part => part.charAt(0))
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  };
+
   return (
     <header>
       <div className="logo">Culture Compass</div>
 
       <nav>
-        <Link to="/" className="active">Home</Link>
-        <Link to="/service">Service</Link>
-        <Link to="/blogs">Blogs</Link>
-        <Link to="/user">User</Link>
+        <Link to="/" className={isActive('/')}>Home</Link>
+        <Link to="/service" className={isActive('/service')}>Service</Link>
+        <Link to="/blogs" className={isActive('/blogs')}>Blogs</Link>
+        <Link to="/user" className={isActive('/user')}>User</Link>
       </nav>
 
-      <div className="auth">
-        <button className="btn" onClick={openPopup}>Sign up</button>
-        <button className="btn">Login</button>
-      </div>
+      {user ? (
+        <div className="user-info">
+          <div className="user-avatar">{getInitials(user.username)}</div>
+          <div className="user-details">
+            <span>{user.username}</span>
+            <small>{user.email}</small>
+          </div>
+          <button className="btn" onClick={onLogout}>Đăng Xuất</button>
+        </div>
+      ) : (
+        <div className="auth">
+          <button className="btn" onClick={openSignup || openPopup}>Đăng Ký</button>
+          <button className="btn" onClick={openLogin || openPopup}>Đăng Nhập</button>
+        </div>
+      )}
     </header>
   );
 }
