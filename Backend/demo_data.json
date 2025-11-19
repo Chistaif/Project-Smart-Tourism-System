@@ -14,92 +14,302 @@
 
     "festivals":  [
         {
-            "name": "Lễ hội Pháo hoa Quốc tế Đà Nẵng",
-            "location": "Đà Nẵng",
-            "briefDescription": "Lễ hội pháo hoa thường niên tại Đà Nẵng.",
+            "name": "Festival Huế",
+            "location": "Thành phố Huế, Thừa Thiên Huế (Đặc biệt là khu vực Đại Nội và các sân khấu lớn)",
+            "briefDescription": "Lễ hội văn hóa, nghệ thuật quốc tế lớn nhất Việt Nam, tôn vinh các giá trị di sản văn hóa Cố đô Huế và hội tụ các đoàn nghệ thuật quốc tế.",
             "detailDescription": {
-                "mainTitle": "Các hoạt động chính",
+                "mainTitle": "Các hoạt động và chương trình đặc sắc",
                 "sections": [
                     {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
-                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
-                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Tái hiện Nghi thức Cung đình và Nhã nhạc",
+                        "imageUrl": "https://example.com/images/festival-hue-cung-dinh-nhã-nhạc.jpg",
+                        "content": "Các nghi thức cung đình xưa được tái hiện hoành tráng như **Lễ Tế Giao**, **Đêm Hoàng Cung**, và các buổi trình diễn **Nhã nhạc cung đình Huế** (Di sản Văn hóa Phi vật thể của UNESCO). Đây là cơ hội để du khách trải nghiệm không khí cổ xưa của triều Nguyễn."
                     },
                     {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
-                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
-                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Chương trình Nghệ thuật Quốc tế và Dân gian",
+                        "imageUrl": "https://example.com/images/festival-hue-nghe-thuat-quoc-te.jpg",
+                        "content": "Sự kiện quy tụ hàng chục đoàn nghệ thuật từ khắp nơi trên thế giới, trình diễn nhiều loại hình nghệ thuật từ truyền thống đến hiện đại. Các chương trình ca múa nhạc dân gian Việt Nam cũng được tổ chức tại các sân khấu cộng đồng."
                     },
                     {
-                    "type": "list",
-                    "title": "Gợi ý cho Du khách",
-                    "items": [
-                        "Phải mặc trang phục gọn gàng, lịch sự.",
-                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
-                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
-                        "Không phá hoại cây cối trong khuôn viên.",
-                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
-                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
-                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
-                    ]
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Hoạt động Ẩm thực, Triển lãm và Hội chợ",
+                        "imageUrl": "https://example.com/images/festival-hue-ẩm-thực.jpg",
+                        "content": "Festival là dịp để thưởng thức **ẩm thực cung đình** và **ẩm thực đường phố Huế** đặc sắc. Ngoài ra, còn có các hoạt động trưng bày sản phẩm làng nghề truyền thống, **Triển lãm thư pháp, hội họa** và các hội chợ thương mại."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thời gian và Gợi ý tham quan",
+                        "items": [
+                            "Tính chu kỳ: Lễ hội được tổ chức hai năm một lần.",
+                            "Thời gian: Thường diễn ra trong khoảng 6-9 ngày (cần tra cứu lịch chính thức của kỳ gần nhất).",
+                            "Nên mua vé trước cho các chương trình đặc biệt trong khu vực Đại Nội.",
+                            "Khám phá các hoạt động bên lề như **Lễ hội Áo dài**, **Lễ hội Bia**, và các hoạt động trải nghiệm tại các làng nghề truyền thống."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.4678, 
+            "lon": 107.5793, 
+            "rating": 4.9,
+            "visitDuration": 720, 
+            "imageUrl": "https://example.com/images/festival-hue-tong-quan.jpg",
+            "tags": ["Lễ hội", "Văn hóa", "Di sản", "Cung đình", "Huế", "Nghệ thuật quốc tế", "Ẩm thực"],
+            "datetimeStart": "01:06:YYYY", 
+            "datetimeEnd": "09:06:YYYY" 
+        },
+        {
+            "name": "Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF)",
+            "location": "Sông Hàn, Đà Nẵng (Khu vực cầu Sông Hàn và Cảng Sông Hàn)",
+            "briefDescription": "Lễ hội pháo hoa thường niên mang tầm cỡ quốc tế, với sự tham gia của các đội thi hàng đầu thế giới, kết hợp âm nhạc, nghệ thuật và ánh sáng.",
+            "detailDescription": {
+                "mainTitle": "Các Chương trình và Hoạt động trọng tâm",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Các Đêm Thi Pháo hoa Quốc tế",
+                        "imageUrl": "https://example.com/images/danang-fireworks-thi-chính.jpg",
+                        "content": "Đây là hoạt động trung tâm, thường kéo dài qua nhiều đêm cuối tuần. Các đội thi quốc tế (đại diện cho các quốc gia khác nhau) trình diễn các màn pháo hoa nghệ thuật theo các **chủ đề** được công bố hàng năm, kết hợp âm nhạc và công nghệ ánh sáng hiện đại."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Lễ hội đường phố và Nghệ thuật đường phố",
+                        "imageUrl": "https://example.com/images/danang-fireworks-lễ-hội-đường-phố.jpg",
+                        "content": "Song song với các đêm thi, Đà Nẵng tổ chức **Carnaval và Lễ hội đường phố** với các xe hoa, vũ công quốc tế và nghệ thuật đường phố rực rỡ. Các hoạt động này thường diễn ra tại khu vực hai bờ sông Hàn, tạo không khí lễ hội sôi động khắp thành phố."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Các Chương trình Văn hóa và Ẩm thực",
+                        "imageUrl": "https://example.com/images/danang-fireworks-ẩm-thực.jpg",
+                        "content": "DIFF bao gồm các **Chương trình ca nhạc, nghệ thuật** bên lề với sự tham gia của các ca sĩ nổi tiếng. Đặc biệt là khu vực **Ẩm thực đêm** với các món ăn đặc sản Đà Nẵng và ẩm thực quốc tế, phục vụ du khách đến tận khuya."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý Tham gia và Lưu ý",
+                        "items": [
+                            "Thời gian tổ chức: Thường diễn ra trong khoảng 1 tháng (từ tháng 6 đến tháng 7) hàng năm.",
+                            "Địa điểm xem pháo hoa tốt nhất: Khán đài chính (cần mua vé) hoặc các tòa nhà/quán cà phê cao tầng xung quanh sông Hàn.",
+                            "Nên đặt vé và đặt phòng khách sạn sớm vì lễ hội thu hút rất đông du khách.",
+                            "Lưu ý tình trạng tắc đường và giao thông bị hạn chế ở khu vực trung tâm vào các đêm bắn pháo hoa."
+                        ]
                     }
                 ]
             },
             "lat": 16.0618,
             "lon": 108.2220,
-            "visitDuration": 180,
+            "rating": 4.8,
+            "visitDuration": 180, 
             "imageUrl": "https://example.com/images/danang-fireworks.jpg",
-            "tags": ["Lễ hội", "Văn hóa", "Sự kiện", "Đà Nẵng"],
-            "datetimeStart": "08:06:2024",
-            "datetimeEnd": "13:07:2024"
+            "tags": ["Lễ hội", "Pháo hoa", "Sự kiện", "Đà Nẵng", "Quốc tế", "Nghệ thuật"],
+            "datetimeStart": "08:06:2024", 
+            "datetimeEnd": "13:07:2024" 
         },
         {
-            "name": "Lễ hội Chùa Hương",
-            "location": "Mỹ Đức, Hà Nội",
-            "briefDescription": "Lễ hội hành hương lớn nhất miền Bắc.",
+            "name": "Hội Lim Bắc Ninh",
+            "location": "Tiên Du, Bắc Ninh",
+            "briefDescription": "Lễ hội văn hóa truyền thống đặc sắc của xứ Kinh Bắc, nổi tiếng với các làn điệu Quan họ, được UNESCO công nhận là Di sản Văn hóa Phi vật thể.",
             "detailDescription": {
-                "mainTitle": "Các hoạt động chính",
+                "mainTitle": "Các hoạt động và ý nghĩa chính",
                 "sections": [
                     {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
-                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
-                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Hát Quan Họ - Linh hồn của Hội Lim",
+                        "imageUrl": "https://example.com/images/quan-ho-bac-ninh-chinh.jpg",
+                        "content": "Hát Quan họ là hoạt động trung tâm và nổi bật nhất. Các **liền anh, liền chị** sẽ hát giao duyên trên thuyền rồng ở hồ hoặc đối đáp trên đồi Lim và các lán trại. Đây là hình thức nghệ thuật dân ca đặc sắc đã được **UNESCO** công nhận."
                     },
                     {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
-                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
-                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Nghi thức Lễ và Tế Lễ truyền thống",
+                        "imageUrl": "https://example.com/images/hoi-lim-nghi-le-ruoc.jpg",
+                        "content": "Phần lễ được tổ chức trang trọng tại các Đình, Chùa. Các nghi thức chính bao gồm **Lễ rước** truyền thống (từ Đình làng Ông đến Đình làng Bà) và **Lễ tế** tại các đình, chùa trên đồi Lim, thể hiện lòng thành kính với thần linh và các vị thành hoàng làng."
                     },
                     {
-                    "type": "list",
-                    "title": "Gợi ý cho Du khách",
-                    "items": [
-                        "Phải mặc trang phục gọn gàng, lịch sự.",
-                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
-                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
-                        "Không phá hoại cây cối trong khuôn viên.",
-                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
-                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
-                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
-                    ]
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Các trò chơi dân gian và Trải nghiệm Hội",
+                        "imageUrl": "https://example.com/images/hoi-lim-tro-choi-danh-du.jpg",
+                        "content": "Phần hội sôi nổi với nhiều trò chơi dân gian như **đấu vật**, **chọi gà**, **đánh đu**, **thi dệt cửi** và **hát Quan họ mời trầu** tại các gia đình. Du khách có cơ hội tham gia hoặc cổ vũ các hoạt động vui xuân này."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý và Lưu ý khi tham gia Hội Lim",
+                        "items": [
+                            "Thời gian chính thức: **Ngày 13 tháng Giêng (âm lịch)** hàng năm.",
+                            "Địa điểm chính: **Đồi Lim** và các làng xã quanh vùng Lim, Tiên Du, Bắc Ninh.",
+                            "Nên mặc **trang phục gọn gàng, lịch sự** khi vào khu vực đình, chùa.",
+                            "Giữ trật tự và không có hành vi làm phiền hoặc xúc phạm các liền anh, liền chị Quan họ.",
+                            "Khuyến khích mang theo áo ấm nếu tham gia các hoạt động buổi tối hoặc sáng sớm."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.1444, 
+            "lon": 106.0142, 
+            "rating": 4.8,
+            "visitDuration": 240, 
+            "imageUrl": "https://example.com/images/hoi-lim-bac-ninh-tong-quan.jpg",
+            "tags": ["Lễ hội", "Văn hóa", "Quan họ", "Bắc Ninh", "Di sản", "Tâm linh"],
+            "datetimeStart": "13:01:YYYY_âm lịch", 
+            "datetimeEnd": "15:01:YYYY_âm lịch"
+        },
+        {
+            "name": "Lễ hội Chùa Hương (Hương Sơn)",
+            "location": "Mỹ Đức, Hà Nội",
+            "briefDescription": "Lễ hội hành hương Phật giáo lớn và kéo dài nhất miền Bắc, thu hút hàng triệu Phật tử và du khách đến cúng bái và chiêm bái cảnh sắc thiên nhiên hùng vĩ.",
+            "detailDescription": {
+                "mainTitle": "Các Nghi thức Tôn giáo và Trải nghiệm Hành hương",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Hành trình Ngồi đò và Tham quan Suối Yến",
+                        "imageUrl": "https://example.com/images/chua-huong-suoi-yen-dò.jpg",
+                        "content": "Hành trình bắt đầu bằng việc đi thuyền trên **Suối Yến** thơ mộng. Du khách sẽ được chiêm ngưỡng cảnh quan núi non hùng vĩ và ruộng đồng hai bên bờ suối. Đây là một phần không thể thiếu của trải nghiệm hành hương, tạo nên sự thư thái trước khi đến khu vực chùa chính."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Nghi thức Lễ và Chiêm bái Động Hương Tích",
+                        "imageUrl": "https://example.com/images/chua-huong-động-hương-tích.jpg",
+                        "content": "Khu vực trung tâm là **Động Hương Tích** (được mệnh danh là 'Nam thiên đệ nhất động' – động đẹp nhất trời Nam), nơi diễn ra nghi thức cúng lễ chính. Phật tử dâng hương, cầu nguyện tại ban thờ Phật Bà Quán Thế Âm Bồ Tát và cầu xin tài lộc, bình an, con cái."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Khám phá các Đền, Chùa lân cận",
+                        "imageUrl": "https://example.com/images/chua-huong-chùa-thiên-trù.jpg",
+                        "content": "Ngoài Hương Tích, du khách thường ghé thăm **Chùa Thiên Trù** (Bếp Trời – nơi tổ chức lễ khai hội) và các đền khác như **Đền Trình**, **Chùa Giải Oan**. Hầu hết các điểm này đều có thể đi bộ hoặc đi cáp treo để lên xuống."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý Hành hương và Lưu ý",
+                        "items": [
+                            "Thời gian Khai hội chính thức: **Mùng 6 tháng Giêng (âm lịch)** hàng năm, và kéo dài đến hết tháng 3 Âm lịch.",
+                            "Phương tiện di chuyển: Đi bộ hoặc **Cáp treo** để lên xuống Động Hương Tích (cần mua vé).",
+                            "**Nên mặc trang phục lịch sự, trang nhã** khi vào khu vực chùa chiền và các đền thờ.",
+                            "Giữ gìn vệ sinh chung và trật tự, đặc biệt trong những ngày đầu xuân lễ hội đông đúc.",
+                            "Cẩn thận tình trạng ùn tắc đò và cáp treo vào các ngày cuối tuần hoặc ngày lễ chính."
+                        ]
                     }
                 ]
             },            
             "lat": 20.6186,
             "lon": 105.7460,
-            "visitDuration": 480,
-            "imageUrl": "https://example.com/images/chua-huong.jpg", 
-            "tags": ["Lễ hội", "Tâm linh", "Hà Nội", "Leo núi"],
-            "datetimeStart": "15:02:2024",
-            "datetimeEnd": "15:04:2024"
+            "rating": 4.5,
+            "visitDuration": 480, 
+            "imageUrl": "https://example.com/images/chua-huong-tong-quan.jpg", 
+            "tags": ["Lễ hội", "Tâm linh", "Hà Nội", "Hành hương", "Phật giáo", "Núi non"],
+            "datetimeStart": "06:01:YYYY_âm lịch",
+            "datetimeEnd": "30:03:YYYY_âm lịch" 
+        },
+       {
+            "name": "Lễ hội Tháp Bà Ponagar",
+            "location": "Tháp Bà Ponagar, Nha Trang, Khánh Hòa",
+            "briefDescription": "Lễ hội tưởng nhớ Thánh Mẫu Thiên Y A Na (Dương danh là Bà Chúa Ngọc), mang đậm nét văn hóa tâm linh và là sự giao thoa độc đáo giữa văn hóa Chăm và Việt.",
+            "detailDescription": {
+                "mainTitle": "Các hoạt động, Nghi thức và Văn hóa Chính",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Nghi thức Mộc Dục (Tắm Tượng) và Tế lễ Chính",
+                        "imageUrl": "https://example.com/images/le-hoi-thap-ba-moc-duc.jpg",
+                        "content": "Đây là nghi thức quan trọng nhất, diễn ra vào đêm trước ngày chính lễ. Các tượng Bà được lau rửa sạch sẽ bằng nước hoa và các loại rượu, tượng trưng cho việc tôn kính Thánh Mẫu. **Lễ tế chính** (cầu siêu, cúng Ngọ) diễn ra tại điện thờ chính trong quần thể tháp Bà."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Múa Bóng và Hát Văn (Lên Đồng)",
+                        "imageUrl": "https://example.com/images/le-hoi-thap-ba-mua-bong-hat-van.jpg",
+                        "content": "Đây là hoạt động nghệ thuật tâm linh đặc sắc, thể hiện sự giao thoa văn hóa giữa người Chăm và người Việt. **Múa bóng** là các điệu múa truyền thống trang nghiêm. Các **giá Hát Văn** (hoạt động Lên Đồng) được tổ chức công khai tại sân tháp, thu hút đông đảo du khách."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Lễ rước Tháp và Hoạt động Dân gian",
+                        "imageUrl": "https://example.com/images/le-hoi-thap-ba-rước-lễ.jpg",
+                        "content": "Lễ hội có các nghi thức **rước kiệu** và **rước Tháp** (Tưởng niệm Thánh Mẫu), cùng với các hoạt động mang tính cộng đồng như **hát đối đáp**, **biểu diễn nhạc cụ dân tộc** (đàn Chapi, Kèn Saranai) và các hoạt động văn hóa Chăm truyền thống."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý và Lưu ý khi tham gia Lễ hội",
+                        "items": [
+                            "Thời gian tổ chức chính thức là từ ngày **20 đến ngày 23 tháng 3 Âm lịch** hàng năm.",
+                            "Lễ hội được công nhận là **Di sản Văn hóa Phi vật thể Quốc gia**.",
+                            "Trang phục cần gọn gàng, lịch sự, đặc biệt là khi vào khu vực tế lễ chính tại các tháp.",
+                            "Hạn chế xả rác và giữ trật tự chung để bảo tồn không khí linh thiêng của di tích.",
+                            "Nên đi sớm để tránh tắc nghẽn và tìm được vị trí thuận lợi để xem các nghi thức múa."
+                        ]
+                    }
+                ]
+            },
+            "lat": 12.2612, 
+            "lon": 109.2017, 
+            "rating": 4.7,
+            "visitDuration": 180, 
+            "imageUrl": "https://example.com/images/thap-ba-ponagar-tong-quan.jpg",
+            "tags": ["Lễ hội", "Văn hóa Chăm", "Tâm linh", "Nha Trang", "Di tích", "Di sản quốc gia"],
+            "datetimeStart": "20:03:YYYY_âm lịch",
+            "datetimeEnd": "23:03:YYYY_âm lịch"
+        },
+        {
+            "name": "Lễ hội Chôl Chnăm Thmây",
+            "location": "Các tỉnh Đồng bằng sông Cửu Long (Sóc Trăng, Trà Vinh, An Giang...)",
+            "briefDescription": "Tết cổ truyền mừng năm mới của đồng bào dân tộc Khmer, đánh dấu sự kết thúc của mùa khô và sự khởi đầu của mùa mưa.",
+            "detailDescription": {
+                "mainTitle": "Ý nghĩa, Nghi lễ và Hoạt động Văn hóa chính",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Nghi thức Đón mừng Năm mới và Lễ Rước Lịch",
+                        "imageUrl": "https://example.com/images/kmer-chol-chnam-thmey-nghi-le.jpg",
+                        "content": "Lễ hội thường diễn ra trong ba ngày. **Ngày đầu tiên** tổ chức lễ **rước đại lịch (Môha Songkran)** vào chùa, cúng dường, cầu phúc và rửa mặt bằng nước thiêng. Nghi thức thể hiện lòng biết ơn đối với trời đất và thần linh."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Lễ đắp núi cát và Tắm Phật (Bon Tép Prêk)",
+                        "imageUrl": "https://example.com/images/kmer-chol-chnam-thmey-dap-nui-cat-bon-tép.jpg",
+                        "content": "Các nghi lễ tôn giáo quan trọng. **Lễ đắp núi cát** (Chôl Chnăm Thmây Cát) được tổ chức để cầu mong phước lành. Nghi thức **Tắm Phật** diễn ra trong chùa với nước thơm, mang ý nghĩa xua đuổi điều xấu, cầu mong mưa thuận gió hòa và sự thanh khiết."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Hoạt động Văn hóa Dân gian và Giải trí",
+                        "imageUrl": "https://example.com/images/kmer-chol-chnam-thmey-múa-lâm-thôn.jpg",
+                        "content": "Phần hội diễn ra sôi nổi tại khuôn viên chùa và cộng đồng. Các hoạt động văn hóa tiêu biểu gồm **múa Lâm Thôn**, **hát Aday**, **Rô-băm** và nhiều **trò chơi dân gian** như kéo co, đẩy gậy. Đây là dịp để người Khmer vui chơi và gắn kết."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý Tham gia và Lưu ý",
+                        "items": [
+                            "Thời gian tổ chức: Khoảng giữa **tháng 4 Dương lịch** hàng năm (thường từ ngày 13 đến 15).",
+                            "Nên ghé thăm các **chùa Khmer** (như chùa Chén Kiểu, chùa Dơi ở Sóc Trăng) để trải nghiệm không khí lễ hội trọn vẹn.",
+                            "Trang phục truyền thống được ưu tiên trong các ngày lễ trang trọng.",
+                            "Giữ thái độ tôn nghiêm, lịch sự khi tham quan khu vực chùa chiền và các nghi lễ.",
+                            "Khuyến khích thưởng thức các món ăn truyền thống Khmer trong dịp Tết như bánh tét Trà Cuôn, bún nước lèo."
+                        ]
+                    }
+                ]
+            },
+            "lat": 9.6053, 
+            "lon": 105.9754, 
+            "rating": 4.9,
+            "visitDuration": 720, 
+            "imageUrl": "https://example.com/images/le-hoi-chol-chnam-thmey-tong-quan.jpg",
+            "tags": ["Lễ hội", "Văn hóa Khmer", "Tết cổ truyền", "Miền Tây", "Sóc Trăng", "Tâm linh"],
+            "datetimeStart": "13:04:YYYY", 
+            "datetimeEnd": "15:04:YYYY"
         }
     ],
 
@@ -107,139 +317,638 @@
         {
             "name": "Bảo tàng Dân tộc học Việt Nam",
             "location": "Cầu Giấy, Hà Nội",
-            "briefDescription": "Nơi trưng bày và lưu giữ di sản văn hóa các dân tộc Việt Nam.",
+            "briefDescription": "Nơi trưng bày và lưu giữ di sản văn hóa vật thể và phi vật thể của 54 dân tộc anh em trên khắp Việt Nam, được thiết kế hiện đại và thân thiện.",
             "detailDescription": {
-                "mainTitle": "Các hoạt động chính",
+                "mainTitle": "Các Khu vực Trưng bày và Trải nghiệm Văn hóa",
                 "sections": [
                     {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
-                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
-                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Khu Trưng bày trong nhà (Tòa nhà Trống Đồng)",
+                        "imageUrl": "https://example.com/images/bao-tang-dan-toc-hoc-trong-nha.jpg",
+                        "content": "Khu vực chính trưng bày các hiện vật về cuộc sống, trang phục, tín ngưỡng, hôn nhân, và các nghi lễ truyền thống của 54 dân tộc Việt Nam. Các hiện vật được sắp xếp theo chủ đề và có chú thích song ngữ (Việt - Anh)."
                     },
                     {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
-                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
-                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Khu Trưng bày ngoài trời (Vườn Kiến trúc)",
+                        "imageUrl": "https://example.com/images/bao-tang-dan-toc-hoc-ngoai-troi.jpg",
+                        "content": "Đây là điểm nhấn của bảo tàng với việc tái hiện các mô hình kiến trúc nhà ở truyền thống (nhà sàn, nhà rông, nhà trệt) của nhiều dân tộc như Ê Đê, Ba Na, Gia Rai, và người Việt. Du khách có thể bước vào bên trong để trải nghiệm không gian sống."
                     },
                     {
-                    "type": "list",
-                    "title": "Gợi ý cho Du khách",
-                    "items": [
-                        "Phải mặc trang phục gọn gàng, lịch sự.",
-                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
-                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
-                        "Không phá hoại cây cối trong khuôn viên.",
-                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
-                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
-                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
-                    ]
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Hoạt động Trải nghiệm và Giáo dục",
+                        "imageUrl": "https://example.com/images/bao-tang-dan-toc-hoc-rối-nước.jpg",
+                        "content": "Bảo tàng thường xuyên tổ chức các hoạt động tương tác, trình diễn nghệ thuật dân gian (như **múa rối nước**, múa sạp) và các chương trình giáo dục theo chủ đề vào cuối tuần hoặc các dịp lễ Tết, thu hút đặc biệt là các gia đình có trẻ em."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý tham quan và Thông tin cơ bản",
+                        "items": [
+                            "Thời gian tham quan khuyến nghị: **2 - 3 giờ** để khám phá đầy đủ cả khu vực trong nhà và ngoài trời.",
+                            "Giá vé tham khảo: 40.000 VNĐ/người (cần kiểm tra lại).",
+                            "Giờ mở cửa: **08:30 AM - 05:30 PM (Đóng cửa vào thứ Hai và các ngày lễ Tết)**.",
+                            "Lưu ý: Bạn được phép chụp ảnh trong hầu hết các khu vực, nhưng không chạm vào hiện vật.",
+                            "Trang phục: Không có quy định quá khắt khe, nhưng nên lịch sự."
+                        ]
                     }
                 ]
             },            
             "lat": 21.0390,
             "lon": 105.7997,
-            "visitDuration": 120,
-            "imageUrl": "https://example.com/images/bao-tang-dan-toc-hoc.jpg",
-            "tags": ["Văn hóa", "Bảo tàng", "Hà Nội", "Lịch sử"],
+            "rating": 4.7,
+            "visitDuration": 180, 
+            "imageUrl": "https://example.com/images/bao-tang-dan-toc-hoc-tong-quan.jpg",
+            "tags": ["Văn hóa", "Bảo tàng", "Hà Nội", "Dân tộc học", "Kiến trúc", "Lịch sử"],
             "spotType": "Bảo tàng",
             "ticketPrice": 40000.0,
             "openHours": "08:30 AM - 05:30 PM (Trừ thứ Hai)"
         },
         {
-            "name": "Phố cổ Hội An",
-            "location": "Hội An, Quảng Nam",
-            "briefDescription": "Đô thị cổ được UNESCO công nhận là Di sản Văn hóa Thế giới.",
+            "name": "Lăng Khải Định (Ứng Lăng)",
+            "location": "Xã Thủy Bằng, Thị xã Hương Thủy, Thừa Thiên Huế",
+            "briefDescription": "Lăng mộ của vị hoàng đế thứ 12 triều Nguyễn, nổi tiếng với sự pha trộn kiến trúc độc đáo giữa nét Á Đông và các phong cách phương Tây (Gothic, Ấn Độ giáo).",
             "detailDescription": {
-                "mainTitle": "Các hoạt động chính",
+                "mainTitle": "Kiến trúc Độc đáo và Đặc điểm nổi bật",
                 "sections": [
                     {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
-                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
-                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc giao thoa Đông - Tây",
+                        "imageUrl": "https://example.com/images/lang-khai-dinh-tong-quan.jpg",
+                        "content": "Lăng Khải Định là công trình kiến trúc cuối cùng của triều Nguyễn, được xây dựng từ năm 1920 đến 1931. Nét độc đáo của lăng là sự kết hợp táo bạo giữa kiến trúc truyền thống Việt Nam với các chi tiết kiến trúc **Châu Âu (Gothic)** và **Ấn Độ giáo (Stupa)**, thể hiện rõ qua các trụ cột và cổng lăng."
                     },
                     {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
-                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
-                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Cung điện Thiên Định và Nghệ thuật Khảm Sành Sứ",
+                        "imageUrl": "https://example.com/images/lang-khai-dinh-cung-dien-thien-dinh.jpg",
+                        "content": "Trung tâm của lăng là **Cung điện Thiên Định** với nội thất tráng lệ. Đặc biệt, khu vực này nổi tiếng với nghệ thuật **khảm sành sứ và thủy tinh** tinh xảo, tạo nên các bức tranh rực rỡ và độc đáo chưa từng có trong các lăng tẩm khác của triều Nguyễn."
                     },
                     {
-                    "type": "list",
-                    "title": "Gợi ý cho Du khách",
-                    "items": [
-                        "Phải mặc trang phục gọn gàng, lịch sự.",
-                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
-                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
-                        "Không phá hoại cây cối trong khuôn viên.",
-                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
-                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
-                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
-                    ]
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Bái Đình và Tượng đồng Vua Khải Định",
+                        "imageUrl": "https://example.com/images/lang-khai-dinh-bai-dinh.jpg",
+                        "content": "Khu vực sân **Bái Đình** gồm các hàng tượng lính hầu, quan văn, quan võ được tạc bằng đá, tạo nên một đội hình nghiêm trang. Bên trong cung điện Thiên Định là tượng đồng của vua Khải Định được đặt trên bệ cao."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý tham quan và Lưu ý",
+                        "items": [
+                            "Lăng có nhiều bậc thang dốc, du khách nên chuẩn bị giày thoải mái.",
+                            "Thời gian tham quan lý tưởng: Khoảng 1.5 - 2 giờ.",
+                            "Vì là di tích lịch sử cung đình, du khách nên mặc trang phục lịch sự, kín đáo.",
+                            "Lăng Khải Định nằm cách trung tâm thành phố Huế khoảng 10km, dễ dàng di chuyển bằng xe máy hoặc taxi."
+                        ]
                     }
                 ]
-            },            
-            "lat": 15.8801,
-            "lon": 108.3380,
-            "visitDuration": 240,
-            "imageUrl": "https://example.com/images/hoi-an.jpg",
-            "tags": ["Di sản", "Kiến trúc", "Văn hóa", "Chụp ảnh", "Ẩm thực"],
-            "spotType": "Di tích",
-            "ticketPrice": 120000.0,
-            "openHours": "07:00 AM - 09:30 PM"
+            },
+            "lat": 16.4024, 
+            "lon": 107.5910,
+            "rating": 4.6,
+            "visitDuration": 90, 
+            "imageUrl": "https://example.com/images/lang-khai-dinh-tong-quan.jpg",
+            "tags": ["Di tích", "Cung đình", "Kiến trúc", "Huế", "Lăng tẩm", "Lịch sử"],
+            "spotType": "Lăng tẩm",
+            "ticketPrice": 150000.0, 
+            "openHours": "07:00 AM - 05:30 PM"
+        },
+        {
+            "name": "Quần thể Di tích Cố đô Huế",
+            "location": "Thành phố Huế và các vùng phụ cận, Thừa Thiên Huế",
+            "briefDescription": "Di sản Văn hóa Thế giới UNESCO đầu tiên của Việt Nam (công nhận năm 1993). Đây là kinh đô của triều Nguyễn (1802-1945), nơi lưu giữ hệ thống kiến trúc cung đình, lăng tẩm và văn hóa phi vật thể quý giá.",
+            "detailDescription": {
+                "mainTitle": "Kiến trúc Cung đình, Lăng tẩm và Di sản Phi vật thể",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Đại Nội: Kinh Thành, Hoàng Thành và Tử Cấm Thành",
+                        "imageUrl": "https://example.com/images/hue-dai-noi-ngo-mon.jpg",
+                        "content": "Đây là trái tim của Cố đô, hệ thống ba vòng thành lồng vào nhau, được xây dựng bên bờ Sông Hương. Các công trình tiêu biểu nhất bao gồm **Ngọ Môn**, **Điện Thái Hòa** (nơi thiết triều), và **Tử Cấm Thành** (nơi sinh hoạt riêng của vua và hoàng gia). Kiến trúc là sự kết hợp hài hòa giữa tinh hoa phương Đông và ảnh hưởng phương Tây."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Hệ thống Lăng tẩm Hoàng gia triều Nguyễn",
+                        "imageUrl": "https://example.com/images/hue-lang-tu-duc.jpg",
+                        "content": "Nằm rải rác ở các vùng ngoại vi, mỗi lăng tẩm là một kiệt tác kiến trúc và nghệ thuật cảnh quan phản ánh tính cách của vị vua an nghỉ. Các lăng nổi tiếng nhất là **Lăng Minh Mạng** (hùng vĩ, đăng đối), **Lăng Tự Đức** (thơ mộng, trữ tình) và **Lăng Khải Định** (kiến trúc giao thoa Đông - Tây lộng lẫy)."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Văn hóa Phi vật thể và Các di tích quan trọng khác",
+                        "imageUrl": "https://example.com/images/hue-nha-nhac-duyet-thi-duong.jpg",
+                        "content": "Quần thể di tích còn bao gồm nhiều công trình khác như **Kỳ Đài** (Cột cờ), **Đàn Nam Giao** (nơi vua tế trời) và **Văn Miếu**. Đặc biệt, du khách có thể thưởng thức **Nhã nhạc Cung đình Huế** (Di sản Văn hóa Phi vật thể UNESCO) tại **Duyệt Thị Đường** hoặc nghe **Ca Huế** trên Sông Hương."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin và Gợi ý Tham quan",
+                        "items": [
+                            "Giá vé tham quan Đại Nội (Hoàng Thành + Tử Cấm Thành) khoảng **200.000 VNĐ** (người lớn). Có vé combo để tham quan nhiều điểm (Đại Nội + 3 lăng) với giá ưu đãi hơn.",
+                            "Giờ mở cửa Đại Nội: Thường từ **7:00 AM - 5:30 PM** (thời gian có thể thay đổi theo mùa).",
+                            "Thời gian tham quan khuyến nghị: Nên dành ít nhất **1 ngày** cho Đại Nội và **1-2 ngày** nữa để khám phá các lăng tẩm và công trình ngoại vi.",
+                            "Nên thuê áo dài hoặc cổ phục để chụp ảnh tại Đại Nội để có trải nghiệm trọn vẹn hơn.",
+                            "Trang phục: Lịch sự, kín đáo khi tham quan khu vực đền đài và lăng tẩm tôn nghiêm."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.467, 
+            "lon": 107.584,
+            "rating": 4.8,
+            "visitDuration": 480,
+            "imageUrl": "https://example.com/images/hue-tong-quan.jpg",
+            "tags": ["Văn hóa", "Di sản UNESCO", "Lịch sử", "Kiến trúc Cung đình", "Huế", "Triều Nguyễn"],
+            "spotType": "Di tích Lịch sử",
+            "ticketPrice": 200000.0,
+            "openHours": "Mùa hè: 6:30 AM - 6:00 PM; Mùa đông: 7:00 AM - 5:30 PM"
+        },
+        {
+            "name": "Khu Di tích Mỹ Sơn",
+            "location": "Duy Phú, Duy Xuyên, Quảng Nam",
+            "briefDescription": "Khu thánh địa Ấn Độ giáo của Vương quốc Chăm Pa cổ, được UNESCO công nhận là Di sản Văn hóa Thế giới, là minh chứng cho sự phát triển đỉnh cao của nghệ thuật kiến trúc và điêu khắc Chăm.",
+            "detailDescription": {
+                "mainTitle": "Kiến trúc Đền Tháp, Nghệ thuật Điêu khắc và Lịch sử",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc Tháp Chăm và Cấu trúc Khu đền",
+                        "imageUrl": "https://example.com/images/my-son-kientruc-thap-cham.jpg",
+                        "content": "Mỹ Sơn là quần thể gồm hơn 70 công trình kiến trúc đền tháp bằng gạch và đá, được xây dựng từ thế kỷ thứ 4 đến thế kỷ 13. Các tháp được xây dựng để thờ thần Shiva và các vị thần Ấn Độ giáo khác. Cấu trúc phức tạp gồm các nhóm tháp A, B, C, D... mỗi nhóm có một ngôi tháp chính (Kalan) và các tháp phụ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Nghệ thuật Điêu khắc và Hoa văn Trang trí",
+                        "imageUrl": "https://example.com/images/my-son-dieu-khac-trang-tri.jpg",
+                        "content": "Điêu khắc tại Mỹ Sơn đạt đến trình độ tinh xảo cao, thể hiện sự ảnh hưởng của Ấn Độ giáo với các chủ đề về thần linh, vũ công Apsara, và các mô típ thực vật. Các bức phù điêu trên gạch được chạm khắc trực tiếp vào thân tháp, tạo nên vẻ đẹp bí ẩn và trường tồn theo thời gian."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Lễ hội và Hoạt động Văn hóa Chăm",
+                        "imageUrl": "https://example.com/images/my-son-mua-chăm.jpg",
+                        "content": "Tại khu vực trung tâm, du khách thường được thưởng thức các chương trình **biểu diễn múa Chăm** truyền thống, tái hiện lại các nghi lễ cung đình và tín ngưỡng của người Chăm Pa xưa. Đây là cơ hội để tìm hiểu về văn hóa phi vật thể của dân tộc Chăm."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý tham quan và Lưu ý",
+                        "items": [
+                            "Thời điểm tham quan lý tưởng: Buổi sáng sớm (6:30 AM - 9:00 AM) hoặc chiều mát (3:00 PM - 5:00 PM) để tránh nắng gắt và ngắm cảnh đẹp nhất.",
+                            "Phương tiện di chuyển: Có thể đi xe du lịch hoặc thuê xe máy từ Hội An/Đà Nẵng (khoảng 1 giờ đi xe).",
+                            "Thời gian tham quan khuyến nghị: Khoảng **2.5 - 3 giờ**.",
+                            "Nên thuê hướng dẫn viên hoặc sử dụng dịch vụ xe điện tại cổng để hiểu rõ hơn về lịch sử của các nhóm đền tháp.",
+                            "Trang phục: Lịch sự, kín đáo khi vào khu vực thánh địa."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.5186, 
+            "lon": 108.1278, 
+            "rating": 4.7,
+            "visitDuration": 150, 
+            "imageUrl": "https://example.com/images/my-son-tong-quan.jpg",
+            "tags": ["Di tích", "Văn hóa Chăm", "Ấn Độ giáo", "Di sản UNESCO", "Quảng Nam", "Kiến trúc"],
+            "spotType": "Thánh địa",
+            "ticketPrice": 150000.0, 
+            "openHours": "06:30 AM - 05:30 PM"
+        },
+        {
+            "name": "Không gian Văn hóa Cồng chiêng Tây Nguyên",
+            "location": "Các tỉnh Tây Nguyên (Gia Lai, Kon Tum, Đắk Lắk, Đắk Nông, Lâm Đồng)",
+            "briefDescription": "Di sản Văn hóa Phi vật thể của UNESCO, bao gồm các giá trị văn hóa, tín ngưỡng và nghệ thuật biểu diễn gắn liền với cồng chiêng của các dân tộc Êđê, Gia Rai, Ba Na, M’Nông, Xơ Đăng, v.v.",
+            "detailDescription": {
+                "mainTitle": "Ý nghĩa, Tín ngưỡng và Biểu diễn Cồng chiêng",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Cồng chiêng trong Tín ngưỡng và Đời sống",
+                        "imageUrl": "https://example.com/images/cong-chieng-tay-nguyen-tín-ngưỡng.jpg",
+                        "content": "**Cồng chiêng** không chỉ là nhạc cụ mà còn là tài sản quý giá, là phương tiện giao tiếp linh thiêng giữa con người và thần linh (**Yàng**). Cồng chiêng gắn bó với các sự kiện quan trọng trong đời sống cộng đồng như Lễ cúng lúa mới, Lễ bỏ mả, Lễ trưởng thành, và Lễ hội cồng chiêng định kỳ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Nghệ thuật Biểu diễn và Kỹ thuật Âm thanh",
+                        "imageUrl": "https://example.com/images/cong-chieng-tay-nguyen-bieu-dien.jpg",
+                        "content": "Âm nhạc cồng chiêng được tạo nên từ sự kết hợp của các loại cồng và chiêng khác nhau (cồng có núm và chiêng không núm), tạo ra một dải âm thanh phong phú. Các bài tấu cồng chiêng là loại hình nghệ thuật tập thể, thể hiện sự đoàn kết và tinh thần cộng đồng mạnh mẽ của các dân tộc bản địa."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Các Làng Văn hóa và Hoạt động Trải nghiệm",
+                        "imageUrl": "https://example.com/images/cong-chieng-tay-nguyen-trải-nghiệm.jpg",
+                        "content": "Du khách có thể tìm hiểu về không gian văn hóa này tại các làng du lịch cộng đồng ở Buôn Ma Thuột (Đắk Lắk), Pleiku (Gia Lai) hoặc Kon Tum. Tại đây, du khách có thể tham quan **nhà Rông**, thưởng thức **rượu cần**, và tham gia vào các đêm giao lưu **văn nghệ cồng chiêng** cùng với các nghệ nhân."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý tham quan và Thời điểm trải nghiệm",
+                        "items": [
+                            "Thời điểm tốt nhất để trải nghiệm: Vào các dịp **Lễ hội Cồng chiêng** (định kỳ 1-2 năm/lần), hoặc các lễ hội truyền thống của các dân tộc thiểu số.",
+                            "Địa điểm nổi bật: **Buôn Đôn** (Đắk Lắk), **Làng Plei Ố** (Gia Lai), **Làng Kon Klor** (Kon Tum).",
+                            "Lưu ý: Luôn thể hiện sự tôn trọng đối với văn hóa và tín ngưỡng của người dân địa phương, đặc biệt là khi vào nhà Rông hoặc tham gia nghi lễ.",
+                            "Trang phục: Nên mặc lịch sự, phù hợp với không gian văn hóa cộng đồng."
+                        ]
+                    }
+                ]
+            },
+            "lat": 13.0000, 
+            "lon": 108.2000, 
+            "rating": 4.9,
+            "visitDuration": 480, 
+            "imageUrl": "https://example.com/images/cong-chieng-tay-nguyen-tong-quan.jpg",
+            "tags": ["Văn hóa", "Di sản UNESCO", "Tâm linh", "Âm nhạc", "Tây Nguyên", "Dân tộc thiểu số"],
+            "spotType": "Không gian Văn hóa",
+            "ticketPrice": 0.0, 
+            "openHours": "Cả ngày (Khuôn viên làng)"
         }
     ],
     
     "attraction": [
         {
-            "name": "Bãi biển Mỹ Khê",
-            "location": "Đà Nẵng",
-            "briefDescription": "Một trong những bãi biển quyến rũ nhất hành tinh.",
+            "name": "Cao nguyên Mộc Châu",
+            "location": "Mộc Châu, Sơn La",
+            "briefDescription": "Cao nguyên rộng lớn nổi tiếng với những đồi chè xanh mướt, đồng cỏ bao la và các mùa hoa rực rỡ (mận, cải, đào).",
             "detailDescription": {
-                "mainTitle": "Các hoạt động chính",
+                "mainTitle": "Các Điểm đến và Hoạt động nổi bật",
                 "sections": [
                     {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Kiến trúc Bảo tàng Chăm Đà Nẵng có gì độc đáo ?",
-                    "imageUrl": "https://url-den-anh-bao-tang.jpg",
-                    "content": "Ngay khi đặt chân đến đây du khách sẽ cảm nhận được hơi thở cổ kính ở nơi đây, dù qua bao năm tháng nhưng vẫn được gìn giữ. Bên cạnh đó, vì được dựng theo lối kiến trúc Gothic bởi hai kiến trúc sư người Pháp nên du khách có thể thấy được tòa nhà như tái hiện một khoảng trời của phương Tây vậy."
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Đồi chè và Nhà máy chè Mộc Châu",
+                        "imageUrl": "https://example.com/images/moc-chau-doi-che.jpg",
+                        "content": "Đây là biểu tượng của Mộc Châu. Các đồi chè hình trái tim hay đồi chè bậc thang là nơi lý tưởng để chụp ảnh và tìm hiểu về quy trình sản xuất chè Shan tuyết. Du khách có thể tham gia thu hoạch chè vào mùa vụ."
                     },
                     {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Khám phá phòng trưng bày bảo tàng Champa Đà Nẵng",
-                    "imageUrl": "https://url-den-anh-phong-trung-bay.jpg",
-                    "content": "Sau hơn 100 năm thu thập, hiện nơi này đang sở hữu hơn 2.000 hiện vật lớn nhỏ. Đặc biệt, nơi đây còn bảo bảo quản bảo vật quốc gia gồm: Đài thờ Trà Kiệu, Đài thờ Mỹ Sơn E1, tượng Bồ Tát Tara/Avalokiteshvara và Đài thờ Đồng Dương."
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Rừng mận và Đồng hoa Cải",
+                        "imageUrl": "https://example.com/images/moc-chau-rung-man.jpg",
+                        "content": "Mộc Châu đẹp nhất vào các mùa hoa. **Hoa mận** nở trắng xóa vào dịp Tết Nguyên đán, tạo thành 'rừng tuyết trắng'. **Hoa cải trắng** thường nở rộ vào khoảng tháng 11 - 12, phủ kín thung lũng Nà Ka và các khu vực lân cận."
                     },
                     {
-                    "type": "list",
-                    "title": "Gợi ý cho Du khách",
-                    "items": [
-                        "Phải mặc trang phục gọn gàng, lịch sự.",
-                        "Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.",
-                        "Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.",
-                        "Không phá hoại cây cối trong khuôn viên.",
-                        "Không ăn uống, hút thuốc, hoặc bán hàng rong.",
-                        "Giữ gìn vệ sinh, bỏ rác đúng nơi quy định.",
-                        "Không sử dụng máy ảnh hoặc chụp ảnh tự sướng trong Cổ viện Chăm."
-                    ]
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Thác Dải Yếm và Bản Áng",
+                        "imageUrl": "https://example.com/images/moc-chau-thac-dai-yem.jpg",
+                        "content": "Thác Dải Yếm gắn liền với truyền thuyết tình yêu, có dòng nước hùng vĩ nhất vào mùa mưa. **Bản Áng** là khu vực có hồ nước tự nhiên, rừng thông và là nơi lưu giữ văn hóa sinh thái của đồng bào dân tộc Thái."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý Du lịch và Thời điểm tốt nhất",
+                        "items": [
+                            "Thời điểm đẹp nhất: Mùa hoa cải (tháng 11 - 12), mùa hoa mận (tháng 1 - 2 Âm lịch) hoặc mùa chè xanh (quanh năm).",
+                            "Hoạt động: Cắm trại, tham quan các trang trại sữa bò, trải nghiệm hái chè và tìm hiểu văn hóa các dân tộc (Thái, Mông).",
+                            "Lưu ý: Mộc Châu có khí hậu mát mẻ quanh năm nhưng nhiệt độ có thể xuống rất thấp vào mùa đông, cần chuẩn bị quần áo ấm."
+                        ]
+                    }
+                ]
+            },            
+            "lat": 20.8200, 
+            "lon": 104.6640, 
+            "rating": 4.7,
+            "visitDuration": 2000, 
+            "imageUrl": "https://example.com/images/moc-chau-tong-quan.jpg",
+            "tags": ["Thiên nhiên", "Nông nghiệp", "Đồi chè", "Hoa mận", "Sơn La", "Cao nguyên"]
+        },
+        {
+            "name": "Ruộng bậc thang Mù Cang Chải",
+            "location": "Mù Cang Chải, Yên Bái",
+            "briefDescription": "Di sản danh thắng cấp quốc gia, nổi tiếng với những thửa ruộng bậc thang kỳ vĩ trải dài, tạo nên bức tranh thiên nhiên tuyệt đẹp theo mùa.",
+            "detailDescription": {
+                "mainTitle": "Các Điểm đến và Trải nghiệm nổi bật",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Các Điểm ngắm cảnh Ruộng bậc thang nổi tiếng",
+                        "imageUrl": "https://example.com/images/mu-cang-chai-mam-xoi.jpg",
+                        "content": "Những điểm ngắm cảnh không thể bỏ qua là **Đèo Khau Phạ** (một trong 'tứ đại đỉnh đèo'), **đồi Mâm Xôi** (tại xã La Pán Tẩn) và **thung lũng Lìm Mông** (tại xã Chế Cu Nha). Các điểm này mang đến góc nhìn toàn cảnh về sự kỳ vĩ của ruộng bậc thang."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Văn hóa và Đời sống Đồng bào dân tộc H'Mông",
+                        "imageUrl": "https://example.com/images/mu-cang-chai-cho-phien.jpg",
+                        "content": "Mù Cang Chải là nơi sinh sống chủ yếu của người H'Mông. Du khách có thể trải nghiệm **homestay** tại các bản làng, tham gia **chợ phiên** cuối tuần, hoặc tìm hiểu về nghề dệt thổ cẩm và các phong tục tập quán truyền thống của người dân bản địa."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Các Hoạt động Du lịch Mạo hiểm và Trải nghiệm",
+                        "imageUrl": "https://example.com/images/mu-cang-chai-du-luon.jpg",
+                        "content": "Tại Đèo Khau Phạ, du khách có thể tham gia **dù lượn** (Paragliding) để ngắm toàn cảnh ruộng bậc thang từ trên cao. Ngoài ra, các hoạt động đi bộ, **trekking** xuyên qua các cánh đồng lúa cũng rất được ưa chuộng."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý Du lịch và Thời điểm tốt nhất",
+                        "items": [
+                            "**Mùa nước đổ (tháng 5 - 6):** Nước được dẫn về các thửa ruộng, tạo nên vẻ đẹp phản chiếu ánh nắng lấp lánh.",
+                            "**Mùa lúa chín (tháng 9 - 10):** Cảnh tượng ngoạn mục nhất khi lúa chuyển sang màu vàng rực rỡ khắp các triền đồi.",
+                            "Lưu ý đường đi: Đường lên Mù Cang Chải hiểm trở (Quốc lộ 32) nhưng cảnh quan rất xứng đáng.",
+                            "Cần chuẩn bị đồ bảo hộ và liên hệ hướng dẫn viên địa phương nếu muốn trekking sâu."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.7820, 
+            "lon": 104.0980, 
+            "rating": 4.9,
+            "visitDuration": 1800, 
+            "imageUrl": "https://example.com/images/mu-cang-chai-tong-quan.jpg",
+            "tags": ["Thiên nhiên", "Ruộng bậc thang", "Văn hóa H'Mông", "Yên Bái", "Trekking", "Di sản"]
+        },
+        {
+            "name": "Vườn Quốc gia Phong Nha – Kẻ Bàng",
+            "location": "Bố Trạch và Minh Hóa, Quảng Bình",
+            "briefDescription": "Di sản Thiên nhiên Thế giới được UNESCO công nhận, nổi tiếng với hệ thống hang động đá vôi kỳ vĩ nhất thế giới, thảm thực vật đa dạng và cảnh quan karst độc đáo.",
+            "detailDescription": {
+                "mainTitle": "Các Hang động và Hoạt động Khám phá chính",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Khám phá các Hang động Du lịch",
+                        "imageUrl": "https://example.com/images/phong-nha-ke-bang-dong-phong-nha.jpg",
+                        "content": "Các hang động dễ tiếp cận và nổi tiếng nhất là **Động Phong Nha** (đi thuyền), **Động Tiên Sơn** và **Động Thiên Đường** (được mệnh danh là 'Hoàng cung trong lòng đất'). Đây là trải nghiệm bắt buộc để chiêm ngưỡng thạch nhũ và măng đá tráng lệ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Du lịch Thám hiểm và Khám phá Sinh thái",
+                        "imageUrl": "https://example.com/images/phong-nha-ke-bang-du-lich-tham-hiem.jpg",
+                        "content": "Phong Nha là trung tâm của du lịch mạo hiểm với các tour khám phá sâu hơn như **Hang Tối** (tắm bùn và đu dây Zipline), hoặc các tour trekking dài ngày đến các hang động hoang sơ nổi tiếng toàn cầu như **Hang Sơn Đoòng** (cần đặt tour đặc biệt)."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Cảnh quan Karst và Hệ sinh thái",
+                        "imageUrl": "https://example.com/images/phong-nha-ke-bang-rung-karst.jpg",
+                        "content": "Vườn Quốc gia bao gồm khu vực núi đá vôi Karst cổ nhất Châu Á, tạo nên hệ sinh thái rừng nhiệt đới trên núi đá vôi đặc trưng. Du khách có thể tham quan **Vườn Thực vật** hoặc các khu vực trekking để tìm hiểu về đa dạng sinh học."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý và Lưu ý tham quan",
+                        "items": [
+                            "Phương tiện di chuyển: Từ trung tâm Đồng Hới, bạn có thể thuê xe máy hoặc đi xe buýt đến Phong Nha.",
+                            "Thời điểm đẹp nhất: Mùa hè (tháng 4 - tháng 8) khi trời nắng ráo. Nên tránh mùa mưa bão (tháng 9 - tháng 11).",
+                            "**Lưu ý:** Du lịch mạo hiểm và khám phá hang động hoang sơ yêu cầu thể lực tốt và phải có hướng dẫn viên chuyên nghiệp.",
+                            "Giữ vệ sinh môi trường nghiêm ngặt, không làm tổn hại đến các cấu tạo địa chất trong hang."
+                        ]
+                    }
+                ]
+            },
+            "lat": 17.5262, 
+            "lon": 106.2798, 
+            "rating": 4.9,
+            "visitDuration": 900, 
+            "imageUrl": "https://example.com/images/phong-nha-ke-bang-tong-quan.jpg",
+            "tags": ["Thiên nhiên", "Hang động", "Địa chất", "UNESCO", "Quảng Bình", "Du lịch mạo hiểm"]
+        },
+        {
+            "name": "Bãi biển Mỹ Khê",
+            "location": "Sơn Trà, Đà Nẵng",
+            "briefDescription": "Một trong những bãi biển quyến rũ nhất hành tinh, nổi tiếng với cát trắng mịn, sóng êm và nước biển xanh trong.",
+            "detailDescription": {
+                "mainTitle": "Các Hoạt động, Dịch vụ và Quy tắc an toàn",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Hoạt động Bơi lội và Thể thao Nước",
+                        "imageUrl": "https://example.com/images/mykhe-hoat-dong-the-thao.jpg",
+                        "content": "Bãi biển Mỹ Khê là nơi lý tưởng để bơi lội, tắm nắng, và tham gia các môn thể thao nước như **lướt ván**, **dù lượn** (paragliding), **moto nước** và **chèo thuyền Kayak**. Các khu vực tắm an toàn được cắm cờ và có đội cứu hộ túc trực."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Ẩm thực, Thư giãn và Dịch vụ Công cộng",
+                        "imageUrl": "https://example.com/images/mykhe-hai-san-dịch-vụ.jpg",
+                        "content": "Dọc bờ biển có nhiều nhà hàng hải sản tươi sống và các quán cà phê bãi biển phục vụ từ sáng sớm đến tối muộn. Du khách có thể dễ dàng thuê **ghế dù**, **phòng tắm nước ngọt** công cộng để thư giãn và tận hưởng kỳ nghỉ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Quy tắc An toàn và Bảo vệ Môi trường",
+                        "imageUrl": "https://example.com/images/mykhe-quy-tắc-an-toàn.jpg",
+                        "content": "Đây là bãi biển công cộng, việc tuân thủ các quy định về an toàn rất quan trọng. **Giờ tắm biển an toàn** được khuyến cáo là sáng sớm và chiều tối. Du khách cần tuân thủ các chỉ dẫn của cứu hộ và giữ gìn vệ sinh chung."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý Chi tiết và Lưu ý",
+                        "items": [
+                            "Giờ tắm biển an toàn nhất: Sáng sớm (5:00 AM - 8:00 AM) và chiều tối (4:00 PM - 6:30 PM).",
+                            "Tuyệt đối tuân thủ các **biển báo** và hướng dẫn của **đội cứu hộ**.",
+                            "Không bơi ra quá xa bờ, đặc biệt khi có cờ cảnh báo sóng lớn.",
+                            "Giữ vệ sinh chung, không xả rác trên bãi biển.",
+                            "Lưu ý bảo quản tài sản cá nhân."
+                        ]
                     }
                 ]
             },            
             "lat": 16.0551,
             "lon": 108.2497,
+            "rating": 4.5,
             "visitDuration": 180,
             "imageUrl": "https://example.com/images/my-khe-beach.jpg",
-            "tags": ["Biển", "Thiên nhiên", "Thư giãn", "Đà Nẵng"]
+            "tags": ["Biển", "Thiên nhiên", "Thư giãn", "Đà Nẵng", "Thể thao nước"]
+        },
+        {
+            "name": "Cù Lao Chàm (Khu dự trữ Sinh quyển)",
+            "location": "Tân Hiệp, Hội An, Quảng Nam",
+            "briefDescription": "Quần đảo xinh đẹp được UNESCO công nhận là Khu Dự trữ Sinh quyển thế giới, nổi tiếng với hệ sinh thái biển đa dạng và bãi biển hoang sơ.",
+            "detailDescription": {
+                "mainTitle": "Các Hoạt động và Điểm đến không thể bỏ qua",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Lặn biển ngắm San hô và Thăm quan Hòn",
+                        "imageUrl": "https://example.com/images/cu-lao-cham-lan-ngam-san-ho.jpg",
+                        "content": "Đây là hoạt động thu hút nhất tại Cù Lao Chàm. Du khách có thể tham gia lặn ống thở (snorkeling) hoặc lặn có bình dưỡng khí (scuba diving) để chiêm ngưỡng rạn san hô đầy màu sắc và các loài sinh vật biển phong phú. Các bãi lặn nổi tiếng là Bãi Bắc, Hòn Dài."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Khám phá các Bãi biển và Điểm Văn hóa",
+                        "imageUrl": "https://example.com/images/cu-lao-cham-bai-ong-hai-san.jpg",
+                        "content": "Các bãi biển nổi tiếng như **Bãi Ông**, **Bãi Chồng** có cát trắng, nước trong và nhiều dịch vụ ăn uống. Du khách cũng nên ghé thăm **Giếng cổ Chăm** và **Chùa Hải Tạng** để tìm hiểu về lịch sử và văn hóa địa phương."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Đặc sản và Ẩm thực Địa phương",
+                        "imageUrl": "https://example.com/images/cu-lao-cham-oc-vú-nàng.jpg",
+                        "content": "Đặc sản của Cù Lao Chàm là các loại hải sản tươi sống và rau rừng. Nổi bật nhất là **ốc vú nàng**, **cua đá** và **bánh ít lá gai**. Chợ Tân Hiệp là nơi lý tưởng để mua sắm hải sản và quà lưu niệm."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý về Du lịch Sinh thái",
+                        "items": [
+                            "Phương tiện di chuyển: Đi Cano cao tốc từ Cửa Đại (Hội An) ra đảo (khoảng 15-20 phút).",
+                            "Thời điểm đẹp nhất: Mùa hè (tháng 3 đến tháng 8), khi biển lặng và nắng đẹp.",
+                            "**Quy định bảo tồn nghiêm ngặt:** Tuyệt đối không mang túi nilon/túi nhựa lên đảo.",
+                            "Không được phép khai thác hay làm hại các loài sinh vật biển và san hô.",
+                            "Cần mang theo giấy tờ tùy thân khi lên đảo."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.9554, 
+            "lon": 108.4839, 
+            "rating": 4.8,
+            "visitDuration": 360, 
+            "imageUrl": "https://example.com/images/cu-lao-cham-tong-quan.jpg",
+            "tags": ["Thiên nhiên", "Biển", "Hội An", "Lặn biển", "Du lịch sinh thái", "UNESCO"]
+        },
+        {
+            "name": "Đảo Lý Sơn (Đảo Tiên)",
+            "location": "Lý Sơn, Quảng Ngãi",
+            "briefDescription": "Quần đảo núi lửa độc đáo, nổi tiếng với cảnh quan địa chất kỳ thú, những bãi biển hoang sơ và nghề trồng hành, tỏi truyền thống.",
+            "detailDescription": {
+                "mainTitle": "Các Điểm đến và Hoạt động Khám phá chính",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Khám phá các Di tích Núi lửa và Cảnh quan",
+                        "imageUrl": "https://example.com/images/ly-son-núi-thôi-lới.jpg",
+                        "content": "Các miệng núi lửa đã tắt là điểm nhấn của đảo. Nổi bật nhất là **Núi Thới Lới** (cung cấp tầm nhìn toàn cảnh đảo), **Hang Câu** (vách đá bị sóng biển bào mòn) và **Cổng Tò Vò** (cổng đá bazan độc đáo, nơi ngắm hoàng hôn lý tưởng)."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Di sản Văn hóa và Tín ngưỡng Biển",
+                        "imageUrl": "https://example.com/images/ly-son-chùa-hang.jpg",
+                        "content": "Lý Sơn lưu giữ nhiều di tích lịch sử và văn hóa quan trọng như **Chùa Hang** (chùa nằm trong hang đá núi lửa), **Đình làng An Hải** và **Âm Linh Tự** (nơi thờ cúng linh hồn lính Hoàng Sa). Hàng năm, nơi đây tổ chức Lễ khao lề thế lính Hoàng Sa."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Đặc sản và Trải nghiệm Nông nghiệp",
+                        "imageUrl": "https://example.com/images/ly-son-ruong-tỏi.jpg",
+                        "content": "Đảo Lý Sơn nổi tiếng với đặc sản **Tỏi Cô Đơn** và **Hành Lý Sơn**. Du khách có thể ghé thăm các cánh đồng hành, tỏi (tùy mùa vụ) và thưởng thức các món ăn địa phương chế biến từ hải sản và tỏi."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý tham quan và Thời điểm đẹp nhất",
+                        "items": [
+                            "Phương tiện di chuyển: Đi tàu cao tốc từ cảng Sa Kỳ (Quảng Ngãi) ra đảo (khoảng 1 tiếng).",
+                            "Thời điểm đẹp nhất: Mùa hè (tháng 5 - tháng 9), biển lặng và nắng đẹp. Tránh mùa mưa bão (tháng 10 - tháng 12).",
+                            "Hoạt động: Lặn ngắm san hô tại đảo Bé (An Bình), tắm biển, câu cá, thuê xe máy khám phá đảo lớn.",
+                            "Lưu ý: Giữ vệ sinh môi trường, đặc biệt là rác thải nhựa."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.3854, 
+            "lon": 109.1171, 
+            "rating": 4.7,
+            "visitDuration": 720, 
+            "imageUrl": "https://example.com/images/ly-son-tong-quan.jpg",
+            "tags": ["Thiên nhiên", "Núi lửa", "Hải đảo", "Quảng Ngãi", "Du lịch sinh thái"]
+        },
+        {
+            "name": "Đảo Bình Ba (Đảo Tôm Hùm)",
+            "location": "Xã Cam Bình, Cam Ranh, Khánh Hòa",
+            "briefDescription": "Hòn đảo quân sự xinh đẹp trong Vịnh Cam Ranh, nổi tiếng với hải sản tươi ngon, đặc biệt là tôm hùm, và các bãi biển hoang sơ, yên bình.",
+            "detailDescription": {
+                "mainTitle": "Các Điểm đến và Hoạt động nổi bật",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Khám phá các Bãi biển hoang sơ",
+                        "imageUrl": "https://example.com/images/binh-ba-bãi-nồm.jpg",
+                        "content": "Bình Ba có nhiều bãi tắm nhỏ và hoang sơ. Nổi tiếng nhất là **Bãi Nồm** (lý tưởng để tắm biển và ngắm hoàng hôn), **Bãi Chướng** (nơi ngắm bình minh) và **Bãi Nhà Cũ** (phù hợp để lặn ngắm san hô)."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Thiên đường Ẩm thực Tôm Hùm",
+                        "imageUrl": "https://example.com/images/binh-ba-tôm-hùm.jpg",
+                        "content": "Đảo Bình Ba được mệnh danh là 'đảo Tôm Hùm' vì nghề nuôi tôm hùm phát triển mạnh. Du khách đến đây không thể bỏ qua trải nghiệm thưởng thức **tôm hùm tươi sống** và các loại hải sản khác với giá cả hợp lý tại các bè nuôi."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Các Hoạt động trải nghiệm khác",
+                        "imageUrl": "https://example.com/images/binh-ba-ngắm-hải-đăng.jpg",
+                        "content": "Du khách có thể thuê xe máy để vòng quanh đảo, tham quan **đỉnh Hòn Cỏ** hoặc **ngọn Hải Đăng** để ngắm toàn cảnh Vịnh Cam Ranh, và trải nghiệm đi thuyền tham quan các đảo nhỏ lân cận."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý Quan trọng khi tham quan",
+                        "items": [
+                            "**Quy định:** Bình Ba là đảo quân sự, **người nước ngoài không được phép tham quan và lưu trú**.",
+                            "Phương tiện di chuyển: Đi tàu/cano từ cảng Ba Ngòi (Cam Ranh) ra đảo.",
+                            "Thời điểm đẹp nhất: Mùa hè (tháng 3 đến tháng 9), biển êm và trời trong xanh.",
+                            "Hạn chế chụp ảnh các khu vực quân sự, cẩn thận giữ gìn vệ sinh chung trên đảo."
+                        ]
+                    }
+                ]
+            },
+            "lat": 11.8385, 
+            "lon": 109.2131, 
+            "rating": 4.5,
+            "visitDuration": 600, 
+            "imageUrl": "https://example.com/images/dao-binh-ba-tong-quan.jpg",
+            "tags": ["Thiên nhiên", "Hải đảo", "Ẩm thực", "Tôm hùm", "Nha Trang", "Khánh Hòa"]
+        },
+        {
+            "name": "Mũi Né (Phan Thiết)",
+            "location": "Thành phố Phan Thiết, Bình Thuận",
+            "briefDescription": "Là trung tâm du lịch quốc gia, nổi tiếng với những đồi cát hùng vĩ, bãi biển tuyệt đẹp và được mệnh danh là 'thiên đường' của các môn thể thao nước mạo hiểm như lướt ván diều.",
+            "detailDescription": {
+                "mainTitle": "Những Thắng cảnh Thiên nhiên và Hoạt động Trải nghiệm Độc đáo",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Đồi Cát Bay (Đồi Hồng) và Bàu Trắng (Tiểu Sahara)",
+                        "imageUrl": "https://example.com/images/mui-ne-doi-cat.jpg",
+                        "content": "Đây là biểu tượng của Mũi Né. **Đồi Cát Bay** (Đồi Hồng) nằm gần trung tâm và nổi tiếng với màu cát thay đổi theo giờ. Xa hơn là **Bàu Trắng**, được ví như 'Sa mạc Sahara thu nhỏ' với cát trắng tinh và hồ nước ngọt (Bàu Sen) nằm giữa đồi. Đây là địa điểm lý tưởng để ngắm bình minh và hoàng hôn."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Thiên đường Thể thao Nước và Du lịch Sinh thái",
+                        "imageUrl": "https://example.com/images/mui-ne-kitesurfing.jpg",
+                        "content": "Với điều kiện gió mạnh và ổn định, Mũi Né là một trong những trung tâm lướt ván hàng đầu châu Á. Các hoạt động nổi bật bao gồm **lướt ván diều (Kitesurfing)**, lướt ván buồm, và thuê xe địa hình **ATV** tại Bàu Trắng. Du khách cũng có thể ghé thăm **Suối Tiên**, một khe nước nhỏ độc đáo với vách nhũ cát màu đỏ cam rực rỡ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 3,
+                        "title": "III. Khám phá Văn hóa Chăm và Làng Chài Truyền thống",
+                        "imageUrl": "https://example.com/images/mui-ne-lang-chai-thap-cham.jpg",
+                        "content": "Khu vực này có nhiều di tích lịch sử - văn hóa Chăm Pa. Nổi bật là **Tháp Chăm Poshanư** với kiến trúc cổ độc đáo. Du khách cũng nên ghé thăm **Làng Chài Mũi Né** vào sáng sớm để chứng kiến cảnh mua bán hải sản tươi sống nhộn nhịp, hoặc thăm **Bảo tàng Nước Mắm Làng Chài Xưa** để tìm hiểu về nghề truyền thống."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý Tham quan và Mùa du lịch",
+                        "items": [
+                            "Thời điểm lý tưởng nhất để du lịch Mũi Né là từ **Tháng 12 đến Tháng 5** (mùa khô), với nắng đẹp và gió lý tưởng cho thể thao nước.",
+                            "Hoạt động không thể bỏ lỡ: **Trượt cát** tại Đồi Cát Bay và thuê **xe Jeep** khám phá Bàu Trắng.",
+                            "Về ẩm thực: Hãy thưởng thức các món **hải sản tươi sống** tại Làng Chài và **bánh căn, bánh xèo** đặc trưng Phan Thiết.",
+                            "Lưu ý: Luôn chuẩn bị kem chống nắng, mũ rộng vành và kính mát vì nhiệt độ ở đồi cát khá cao."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.9819, 
+            "lon": 108.2514, 
+            "rating": 4.5,
+            "visitDuration": 720,
+            "imageUrl": "https://example.com/images/mui-ne-phan-thiet-tong-quan.jpg",
+            "tags": ["Biển", "Đồi cát", "Thể thao nước", "Văn hóa Chăm", "Phan Thiết", "Bình Thuận"]
         }
     ],
+    
     "reviews": [
         {
             "userEmail": "chitai@gmail.com",
