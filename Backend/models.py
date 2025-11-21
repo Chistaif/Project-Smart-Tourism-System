@@ -163,9 +163,11 @@ class Review(db.Model):
 
     def to_json(self):
         return {
+            "reviewId": self.review_id,
+            "userId": self.user_id,
             "rating": self.rating_score,
             "content": self.content,
-            "createdAt": self.created_at,
+            "createdAt": self.created_at.isoformat() if self.created_at else None,
             "user": self.user.to_json() if self.user else None
         }
 

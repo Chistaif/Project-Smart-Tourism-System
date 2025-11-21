@@ -1,15 +1,30 @@
 # Import thư viện ngoài 
 from flask import Flask, jsonify, request
-from flask_cors import CORS        
-from datetime import datetime 
-
-# Import trong project
-from models import db, Attraction, Festival, CulturalSpot, Review, Tag, Blog
-from init_db import import_demo_data
-from service.search_service import search_service
-from service.attraction_service import get_attraction_detail_service
+from flask_cors import CORS
+from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
+
+# Import trong project
+from models import (
+    db,
+    Attraction,
+    Festival,
+    CulturalSpot,
+    Review,
+    Tag,
+    Blog,
+    User,
+)
+from init_db import import_demo_data
+from service.search_service import search_service
+from service.attraction_service import (
+    get_attraction_detail_service,
+    create_review,
+    update_review,
+    delete_review,
+    set_favorite,
+)
 
 
 # ===========================================================================
@@ -54,44 +69,156 @@ app = create_app()
 # ===========================================================================
 """
 === Chức năng search ===
-/api/search?searchTerm=Hội An&typeList=Lễ hội       => lấy được id, name, url(ảnh mh) cơ bản
-{
-    "success": True/False,
-    "data": {
-        "festivals": [...],
-        "culturalSpots": [...],
-        "otherAttractions": [...]
-    }
-}
+Frontend cần nhớ:
+- Query param `searchTerm` + `typeList` (multi) vẫn như cũ.
+- Nếu muốn backend ưu tiên các điểm đã Favorite của user nào đó,
+  truyền thêm `userId=<int>` trong query string. Nếu bỏ trống, backend
+  sẽ không tính tới danh sách Favorite.
 
-/api/search                                         => lấy tất cả attractions
+Ví dụ:
+/api/search?searchTerm=Hội%20An&typeList=Lễ%20hội&userId=1
 """
 @app.route('/api/search', methods=["GET"])
 def search():
     types_list = request.args.getlist("typeList", [])
     search_term = request.args.get("searchTerm", "").strip()
+    user_id_param = request.args.get("userId")
+    user_id = None
+    if user_id_param:
+        try:
+            user_id = int(user_id_param)
+            if user_id <= 0:
+                raise ValueError
+        except ValueError:
+            return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
 
+    # NOTE cho FE: userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
     try:
-        data = search_service(types_list, search_term)
+        data = search_service(types_list, search_term, user_id=user_id)
         return jsonify({"success": True, "data": data}), 200
-        
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
 
 
-'''
-=== Chức năng lấy thông tin chi tiết attraction ===
-/api/attraction/<id>                => lấy đầy đủ thông tin của attraction
-'''
-@app.route('/api/attraction/<int:attraction_id>', methods=["GET"])
+# NOTE cho frontend:
+#   • GET    /api/attraction/<id>?userId=<int optional>
+#       - Trả về detail + reviews + trạng thái favorite (nếu có userId).
+#   • POST   /api/attraction/<id>
+#       - Body theo create_review: { userId, content, ratingScore }.
+#       - Response trả lại full detail để FE refresh ngay.
+#   • PUT    /api/attraction/<id>
+#       - Body: { userId, reviewId, content, ratingScore }.
+#   • DELETE /api/attraction/<id>
+#       - Body: { userId, reviewId }.
+#   • PATCH  /api/attraction/<id>
+#       - Toggle favorite. Body: { "userId": <int>, "isFavorite": true/false }.
+#       - Response trả về detail + block `favorite` để đồng bộ UI.
+# Ghi nhớ: mọi response đều có dạng {"success": bool, "data": {...}} (riêng PATCH có thêm "favorite").
+@app.route('/api/attraction/<int:attraction_id>', methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 def get_attraction_detail(attraction_id):
-    try:
-        data = get_attraction_detail_service(attraction_id)
-        return jsonify({"success": True, "data": data}), 200
+    if request.method == "GET":
+        """
+        Lấy thông tin chi tiết của attraction
+        """
 
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        user_id_param = request.args.get("userId")
+        user_id = None
+        if user_id_param:
+            try:
+                user_id = int(user_id_param)
+                if user_id <= 0:
+                    raise ValueError
+            except ValueError:
+                return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+
+        try:
+            data = get_attraction_detail_service(attraction_id, user_id=user_id)
+            return jsonify({"success": True, "data": data}), 200
+
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
+    
+    elif request.method == "POST":
+        """
+        Thêm  review mới
+        """
+        try:
+            review_data = request.get_json(silent=True)
+            create_review(attraction_id, review_data)
+            user_id = review_data.get("userId") if review_data else None
+            data = get_attraction_detail_service(attraction_id, user_id=user_id)
+            return jsonify({"success": True, "data": data}), 201
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+        except PermissionError as e:
+            return jsonify({"success": False, "error": str(e)}), 403
+        except LookupError as e:
+            return jsonify({"success": False, "error": str(e)}), 404
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
+
+    elif request.method == "PUT":
+        """
+        Sửa đổi review (yêu cầu reviewId và userId khớp với chủ review)
+        """
+        try:
+            review_data = request.get_json(silent=True)
+            update_review(attraction_id, review_data)
+            user_id = review_data.get("userId") if review_data else None
+            data = get_attraction_detail_service(attraction_id, user_id=user_id)
+            return jsonify({"success": True, "data": data}), 200
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+        except PermissionError as e:
+            return jsonify({"success": False, "error": str(e)}), 403
+        except LookupError as e:
+            return jsonify({"success": False, "error": str(e)}), 404
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
+
+    elif request.method == "DELETE":
+        """
+        Xóa review (yêu cầu reviewId và userId khớp với chủ review)
+        """
+        try:
+            review_data = request.get_json(silent=True)
+            delete_review(attraction_id, review_data)
+            user_id = review_data.get("userId") if review_data else None
+            data = get_attraction_detail_service(attraction_id, user_id=user_id)
+            return jsonify({"success": True, "data": data}), 200
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+        except PermissionError as e:
+            return jsonify({"success": False, "error": str(e)}), 403
+        except LookupError as e:
+            return jsonify({"success": False, "error": str(e)}), 404
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
+
+    elif request.method == "PATCH":
+        """
+        Toggle trạng thái yêu thích:
+        Body JSON tối thiểu: { "userId": <int>, "isFavorite": true/false }
+        """
+        try:
+            favorite_data = request.get_json(silent=True)
+            favorite_state = set_favorite(attraction_id, favorite_data)
+            data = get_attraction_detail_service(
+                attraction_id,
+                user_id=favorite_state["userId"]
+            )
+            return jsonify({
+                "success": True,
+                "data": data,
+                "favorite": favorite_state
+            }), 200
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
     
 
 
