@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
+import AttractionDetail from './pages/AttractionDetail';
 import { authAPI } from './utils/api';
 
 import homeImg from './asset/home.png';
@@ -241,8 +242,15 @@ function App() {
 
         {/* ROUTES */}
         <Routes>
-          <Route path="/" element={<HomePage handleCardClick={handleCardClick} />} />
-          <Route path="/service" element={<Service />} />
+          <Route 
+            path="/" 
+            element={<HomePage handleCardClick={handleCardClick} currentUser={user} />} 
+          />
+          <Route 
+            path="/service" 
+            element={<Service currentUser={user} />} 
+          />
+          <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} />} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />
         </Routes>

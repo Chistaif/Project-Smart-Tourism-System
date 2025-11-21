@@ -4,7 +4,7 @@ import test1 from '../asset/test1.png';
 import test2 from '../asset/test2.png';
 import test3 from '../asset/test3.png';
 
-export default function HomePage({ handleCardClick }) {
+export default function HomePage({ handleCardClick, currentUser }) {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,9 @@ export default function HomePage({ handleCardClick }) {
     const fetchDestinations = async () => {
       try {
         setLoading(true);
-        const response = await destinationsAPI.getAll();
+        const response = await destinationsAPI.getAll({
+          userId: currentUser?.user_id,
+        });
         if (response.success) {
           setDestinations(response.data);
         } else {
@@ -29,7 +31,7 @@ export default function HomePage({ handleCardClick }) {
     };
 
     fetchDestinations();
-  }, []);
+  }, [currentUser]);
 
   return (
     <main className="hero">

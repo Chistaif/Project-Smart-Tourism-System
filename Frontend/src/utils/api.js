@@ -1,6 +1,25 @@
 // API configuration
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+const buildSearchQuery = ({ searchTerm, typeList, userId } = {}) => {
+  const params = new URLSearchParams();
+  if (searchTerm) {
+    params.append('searchTerm', searchTerm.trim());
+  }
+  if (Array.isArray(typeList)) {
+    typeList.forEach((type) => {
+      if (type) params.append('typeList', type);
+    });
+  } else if (typeList) {
+    params.append('typeList', typeList);
+  }
+  if (userId) {
+    params.append('userId', userId);
+  }
+  const queryString = params.toString();
+  return queryString ? `?${queryString}` : '';
+};
+
 /**
  * Generic API request function
  */
@@ -43,20 +62,44 @@ async function apiRequest(endpoint, options = {}) {
 
 // API functions for destinations
 export const destinationsAPI = {
-  // Get all destinations
-  getAll: () => apiRequest('/search'),
+  // Get all destinations (optionally filtered)
+  getAll: (params = {}) => apiRequest(`/search${buildSearchQuery(params)}`),
   
   // Get a single destination by ID
-  getById: (id) => apiRequest(`/attraction/${id}`),
+  getById: (id, userId) => apiRequest(`/attraction/${id}${userId ? `?userId=${userId}` : ''}`),
 };
 
 // API functions for attractions
 export const attractionsAPI = {
-  // Get all attractions
-  getAll: () => apiRequest('/search'),
-  
-  // Search attractions by location
-  search: (location) => apiRequest(`/search?searchTerm=${encodeURIComponent(location)}`),
+  // Search attractions by filters
+  search: (params = {}) => apiRequest(`/search${buildSearchQuery(params)}`),
+
+  // Get detailed info (with optional favorite state)
+  getDetail: (id, userId) => apiRequest(`/attraction/${id}${userId ? `?userId=${userId}` : ''}`),
+
+  // Create review
+  createReview: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  // Update review
+  updateReview: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  }),
+
+  // Delete review
+  deleteReview: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'DELETE',
+    body: JSON.stringify(payload),
+  }),
+
+  // Toggle favorite
+  toggleFavorite: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  }),
 };
 
 // Health check
