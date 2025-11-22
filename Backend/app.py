@@ -25,6 +25,12 @@ from service.attraction_service import (
     delete_review,
     set_favorite,
 )
+from service.tour_service import generate_smart_tour
+from user.save_tour_service import (
+    get_saved_tours_service,
+    save_tour_service,
+    unsave_tour_service
+)
 
 
 # ===========================================================================
@@ -224,26 +230,255 @@ def get_attraction_detail(attraction_id):
 
 
 # === Chức năng tạo tour ===
-@app.route('/api/quick-tour-creator', methods=['GET', 'POST'])
+# NOTE:
+# Thông tin cần: attractionIds, startLat, startLon, startTime, endTime
+# Thông tin trả về:
+# {
+#     'success': True|False,
+#     'data': {
+#         "timeline": [
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "08:00",
+#             "type": "START",
+#             "name": "Điểm xuất phát",
+#             "detail": "Bắt đầu hành trình"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025", 
+#             "time": "12:00",
+#             "type": "LUNCH",
+#             "name": "Nghỉ ăn trưa",
+#             "detail": "Tự do thưởng thức ẩm thực địa phương",
+#             "duration": 60,
+#             "endTime": "13:00"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "10:30",
+#             "type": "TRAVEL",
+#             "name": "Di chuyển đến Cố đô Huế",
+#             "detail": "Quãng đường: 85.2km (90 phút)",
+#             "duration": 90
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "12:00",
+#             "type": "VISIT",
+#             "id": 1,
+#             "name": "Cố đô Huế",
+#             "detail": "Tham quan, chụp ảnh.",
+#             "duration": 120,
+#             "endTime": "14:00",
+#             "lat": 16.4637,
+#             "lon": 107.5909,
+#             "imageUrl": "/static/images/hue.jpg"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "18:00",
+#             "type": "DINNER",
+#             "name": "Nghỉ ăn tối",
+#             "detail": "Tự do thưởng thức ẩm thực địa phương",
+#             "duration": 60,
+#             "endTime": "19:00"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "22:00",
+#             "type": "SLEEP",
+#             "name": "Nghỉ ngơi",
+#             "detail": "Kết thúc ngày, chuẩn bị cho ngày mai"
+#         },
+#         {
+#             "day": 2,
+#             "date": "26/12/2025",
+#             "time": "06:00",
+#             "type": "WAKE_UP",
+#             "name": "Thức dậy",
+#             "detail": "Bắt đầu ngày 2"
+#         }],
+#         "mapHtml": map_html,
+#         "invalidAttractions": [
+#          {
+#              "id": attr.id,
+#              "name": attr.name,
+#              "reason": reason
+#          },
+#          {
+#              "id": attr.id,
+#              "name": attr.name,
+#              "reason": reason
+#          }
+#            
+#         ],
+#         "finishTime": current_time.strftime("%H:%M"),
+#         "totalDestinations": len(visit_points),
+#         "totalDays": len(attractions_per_day)
+#     }
+# }
+@app.route('/api/quick-tour-creator', methods=['GET'])
 def creator():
-    if request.method == 'POST':
-        # Logic xử lý việc lưu tour sẽ ở đây
-        # Lấy dữ liệu từ React: data = request.json
-        # ...
-        print("Đã gọi POST /api/quick-tour-creator")
-        return jsonify({"success": True, "message": "Tour đã được tạo (thay thế logic này)"})
+    """
+    API tạo lịch trình thông minh (Method: GET).
+    Frontend gửi request dạng Query Params:
+    /api/quick-tour-creator?attractionIds=1&attractionIds=5&startLat=10.77&startLon=106.70&startTime=25/12/2025%2008:00
+    """
+    try:
+        # 1. Lấy danh sách ID (List)
+        # Frontend cần gửi dạng: ?attractionIds=1&attractionIds=2...
+        attraction_ids_raw = request.args.getlist('attractionIds')
+        
+        # Xử lý trường hợp Frontend gửi dạng mảng có ngoặc vuông (attractionIds[]=1) thường gặp ở Axios/jQuery
+        if not attraction_ids_raw:
+            attraction_ids_raw = request.args.getlist('attractionIds[]')
 
-    # Logic GET (ví dụ: lấy gợi ý cho React)
-    # ...
-    print("Đã gọi GET /api/quick-tour-creator")
-    return jsonify({"success": True, "message": "API tạo tour sẵn sàng (thay thế logic này)"})
+        # Convert sang int và lọc bỏ giá trị rác
+        attraction_ids = []
+        for x in attraction_ids_raw:
+            if x.isdigit():
+                attraction_ids.append(int(x))
+
+        # 2. Lấy các tham số đơn
+        start_lat = request.args.get('startLat')
+        start_lon = request.args.get('startLon')
+        start_time_str = request.args.get('startTime') # Format: dd/mm/yyyy HH:MM
+        end_time_str = request.args.get('endTime')     # Format: dd/mm/yyyy HH:MM (MỚI)
+
+        # 3. Validation
+        if not attraction_ids:
+             return jsonify({"success": False, "error": "Chưa chọn điểm đến nào (param: attractionIds)"}), 400
+        if not start_lat or not start_lon:
+             return jsonify({"success": False, "error": "Thiếu tọa độ (param: startLat, startLon)"}), 400
+        if not start_time_str:
+            return jsonify({"success": False, "error": "Thiếu thời gian (param: startTime)"}), 400
+        if not end_time_str:
+            return jsonify({"success": False, "error": "Thiếu thời gian kết thúc (param: endTime)"}), 400
+
+        # Parse endTime
+        try:
+            start_time = datetime.strptime(start_time_str, "%d/%m/%Y %H:%M")
+            end_time = datetime.strptime(end_time_str, "%d/%m/%Y %H:%M")
+        except ValueError:
+            return jsonify({"success": False, "error": "Format time không hợp lệ"}), 400
+
+        if end_time <= start_time:
+            return jsonify({"success": False, "error": "Thời gian kết thúc phải sau thời gian bắt đầu"}), 400
+
+        # 4. Gọi Service (Logic giữ nguyên)
+        result = generate_smart_tour(
+            attraction_ids, 
+            float(start_lat), 
+            float(start_lon), 
+            start_time_str,
+            end_time_str
+        )
+
+        return jsonify({
+            "success": True, 
+            "data": result
+        }), 200
+
+    except Exception as e:
+        print(f"Error creating tour: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
-# ===========================================================================
-# ===                                                                     ===
-# ===                                 User                                ===
-# ===                                                                     ===
-# ===========================================================================
+
+@app.route('/api/save-tour', methods=['POST', 'PATCH'])
+def save_tour():
+    """
+    POST: Lưu tour mới
+    PATCH: Hủy lưu tour (unsave)
+    """
+    try:
+        if request.method == 'POST':
+            # === LƯU TOUR MỚI ===
+            data = request.get_json()
+            
+            if not data:
+                return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
+            
+            user_id = data.get('userId')
+            tour_name = data.get('tourName', '').strip()
+            attraction_ids = data.get('attractionIds', [])
+            
+            try:
+                tour_data = save_tour_service(user_id, tour_name, attraction_ids)
+                return jsonify({
+                    "success": True,
+                    "message": f"Đã lưu tour '{tour_name}' thành công",
+                    "tour": tour_data
+                }), 201
+            except ValueError as e:
+                return jsonify({"success": False, "error": str(e)}), 400
+            except LookupError as e:
+                return jsonify({"success": False, "error": str(e)}), 404
+        
+        elif request.method == 'PATCH':
+            # === HỦY LƯU TOUR ===
+            data = request.get_json()
+            
+            if not data:
+                return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
+            
+            user_id = data.get('userId')
+            tour_id = data.get('tourId')
+            
+            try:
+                tour_name = unsave_tour_service(user_id, tour_id)
+                return jsonify({
+                    "success": True,
+                    "message": f"Đã hủy lưu tour '{tour_name}' thành công"
+                }), 200
+            except ValueError as e:
+                return jsonify({"success": False, "error": str(e)}), 400
+            except LookupError as e:
+                return jsonify({"success": False, "error": str(e)}), 404
+    
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error in save_tour: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# Thêm route get_saved_tours
+@app.route('/api/saved-tours', methods=['GET'])
+def get_saved_tours():
+    """
+    Lấy danh sách tours đã lưu của user
+    Query param: userId=<int>
+    """
+    try:
+        user_id_param = request.args.get('userId')
+        if not user_id_param:
+            return jsonify({"success": False, "error": "userId là bắt buộc"}), 400
+        
+        try:
+            user_id = int(user_id_param)
+        except ValueError:
+            return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+        
+        try:
+            tours_data = get_saved_tours_service(user_id)
+            return jsonify({
+                "success": True,
+                "data": tours_data,
+                "total": len(tours_data)
+            }), 200
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+        except LookupError as e:
+            return jsonify({"success": False, "error": str(e)}), 404
+    
+    except Exception as e:
+        print(f"Error in get_saved_tours: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # ===========================================================================
 # ===                                                                     ===

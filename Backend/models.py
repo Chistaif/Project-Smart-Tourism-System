@@ -91,7 +91,9 @@ class Attraction(db.Model):
             "averageRating": self.average_rating,
             "visitDuration": self.visit_duration,
             "imageUrl": self.image_url,
-            "tags": tag_list
+            "tags": tag_list,
+            "lat": self.lat,
+            "lon": self.lon
         }
 
 class Festival(Attraction):
