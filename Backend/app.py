@@ -4,6 +4,16 @@ from flask_cors import CORS
 from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
+from flask_limiter import Limiter
+from flask_jwt_extended import (
+    JWTManager, 
+    create_access_token, 
+    create_refresh_token,
+    jwt_required, 
+    get_jwt_identity
+)
+from dotenv import load_dotenv
+
 
 # Import trong project
 from models import (
@@ -32,6 +42,8 @@ from user.save_tour_service import (
     unsave_tour_service
 )
 
+# Load environment variables
+load_dotenv()
 
 # ===========================================================================
 # ===                                                                     ===
@@ -43,6 +55,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JSON_AS_ASCII'] = False
+    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'your-super-secret-jwt-key-change-this-in-production')
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 3600  # 1 hour
+    app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 2592000  # 30 days
     app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     
@@ -65,8 +80,20 @@ def create_app():
     return app
 
 app = create_app()
+limiter = Limiter(app)
+jwt = JWTManager(app)
 
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({"success": False, "error": "Token đã hết hạn"}), 401
 
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return jsonify({"success": False, "error": "Token không hợp lệ"}), 401
+
+@jwt.unauthorized_loader
+def unauthorized_callback(error):
+    return jsonify({"success": False, "error": "Thiếu authentication token"}), 401
 
 # ===========================================================================
 # ===                                                                     ===
@@ -85,18 +112,21 @@ Ví dụ:
 /api/search?searchTerm=Hội%20An&typeList=Lễ%20hội&userId=1
 """
 @app.route('/api/search', methods=["GET"])
+@jwt_required(optional=True)
 def search():
+    user_id = get_jwt_identity()
+
     types_list = request.args.getlist("typeList", [])
     search_term = request.args.get("searchTerm", "").strip()
-    user_id_param = request.args.get("userId")
-    user_id = None
-    if user_id_param:
-        try:
-            user_id = int(user_id_param)
-            if user_id <= 0:
-                raise ValueError
-        except ValueError:
-            return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+    if not user_id:
+        user_id_param = request.args.get("userId")
+        if user_id_param:
+            try:
+                user_id = int(user_id_param)
+                if user_id <= 0:
+                    raise ValueError
+            except ValueError:
+                return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
 
     # NOTE cho FE: userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
     try:
@@ -124,21 +154,23 @@ def search():
 #       - Response trả về detail + block `favorite` để đồng bộ UI.
 # Ghi nhớ: mọi response đều có dạng {"success": bool, "data": {...}} (riêng PATCH có thêm "favorite").
 @app.route('/api/attraction/<int:attraction_id>', methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
+@jwt_required(optional=True)
 def get_attraction_detail(attraction_id):
+    user_id = get_jwt_identity()
+
     if request.method == "GET":
         """
         Lấy thông tin chi tiết của attraction
         """
-
-        user_id_param = request.args.get("userId")
-        user_id = None
-        if user_id_param:
-            try:
-                user_id = int(user_id_param)
-                if user_id <= 0:
-                    raise ValueError
-            except ValueError:
-                return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+        if not user_id:
+            user_id_param = request.args.get("userId")
+            if user_id_param:
+                try:
+                    user_id = int(user_id_param)
+                    if user_id <= 0:
+                        raise ValueError
+                except ValueError:
+                    return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
 
         try:
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
@@ -154,7 +186,8 @@ def get_attraction_detail(attraction_id):
         try:
             review_data = request.get_json(silent=True)
             create_review(attraction_id, review_data)
-            user_id = review_data.get("userId") if review_data else None
+            if not user_id:
+                user_id = review_data.get("userId") 
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
             return jsonify({"success": True, "data": data}), 201
         except ValueError as e:
@@ -173,7 +206,8 @@ def get_attraction_detail(attraction_id):
         try:
             review_data = request.get_json(silent=True)
             update_review(attraction_id, review_data)
-            user_id = review_data.get("userId") if review_data else None
+            if not user_id:
+                user_id = review_data.get("userId") 
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
             return jsonify({"success": True, "data": data}), 200
         except ValueError as e:
@@ -192,7 +226,8 @@ def get_attraction_detail(attraction_id):
         try:
             review_data = request.get_json(silent=True)
             delete_review(attraction_id, review_data)
-            user_id = review_data.get("userId") if review_data else None
+            if not user_id:
+                user_id = review_data.get("userId") 
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
             return jsonify({"success": True, "data": data}), 200
         except ValueError as e:
@@ -392,12 +427,16 @@ def creator():
 
 
 @app.route('/api/save-tour', methods=['POST', 'PATCH'])
+@jwt_required(optional=True)
 def save_tour():
     """
     POST: Lưu tour mới
     PATCH: Hủy lưu tour (unsave)
     """
     try:
+        # Lấy user_id từ JWT token (nếu có) hoặc từ request
+        user_id = get_jwt_identity()  # Trả về None nếu không có token
+
         if request.method == 'POST':
             # === LƯU TOUR MỚI ===
             data = request.get_json()
@@ -405,7 +444,8 @@ def save_tour():
             if not data:
                 return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
             
-            user_id = data.get('userId')
+            if not user_id:
+                user_id = data.get('userId')
             tour_name = data.get('tourName', '').strip()
             attraction_ids = data.get('attractionIds', [])
             
@@ -428,7 +468,8 @@ def save_tour():
             if not data:
                 return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
             
-            user_id = data.get('userId')
+            if not user_id:
+                user_id = data.get('userId')
             tour_id = data.get('tourId')
             
             try:
@@ -541,6 +582,7 @@ def signup():
         return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/auth/login', methods=['POST'])
+@limiter.limit("5 per minute")
 def login():
     """Đăng nhập"""
     try:
@@ -564,11 +606,18 @@ def login():
         
         if not user or not user.check_password(password):
             return jsonify({"success": False, "error": "Email hoặc mật khẩu không đúng"}), 401
-        
+
+        # Tạo JWT tokens
+        access_token = create_access_token(identity=user.user_id)
+        refresh_token = create_refresh_token(identity=user.user_id)
+
         return jsonify({
             "success": True,
             "message": "Đăng nhập thành công",
-            "user": user.to_json()
+            "user": user.to_json(),
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "Bearer"
         }), 200
         
     except Exception as e:
@@ -602,6 +651,33 @@ def get_users():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
+@app.route('/api/auth/forgot-password', methods=['POST'])
+def forgot_password():
+    # Generate reset token, send email
+    pass
+
+@app.route('/api/auth/reset-password', methods=['POST'])
+def reset_password():
+    # Verify token and update password
+    pass
+
+@app.route('/api/auth/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh_token():
+    """Refresh access token"""
+    try:
+        current_user_id = get_jwt_identity()
+        new_access_token = create_access_token(identity=current_user_id)
+        
+        return jsonify({
+            "success": True,
+            "access_token": new_access_token,
+            "token_type": "Bearer"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 # ===========================================================================
 # ===                                                                     ===
 # ===                                 Blogs                               ===
