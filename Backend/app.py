@@ -36,10 +36,17 @@ from service.attraction_service import (
     set_favorite,
 )
 from service.tour_service import generate_smart_tour
-from user.save_tour_service import (
-    get_saved_tours_service,
+from service.save_tour_service import (
+    get_saved_tours_service,    
     save_tour_service,
     unsave_tour_service
+)
+from user.email_utils import init_mail
+from user.auth_service import (
+    signup_service, 
+    login_service,
+    verify_email_service, 
+    resend_verification_service
 )
 
 # Load environment variables
@@ -55,7 +62,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JSON_AS_ASCII'] = False
-    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'your-super-secret-jwt-key-change-this-in-production')
+    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'asdfghjkmnbvcxzq')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 3600  # 1 hour
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 2592000  # 30 days
     app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
@@ -71,6 +78,7 @@ def create_app():
     })
 
     db.init_app(app=app)
+    init_mail(app)
 
     with app.app_context():
         db.create_all()
@@ -187,7 +195,9 @@ def get_attraction_detail(attraction_id):
             review_data = request.get_json(silent=True)
             create_review(attraction_id, review_data)
             if not user_id:
-                user_id = review_data.get("userId") 
+                user_id = review_data.get("userId")
+                if not user_id:
+                    return jsonify({"success": False, "error": "userId là bắt buộc"}), 400
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
             return jsonify({"success": True, "data": data}), 201
         except ValueError as e:
@@ -488,6 +498,12 @@ def save_tour():
         print(f"Error in save_tour: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
+# ===========================================================================
+# ===                                                                     ===
+# ===                                 USER                                ===
+# ===                                                                     ===
+# ===========================================================================
+
 # Thêm route get_saved_tours
 @app.route('/api/saved-tours', methods=['GET'])
 def get_saved_tours():
@@ -526,100 +542,82 @@ def get_saved_tours():
 # ===                                 Auth                                ===
 # ===                                                                     ===
 # ===========================================================================
+# NOTE: sửa đổi lại logic cho 2  luồng 
+# Đăng ký:
+    # Người dùng nhập: username (duy nhất), email (duy nhất), password.
+    # Hệ thống tạo user -> Gửi mã về email.
+# Đăng nhhập:
+    # Người dùng nhập: username + password.
+    # Hệ thống kiểm tra:
+    # Tìm user theo username.
+    # Khớp password.
+    # Kiểm tra email_verified (nếu chưa xác thực -> chặn và báo lỗi).
+    # Thành công -> Trả về JWT Token.
 @app.route('/api/auth/signup', methods=['POST'])
 def signup():
     """Đăng ký tài khoản mới"""
     try:
         data = request.get_json()
-        
-        if not data:
-            return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
-        
-        username = data.get('username', '').strip()
-        email = data.get('email', '').strip().lower()
-        password = data.get('password', '')
-        confirm_password = data.get('confirmPassword', '')
-        
-        # Validation
-        if not username:
-            return jsonify({"success": False, "error": "Tên người dùng là bắt buộc"}), 400
-        
-        if not email:
-            return jsonify({"success": False, "error": "Email là bắt buộc"}), 400
-        
-        if not password:
-            return jsonify({"success": False, "error": "Mật khẩu là bắt buộc"}), 400
-        
-        if len(password) < 6:
-            return jsonify({"success": False, "error": "Mật khẩu phải có ít nhất 6 ký tự"}), 400
-        
-        if password != confirm_password:
-            return jsonify({"success": False, "error": "Mật khẩu xác nhận không khớp"}), 400
-        
-        # Kiểm tra email đã tồn tại chưa
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return jsonify({"success": False, "error": "Email này đã được đăng ký"}), 409
-        
-        # Tạo người dùng mới
-        new_user = User(
-            username=username,
-            email=email
-        )
-        new_user.set_password(password)
-        
-        db.session.add(new_user)
-        db.session.commit()
-        
-        return jsonify({
-            "success": True,
-            "message": "Đăng ký thành công",
-            "user": new_user.to_json()
-        }), 201
-        
+        result = signup_service(data) # Gọi service
+        return jsonify({"success": True, "data": result}), 201
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
     except Exception as e:
         db.session.rollback()
+        return jsonify({"success": False, "error": "Lỗi hệ thống: " + str(e)}), 500
+
+# ================================= NEW ============================================
+@app.route('/api/auth/verify-email', methods=['POST'])
+def verify_email():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        code = data.get('code')
+        
+        result = verify_email_service(email, code) # Gọi service
+        return jsonify({"success": True, "data": result}), 200
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except LookupError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/api/auth/resend-code', methods=['POST'])
+def resend_code():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        
+        result = resend_verification_service(email) # Gọi service
+        return jsonify({"success": True, "data": result}), 200
+    except (ValueError, LookupError) as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# ================================= NEW ============================================
+
 
 @app.route('/api/auth/login', methods=['POST'])
 @limiter.limit("5 per minute")
 def login():
     """Đăng nhập"""
     try:
+        # NOTE: sửa lại logic đăng nhập dùng username + password cho hợp lý 
+        # email chỉ dùng để gửi mã xác nhận khi đăng ký / quên mật khẩu
         data = request.get_json()
+        result = login_service(data)
         
-        if not data:
-            return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
+        # Nếu có lỗi trong result (ví dụ chưa verify email)
+        if "error" in result:
+            return jsonify({"success": False, **result}), 403
+            
+        return jsonify({"success": True, **result}), 200
         
-        email = data.get('email', '').strip().lower()
-        password = data.get('password', '')
-        
-        # Validation
-        if not email:
-            return jsonify({"success": False, "error": "Email là bắt buộc"}), 400
-        
-        if not password:
-            return jsonify({"success": False, "error": "Mật khẩu là bắt buộc"}), 400
-        
-        # Tìm người dùng
-        user = User.query.filter_by(email=email).first()
-        
-        if not user or not user.check_password(password):
-            return jsonify({"success": False, "error": "Email hoặc mật khẩu không đúng"}), 401
-
-        # Tạo JWT tokens
-        access_token = create_access_token(identity=user.user_id)
-        refresh_token = create_refresh_token(identity=user.user_id)
-
-        return jsonify({
-            "success": True,
-            "message": "Đăng nhập thành công",
-            "user": user.to_json(),
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "token_type": "Bearer"
-        }), 200
-        
+    except ValueError as e:
+        # Sai user/pass
+        return jsonify({"success": False, "error": str(e)}), 401
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 

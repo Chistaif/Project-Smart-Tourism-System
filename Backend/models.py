@@ -24,7 +24,7 @@ tour_attractions = db.Table('tour_attractions',
 class User(db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False, unique=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     avatar_url = db.Column(db.String(100), nullable=True, default='default_avatar.png') 
@@ -190,6 +190,11 @@ class Review(db.Model):
 
     user = db.relationship('User', back_populates='reviews')
     attraction = db.relationship('Attraction', back_populates='reviews')
+
+    __table_args__ = (
+        db.Index('idx_review_user_attraction', 'user_id', 'attraction_id'),
+        db.Index('idx_review_created_at', 'created_at'),
+    )
 
     def to_json(self):
         return {
