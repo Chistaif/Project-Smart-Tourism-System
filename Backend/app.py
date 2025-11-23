@@ -50,6 +50,7 @@ from user.auth_service import (
     forgot_password_service,  
     reset_password_service
 )
+from cloudinary_utils import upload_image_to_cloud
 
 # Load environment variables
 load_dotenv()
@@ -104,6 +105,13 @@ def invalid_token_callback(error):
 @jwt.unauthorized_loader
 def unauthorized_callback(error):
     return jsonify({"success": False, "error": "Thiếu authentication token"}), 401
+
+# Cấu hình upload
+# UPLOAD_FOLDER = 'static/uploads/blogs'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ===========================================================================
 # ===                                                                     ===
@@ -539,6 +547,44 @@ def get_saved_tours():
         print(f"Error in get_saved_tours: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
+
+@app.route('/api/user/upload-avatar', methods=['POST'])
+@jwt_required()
+def upload_avatar():
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+        
+        if 'avatar' not in request.files:
+            return jsonify({"success": False, "error": "Không có file ảnh"}), 400
+            
+        file = request.files['avatar']
+        
+        if file.filename == '':
+            return jsonify({"success": False, "error": "Chưa chọn file"}), 400
+
+        if not allowed_file(file.filename):
+            return jsonify({"success": False, "error": "Định dạng file không hợp lệ"}), 400
+
+        # GỌI HÀM UPLOAD LÊN CLOUD
+        # Folder trên cloud sẽ là: smart_tourism/avatars
+        image_url = upload_image_to_cloud(file, folder="smart_tourism/avatars")
+        
+        if image_url:
+            # Lưu link tuyệt đối (https://res.cloudinary.com/...) vào DB
+            user.avatar_url = image_url
+            db.session.commit()
+            
+            return jsonify({
+                "success": True, 
+                "message": "Cập nhật ảnh đại diện thành công",
+                "avatarUrl": image_url
+            }), 200
+        else:
+            return jsonify({"success": False, "error": "Lỗi khi upload ảnh"}), 500
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 # ===========================================================================
 # ===                                                                     ===
 # ===                                 Auth                                ===
@@ -701,13 +747,6 @@ def refresh_token():
 # ===                                 Blogs                               ===
 # ===                                                                     ===
 # ===========================================================================
-# Cấu hình upload
-UPLOAD_FOLDER = 'static/uploads/blogs'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @app.route('/api/blogs', methods=['GET'])
 def get_blogs():
     """Lấy danh sách tất cả blogs"""
@@ -739,41 +778,48 @@ def get_blog(blog_id):
 def create_blog():
     """Tạo blog mới với hình ảnh"""
     try:
-        # Kiểm tra thư mục upload
-        if not os.path.exists(UPLOAD_FOLDER):
-            os.makedirs(UPLOAD_FOLDER)
+        # # Kiểm tra thư mục upload
+        # if not os.path.exists(UPLOAD_FOLDER):
+        #     os.makedirs(UPLOAD_FOLDER)
         
         title = request.form.get('title', '').strip()
         content = request.form.get('content', '').strip()
         user_id = request.form.get('user_id', type=int)
         
-        # Validation
-        if not title:
-            return jsonify({"success": False, "error": "Tiêu đề là bắt buộc"}), 400
-        if not content:
-            return jsonify({"success": False, "error": "Nội dung là bắt buộc"}), 400
-        if not user_id:
-            return jsonify({"success": False, "error": "User ID là bắt buộc"}), 400
+        if not title or not content or not user_id:
+            return jsonify({"success": False, "error": "Thiếu thông tin bắt buộc"}), 400
         
-        # Xử lý upload hình ảnh
+        # # Xử lý upload hình ảnh
+        # image_url = None
+        # if 'image' in request.files:
+        #     file = request.files['image']
+        #     if file and file.filename and allowed_file(file.filename):
+        #         filename = secure_filename(file.filename)
+        #         # Thêm timestamp để tránh trùng tên
+        #         from datetime import datetime
+        #         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        #         filename = f"{timestamp}_{filename}"
+        #         filepath = os.path.join(UPLOAD_FOLDER, filename)
+        #         file.save(filepath)
+        #         image_url = f"/static/uploads/blogs/{filename}"
+
+        # Xử lý ảnh Blog
         image_url = None
         if 'image' in request.files:
             file = request.files['image']
-            if file and file.filename and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                # Thêm timestamp để tránh trùng tên
-                from datetime import datetime
-                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                filename = f"{timestamp}_{filename}"
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
-                file.save(filepath)
-                image_url = f"/static/uploads/blogs/{filename}"
+            if file and file.filename != '' and allowed_file(file.filename):
+                # Upload lên folder blogs
+                image_url = upload_image_to_cloud(file, folder="smart_tourism/blogs")
+            elif file.filename != '':
+                # Nếu có file nhưng đuôi không hợp lệ
+                return jsonify({"success": False, "error": "Định dạng file không hợp lệ (chỉ nhận ảnh)"}), 400
+        
         
         # Tạo blog mới
         new_blog = Blog(
             title=title,
             content=content,
-            image_url=image_url,
+            image_url=image_url, # Lưu link cloud vào DB
             user_id=user_id
         )
         
