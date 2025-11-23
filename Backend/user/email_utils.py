@@ -39,3 +39,32 @@ def send_verification_email(user_name, user_email, verification_code):
         # Trả về False nhưng in mã ra console để dev vẫn test được nếu chưa cấu hình mail
         print(f"🔑 [DEBUG ONLY] Mã xác thực cho {user_email}: {verification_code}")
         return False, str(e)
+
+
+def send_reset_password_email(user_name, user_email, reset_code):
+    """Gửi email chứa mã reset mật khẩu"""
+    try:
+        msg = Message(
+            subject='Yêu cầu đặt lại mật khẩu - Smart Tourism',
+            recipients=[user_email],
+            body=f'''
+            Chào {user_name},
+            
+            Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.
+            Mã xác nhận của bạn là: {reset_code}
+            
+            Mã này có hiệu lực trong 10 phút.
+            
+            Nếu bạn không yêu cầu, vui lòng bỏ qua email này. Tài khoản của bạn vẫn an toàn.
+            
+            Trân trọng,
+            Smart Tourism Team
+            '''
+        )
+        mail.send(msg)
+        return True, "Email đã được gửi"
+    except Exception as e:
+        print(f"❌ Lỗi gửi email reset: {e}")
+        # Debug cho dev
+        print(f"🔑 [DEBUG ONLY] Mã Reset cho {user_email}: {reset_code}")
+        return False, str(e)

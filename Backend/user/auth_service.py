@@ -1,7 +1,7 @@
 from datetime import datetime
 from models import db, User
 from flask_jwt_extended import create_access_token, create_refresh_token
-from user.email_utils import send_verification_email
+from user.email_utils import send_verification_email, send_reset_password_email
 import string
 
 def check_password(pw: str):
@@ -23,7 +23,7 @@ def signup_service(data):
     # 1. Validation cơ bản
     if not username or not email or not password:
         raise ValueError("Vui lòng điền đầy đủ thông tin")
-    if check_password(password):
+    if not check_password(password):
         raise ValueError("Mật khẩu phải ít nhất 8 kí tự, chứa chữ hoa, chữ thường, số, kí tự đặc biệt")
     if password != confirm_password:
         raise ValueError("Mật khẩu xác nhận không khớp")
@@ -44,10 +44,14 @@ def signup_service(data):
     
     try:
         db.session.add(new_user)
-        db.session.commit()
-        
+
         # 5. Gửi email (Không chặn luồng nếu gửi lỗi, chỉ log lại)
         sent_success, msg = send_verification_email(username, email, code)
+        if not sent_success:
+            # Nếu gửi mail thất bại thì báo lỗi luôn, không lưu User
+            raise Exception("Không thể gửi email xác thực. Vui lòng kiểm tra lại email.")
+
+        db.session.commit()
         
         return {
             "user": new_user.to_json(),
@@ -138,3 +142,70 @@ def resend_verification_service(email):
         raise Exception("Không thể gửi email. Vui lòng thử lại sau.")
         
     return {"message": "Mã xác thực mới đã được gửi"}
+
+
+def forgot_password_service(email):
+    """
+    Xử lý yêu cầu quên mật khẩu:
+    1. Tìm user
+    2. Tạo mã
+    3. Gửi email
+    """
+    if not email:
+        raise ValueError("Vui lòng nhập email")
+        
+    user = User.query.filter_by(email=email.lower().strip()).first()
+    
+    if not user:
+        raise ValueError("Email không tồn tại trong hệ thống") 
+
+    # Tạo mã reset
+    reset_code = user.generate_verification_code()
+    db.session.commit()
+    
+    # Gửi email
+    sent, msg = send_reset_password_email(user.username, user.email, reset_code)
+    
+    if not sent:
+        raise Exception("Lỗi gửi email. Vui lòng thử lại sau.")
+        
+    return {"message": f"Mã xác nhận đã được gửi đến {email}. Vui lòng kiểm tra hộp thư."}
+
+def reset_password_service(data):
+    """
+    Xử lý đặt lại mật khẩu:
+    1. Validate input
+    2. Check mã code
+    3. Đổi pass
+    """
+    email = data.get('email', '').strip().lower()
+    code = data.get('code', '').strip()
+    new_password = data.get('newPassword', '')
+    confirm_password = data.get('confirmPassword', '')
+    
+    # 1. Validation
+    if not email or not code or not new_password:
+        raise ValueError("Vui lòng điền đầy đủ thông tin")
+        
+    if new_password != confirm_password:
+        raise ValueError("Mật khẩu xác nhận không khớp")
+        
+    if not check_password(new_password): 
+        raise ValueError("Mật khẩu mới phải đủ mạnh (8 ký tự, hoa, thường, số, ký tự đặc biệt)")
+
+    # 2. Tìm user
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        raise ValueError("Người dùng không tồn tại")
+        
+    # 3. Kiểm tra mã
+    if not user.verify_code(code):
+        raise ValueError("Mã xác nhận không đúng hoặc đã hết hạn")
+        
+    # 4. Đổi mật khẩu & Xóa mã
+    user.set_password(new_password)
+    user.clear_verification_code()
+    
+    db.session.commit()
+    
+    return {"message": "Đặt lại mật khẩu thành công. Bạn có thể đăng nhập ngay bây giờ."}

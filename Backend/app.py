@@ -46,7 +46,9 @@ from user.auth_service import (
     signup_service, 
     login_service,
     verify_email_service, 
-    resend_verification_service
+    resend_verification_service,
+    forgot_password_service,  
+    reset_password_service
 )
 
 # Load environment variables
@@ -651,14 +653,32 @@ def get_users():
 
 
 @app.route('/api/auth/forgot-password', methods=['POST'])
+@limiter.limit("3 per minute")
 def forgot_password():
-    # Generate reset token, send email
-    pass
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        
+        result = forgot_password_service(email)
+        return jsonify({"success": True, **result}), 200
+        
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/auth/reset-password', methods=['POST'])
 def reset_password():
-    # Verify token and update password
-    pass
+    try:
+        data = request.get_json()
+        result = reset_password_service(data)
+        return jsonify({"success": True, **result}), 200
+        
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/auth/refresh', methods=['POST'])
 @jwt_required(refresh=True)
