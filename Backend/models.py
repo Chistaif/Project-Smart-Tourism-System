@@ -27,7 +27,7 @@ class User(db.Model):
     username = db.Column(db.String(100), nullable=False, unique=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-    avatar_url = db.Column(db.String(100), nullable=True, default='default_avatar.png') 
+    avatar_url = db.Column(db.String(100), nullable=True, default='https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763910182/c6e56503cfdd87da299f72dc416023d4_s2kfhu.jpg') 
     is_admin = db.Column(db.Boolean, default=False)
     email_verified = db.Column(db.Boolean, default=False)
     email_verification_code = db.Column(db.String(6), nullable=True)
