@@ -9,3 +9,8 @@ textblob
 scikit-learn
 python-dotenv
 polyline
+flask_jwt_extended
+geopy
+flask-limiter
+flask-admin
+flask-mail

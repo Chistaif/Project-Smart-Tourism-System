@@ -4,6 +4,16 @@ from flask_cors import CORS
 from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
+from flask_limiter import Limiter
+from flask_jwt_extended import (
+    JWTManager, 
+    create_access_token, 
+    create_refresh_token,
+    jwt_required, 
+    get_jwt_identity
+)
+from dotenv import load_dotenv
+
 
 # Import trong project
 from models import (
@@ -25,7 +35,24 @@ from service.attraction_service import (
     delete_review,
     set_favorite,
 )
+from service.tour_service import generate_smart_tour
+from service.save_tour_service import (
+    get_saved_tours_service,    
+    save_tour_service,
+    unsave_tour_service
+)
+from user.email_utils import init_mail
+from user.auth_service import (
+    signup_service, 
+    login_service,
+    verify_email_service, 
+    resend_verification_service,
+    forgot_password_service,  
+    reset_password_service
+)
 
+# Load environment variables
+load_dotenv()
 
 # ===========================================================================
 # ===                                                                     ===
@@ -37,6 +64,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JSON_AS_ASCII'] = False
+    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'asdfghjkmnbvcxzq')
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 3600  # 1 hour
+    app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 2592000  # 30 days
     app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     
@@ -50,6 +80,7 @@ def create_app():
     })
 
     db.init_app(app=app)
+    init_mail(app)
 
     with app.app_context():
         db.create_all()
@@ -59,8 +90,20 @@ def create_app():
     return app
 
 app = create_app()
+limiter = Limiter(app)
+jwt = JWTManager(app)
 
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({"success": False, "error": "Token đã hết hạn"}), 401
 
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return jsonify({"success": False, "error": "Token không hợp lệ"}), 401
+
+@jwt.unauthorized_loader
+def unauthorized_callback(error):
+    return jsonify({"success": False, "error": "Thiếu authentication token"}), 401
 
 # ===========================================================================
 # ===                                                                     ===
@@ -79,18 +122,21 @@ Ví dụ:
 /api/search?searchTerm=Hội%20An&typeList=Lễ%20hội&userId=1
 """
 @app.route('/api/search', methods=["GET"])
+@jwt_required(optional=True)
 def search():
+    user_id = get_jwt_identity()
+
     types_list = request.args.getlist("typeList", [])
     search_term = request.args.get("searchTerm", "").strip()
-    user_id_param = request.args.get("userId")
-    user_id = None
-    if user_id_param:
-        try:
-            user_id = int(user_id_param)
-            if user_id <= 0:
-                raise ValueError
-        except ValueError:
-            return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+    if not user_id:
+        user_id_param = request.args.get("userId")
+        if user_id_param:
+            try:
+                user_id = int(user_id_param)
+                if user_id <= 0:
+                    raise ValueError
+            except ValueError:
+                return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
 
     # NOTE cho FE: userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
     try:
@@ -118,21 +164,23 @@ def search():
 #       - Response trả về detail + block `favorite` để đồng bộ UI.
 # Ghi nhớ: mọi response đều có dạng {"success": bool, "data": {...}} (riêng PATCH có thêm "favorite").
 @app.route('/api/attraction/<int:attraction_id>', methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
+@jwt_required(optional=True)
 def get_attraction_detail(attraction_id):
+    user_id = get_jwt_identity()
+
     if request.method == "GET":
         """
         Lấy thông tin chi tiết của attraction
         """
-
-        user_id_param = request.args.get("userId")
-        user_id = None
-        if user_id_param:
-            try:
-                user_id = int(user_id_param)
-                if user_id <= 0:
-                    raise ValueError
-            except ValueError:
-                return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+        if not user_id:
+            user_id_param = request.args.get("userId")
+            if user_id_param:
+                try:
+                    user_id = int(user_id_param)
+                    if user_id <= 0:
+                        raise ValueError
+                except ValueError:
+                    return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
 
         try:
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
@@ -148,7 +196,10 @@ def get_attraction_detail(attraction_id):
         try:
             review_data = request.get_json(silent=True)
             create_review(attraction_id, review_data)
-            user_id = review_data.get("userId") if review_data else None
+            if not user_id:
+                user_id = review_data.get("userId")
+                if not user_id:
+                    return jsonify({"success": False, "error": "userId là bắt buộc"}), 400
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
             return jsonify({"success": True, "data": data}), 201
         except ValueError as e:
@@ -167,7 +218,8 @@ def get_attraction_detail(attraction_id):
         try:
             review_data = request.get_json(silent=True)
             update_review(attraction_id, review_data)
-            user_id = review_data.get("userId") if review_data else None
+            if not user_id:
+                user_id = review_data.get("userId") 
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
             return jsonify({"success": True, "data": data}), 200
         except ValueError as e:
@@ -186,7 +238,8 @@ def get_attraction_detail(attraction_id):
         try:
             review_data = request.get_json(silent=True)
             delete_review(attraction_id, review_data)
-            user_id = review_data.get("userId") if review_data else None
+            if not user_id:
+                user_id = review_data.get("userId") 
             data = get_attraction_detail_service(attraction_id, user_id=user_id)
             return jsonify({"success": True, "data": data}), 200
         except ValueError as e:
@@ -224,118 +277,349 @@ def get_attraction_detail(attraction_id):
 
 
 # === Chức năng tạo tour ===
-@app.route('/api/quick-tour-creator', methods=['GET', 'POST'])
+# NOTE:
+# Thông tin cần: attractionIds, startLat, startLon, startTime, endTime
+# Thông tin trả về:
+# {
+#     'success': True|False,
+#     'data': {
+#         "timeline": [
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "08:00",
+#             "type": "START",
+#             "name": "Điểm xuất phát",
+#             "detail": "Bắt đầu hành trình"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025", 
+#             "time": "12:00",
+#             "type": "LUNCH",
+#             "name": "Nghỉ ăn trưa",
+#             "detail": "Tự do thưởng thức ẩm thực địa phương",
+#             "duration": 60,
+#             "endTime": "13:00"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "10:30",
+#             "type": "TRAVEL",
+#             "name": "Di chuyển đến Cố đô Huế",
+#             "detail": "Quãng đường: 85.2km (90 phút)",
+#             "duration": 90
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "12:00",
+#             "type": "VISIT",
+#             "id": 1,
+#             "name": "Cố đô Huế",
+#             "detail": "Tham quan, chụp ảnh.",
+#             "duration": 120,
+#             "endTime": "14:00",
+#             "lat": 16.4637,
+#             "lon": 107.5909,
+#             "imageUrl": "/static/images/hue.jpg"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "18:00",
+#             "type": "DINNER",
+#             "name": "Nghỉ ăn tối",
+#             "detail": "Tự do thưởng thức ẩm thực địa phương",
+#             "duration": 60,
+#             "endTime": "19:00"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "22:00",
+#             "type": "SLEEP",
+#             "name": "Nghỉ ngơi",
+#             "detail": "Kết thúc ngày, chuẩn bị cho ngày mai"
+#         },
+#         {
+#             "day": 2,
+#             "date": "26/12/2025",
+#             "time": "06:00",
+#             "type": "WAKE_UP",
+#             "name": "Thức dậy",
+#             "detail": "Bắt đầu ngày 2"
+#         }],
+#         "mapHtml": map_html,
+#         "invalidAttractions": [
+#          {
+#              "id": attr.id,
+#              "name": attr.name,
+#              "reason": reason
+#          },
+#          {
+#              "id": attr.id,
+#              "name": attr.name,
+#              "reason": reason
+#          }
+#            
+#         ],
+#         "finishTime": current_time.strftime("%H:%M"),
+#         "totalDestinations": len(visit_points),
+#         "totalDays": len(attractions_per_day)
+#     }
+# }
+@app.route('/api/quick-tour-creator', methods=['GET'])
 def creator():
-    if request.method == 'POST':
-        # Logic xử lý việc lưu tour sẽ ở đây
-        # Lấy dữ liệu từ React: data = request.json
-        # ...
-        print("Đã gọi POST /api/quick-tour-creator")
-        return jsonify({"success": True, "message": "Tour đã được tạo (thay thế logic này)"})
+    """
+    API tạo lịch trình thông minh (Method: GET).
+    Frontend gửi request dạng Query Params:
+    /api/quick-tour-creator?attractionIds=1&attractionIds=5&startLat=10.77&startLon=106.70&startTime=25/12/2025%2008:00
+    """
+    try:
+        # 1. Lấy danh sách ID (List)
+        # Frontend cần gửi dạng: ?attractionIds=1&attractionIds=2...
+        attraction_ids_raw = request.args.getlist('attractionIds')
+        
+        # Xử lý trường hợp Frontend gửi dạng mảng có ngoặc vuông (attractionIds[]=1) thường gặp ở Axios/jQuery
+        if not attraction_ids_raw:
+            attraction_ids_raw = request.args.getlist('attractionIds[]')
 
-    # Logic GET (ví dụ: lấy gợi ý cho React)
-    # ...
-    print("Đã gọi GET /api/quick-tour-creator")
-    return jsonify({"success": True, "message": "API tạo tour sẵn sàng (thay thế logic này)"})
+        # Convert sang int và lọc bỏ giá trị rác
+        attraction_ids = []
+        for x in attraction_ids_raw:
+            if x.isdigit():
+                attraction_ids.append(int(x))
 
+        # 2. Lấy các tham số đơn
+        start_lat = request.args.get('startLat')
+        start_lon = request.args.get('startLon')
+        start_time_str = request.args.get('startTime') # Format: dd/mm/yyyy HH:MM
+        end_time_str = request.args.get('endTime')     # Format: dd/mm/yyyy HH:MM (MỚI)
+
+        # 3. Validation
+        if not attraction_ids:
+             return jsonify({"success": False, "error": "Chưa chọn điểm đến nào (param: attractionIds)"}), 400
+        if not start_lat or not start_lon:
+             return jsonify({"success": False, "error": "Thiếu tọa độ (param: startLat, startLon)"}), 400
+        if not start_time_str:
+            return jsonify({"success": False, "error": "Thiếu thời gian (param: startTime)"}), 400
+        if not end_time_str:
+            return jsonify({"success": False, "error": "Thiếu thời gian kết thúc (param: endTime)"}), 400
+
+        # Parse endTime
+        try:
+            start_time = datetime.strptime(start_time_str, "%d/%m/%Y %H:%M")
+            end_time = datetime.strptime(end_time_str, "%d/%m/%Y %H:%M")
+        except ValueError:
+            return jsonify({"success": False, "error": "Format time không hợp lệ"}), 400
+
+        if end_time <= start_time:
+            return jsonify({"success": False, "error": "Thời gian kết thúc phải sau thời gian bắt đầu"}), 400
+
+        # 4. Gọi Service (Logic giữ nguyên)
+        result = generate_smart_tour(
+            attraction_ids, 
+            float(start_lat), 
+            float(start_lon), 
+            start_time_str,
+            end_time_str
+        )
+
+        return jsonify({
+            "success": True, 
+            "data": result
+        }), 200
+
+    except Exception as e:
+        print(f"Error creating tour: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+
+@app.route('/api/save-tour', methods=['POST', 'PATCH'])
+@jwt_required(optional=True)
+def save_tour():
+    """
+    POST: Lưu tour mới
+    PATCH: Hủy lưu tour (unsave)
+    """
+    try:
+        # Lấy user_id từ JWT token (nếu có) hoặc từ request
+        user_id = get_jwt_identity()  # Trả về None nếu không có token
+
+        if request.method == 'POST':
+            # === LƯU TOUR MỚI ===
+            data = request.get_json()
+            
+            if not data:
+                return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
+            
+            if not user_id:
+                user_id = data.get('userId')
+            tour_name = data.get('tourName', '').strip()
+            attraction_ids = data.get('attractionIds', [])
+            
+            try:
+                tour_data = save_tour_service(user_id, tour_name, attraction_ids)
+                return jsonify({
+                    "success": True,
+                    "message": f"Đã lưu tour '{tour_name}' thành công",
+                    "tour": tour_data
+                }), 201
+            except ValueError as e:
+                return jsonify({"success": False, "error": str(e)}), 400
+            except LookupError as e:
+                return jsonify({"success": False, "error": str(e)}), 404
+        
+        elif request.method == 'PATCH':
+            # === HỦY LƯU TOUR ===
+            data = request.get_json()
+            
+            if not data:
+                return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
+            
+            if not user_id:
+                user_id = data.get('userId')
+            tour_id = data.get('tourId')
+            
+            try:
+                tour_name = unsave_tour_service(user_id, tour_id)
+                return jsonify({
+                    "success": True,
+                    "message": f"Đã hủy lưu tour '{tour_name}' thành công"
+                }), 200
+            except ValueError as e:
+                return jsonify({"success": False, "error": str(e)}), 400
+            except LookupError as e:
+                return jsonify({"success": False, "error": str(e)}), 404
+    
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error in save_tour: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # ===========================================================================
 # ===                                                                     ===
-# ===                                 User                                ===
+# ===                                 USER                                ===
 # ===                                                                     ===
 # ===========================================================================
+
+# Thêm route get_saved_tours
+@app.route('/api/saved-tours', methods=['GET'])
+def get_saved_tours():
+    """
+    Lấy danh sách tours đã lưu của user
+    Query param: userId=<int>
+    """
+    try:
+        user_id_param = request.args.get('userId')
+        if not user_id_param:
+            return jsonify({"success": False, "error": "userId là bắt buộc"}), 400
+        
+        try:
+            user_id = int(user_id_param)
+        except ValueError:
+            return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+        
+        try:
+            tours_data = get_saved_tours_service(user_id)
+            return jsonify({
+                "success": True,
+                "data": tours_data,
+                "total": len(tours_data)
+            }), 200
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+        except LookupError as e:
+            return jsonify({"success": False, "error": str(e)}), 404
+    
+    except Exception as e:
+        print(f"Error in get_saved_tours: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # ===========================================================================
 # ===                                                                     ===
 # ===                                 Auth                                ===
 # ===                                                                     ===
 # ===========================================================================
+# NOTE: sửa đổi lại logic cho 2  luồng 
+# Đăng ký:
+    # Người dùng nhập: username (duy nhất), email (duy nhất), password.
+    # Hệ thống tạo user -> Gửi mã về email.
+# Đăng nhhập:
+    # Người dùng nhập: username + password.
+    # Hệ thống kiểm tra:
+    # Tìm user theo username.
+    # Khớp password.
+    # Kiểm tra email_verified (nếu chưa xác thực -> chặn và báo lỗi).
+    # Thành công -> Trả về JWT Token.
 @app.route('/api/auth/signup', methods=['POST'])
 def signup():
     """Đăng ký tài khoản mới"""
     try:
         data = request.get_json()
-        
-        if not data:
-            return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
-        
-        username = data.get('username', '').strip()
-        email = data.get('email', '').strip().lower()
-        password = data.get('password', '')
-        confirm_password = data.get('confirmPassword', '')
-        
-        # Validation
-        if not username:
-            return jsonify({"success": False, "error": "Tên người dùng là bắt buộc"}), 400
-        
-        if not email:
-            return jsonify({"success": False, "error": "Email là bắt buộc"}), 400
-        
-        if not password:
-            return jsonify({"success": False, "error": "Mật khẩu là bắt buộc"}), 400
-        
-        if len(password) < 6:
-            return jsonify({"success": False, "error": "Mật khẩu phải có ít nhất 6 ký tự"}), 400
-        
-        if password != confirm_password:
-            return jsonify({"success": False, "error": "Mật khẩu xác nhận không khớp"}), 400
-        
-        # Kiểm tra email đã tồn tại chưa
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return jsonify({"success": False, "error": "Email này đã được đăng ký"}), 409
-        
-        # Tạo người dùng mới
-        new_user = User(
-            username=username,
-            email=email
-        )
-        new_user.set_password(password)
-        
-        db.session.add(new_user)
-        db.session.commit()
-        
-        return jsonify({
-            "success": True,
-            "message": "Đăng ký thành công",
-            "user": new_user.to_json()
-        }), 201
-        
+        result = signup_service(data) # Gọi service
+        return jsonify({"success": True, "data": result}), 201
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
     except Exception as e:
         db.session.rollback()
+        return jsonify({"success": False, "error": "Lỗi hệ thống: " + str(e)}), 500
+
+# ================================= NEW ============================================
+@app.route('/api/auth/verify-email', methods=['POST'])
+def verify_email():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        code = data.get('code')
+        
+        result = verify_email_service(email, code) # Gọi service
+        return jsonify({"success": True, "data": result}), 200
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except LookupError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+@app.route('/api/auth/resend-code', methods=['POST'])
+def resend_code():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        
+        result = resend_verification_service(email) # Gọi service
+        return jsonify({"success": True, "data": result}), 200
+    except (ValueError, LookupError) as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# ================================= NEW ============================================
+
+
 @app.route('/api/auth/login', methods=['POST'])
+@limiter.limit("5 per minute")
 def login():
     """Đăng nhập"""
     try:
+        # NOTE: sửa lại logic đăng nhập dùng username + password cho hợp lý 
+        # email chỉ dùng để gửi mã xác nhận khi đăng ký / quên mật khẩu
         data = request.get_json()
+        result = login_service(data)
         
-        if not data:
-            return jsonify({"success": False, "error": "Không có dữ liệu được gửi"}), 400
+        # Nếu có lỗi trong result (ví dụ chưa verify email)
+        if "error" in result:
+            return jsonify({"success": False, **result}), 403
+            
+        return jsonify({"success": True, **result}), 200
         
-        email = data.get('email', '').strip().lower()
-        password = data.get('password', '')
-        
-        # Validation
-        if not email:
-            return jsonify({"success": False, "error": "Email là bắt buộc"}), 400
-        
-        if not password:
-            return jsonify({"success": False, "error": "Mật khẩu là bắt buộc"}), 400
-        
-        # Tìm người dùng
-        user = User.query.filter_by(email=email).first()
-        
-        if not user or not user.check_password(password):
-            return jsonify({"success": False, "error": "Email hoặc mật khẩu không đúng"}), 401
-        
-        return jsonify({
-            "success": True,
-            "message": "Đăng nhập thành công",
-            "user": user.to_json()
-        }), 200
-        
+    except ValueError as e:
+        # Sai user/pass
+        return jsonify({"success": False, "error": str(e)}), 401
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
@@ -367,6 +651,51 @@ def get_users():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
+@app.route('/api/auth/forgot-password', methods=['POST'])
+@limiter.limit("3 per minute")
+def forgot_password():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        
+        result = forgot_password_service(email)
+        return jsonify({"success": True, **result}), 200
+        
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/api/auth/reset-password', methods=['POST'])
+def reset_password():
+    try:
+        data = request.get_json()
+        result = reset_password_service(data)
+        return jsonify({"success": True, **result}), 200
+        
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/api/auth/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh_token():
+    """Refresh access token"""
+    try:
+        current_user_id = get_jwt_identity()
+        new_access_token = create_access_token(identity=current_user_id)
+        
+        return jsonify({
+            "success": True,
+            "access_token": new_access_token,
+            "token_type": "Bearer"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 # ===========================================================================
 # ===                                                                     ===
 # ===                                 Blogs                               ===
