@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <title>Blogs - Culture Compass</title>
+        <link rel="stylesheet" href="../static/css/global.css">
+        <link rel="stylesheet" href="../static/css/blogs.css">
+        <link rel="stylesheet" href="../static/css/login.css">
+    </head>
+
+    <body>
+        <header class="header header-blogs">
+            <div class="container header-inner">
+
+                <div class="logo">Culture Compass</div>
+
+                <nav class="nav">
+                    <ul>
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="service.html">Service</a></li>
+                        <li><a href="blogs.html" class="active">Blogs</a></li>
+                        <li><a href="user.html">User</a></li>
+                    </ul>
+                </nav>
+
+                <div class="auth-btns">
+                    <a class="signup-btn" href="#">Sign up</a>
+                    <a class="login-btn" href="#">Login</a>
+                </div>
+
+            </div>
+        </header>
+
+        <section class="blogs-container">
+
+            <div class="blog-item" style="background-image: url('../static/images/blog_hue.jpg');">
+                <h2>Hành trình khám phá Cố đô Huế:<br> Dấu ấn vàng son của triều Nguyễn</h2>
+            </div>
+
+            <div class="blog-item" style="background-image: url('../static/images/blog_myson.jpg');">
+                <h2>Hành trình theo dấu Di sản Chăm Pa:<br> Từ Thánh địa Mỹ Sơn đến Bảo tàng Điêu khắc Chăm</h2>
+            </div>
+
+            <div class="blog-item" style="background-image: url('../static/images/blog_langnghe.jpg');">
+                <h2>Con đường Di sản Làng nghề:<br> Từ Gốm Bát Tràng đến Lụa Vạn Phúc</h2>
+            </div>
+
+            <div class="blog-item" style="background-image: url('../static/images/blog_amthuc.jpg');">
+                <h2>Ẩm thực Cung đình Huế:<br> Khi món ăn là một Di sản</h2>
+            </div>
+
+            <div class="blog-item" style="background-image: url('../static/images/blog_baotang.jpg');">
+                <h2>Top 3 Bảo tàng Lịch sử "Kể chuyện" hay nhất Việt Nam bạn không thể bỏ lỡ</h2>
+            </div>
+
+            <div class="blog-item" style="background-image: url('../static/images/blog_lehoi.jpg');">
+                <h2>Bí kíp "Săn" Lễ hội Cầu Ngư:<br> Trải nghiệm trọn vẹn văn hóa miền biển Việt Nam</h2>
+            </div>
+
+            <div class="blog-item" style="background-image: url('../static/images/blog_phoco.jpg');">
+                <h2>Giải mã kiến trúc phố cổ Hội An:<br>Vì sao Chùa Cầu là "Trái tim" của Di sản?"</h2>
+            </div>
+
+        </section>
+
+        <!-- LOGIN POPUP -->
+        <div id="login-overlay" class="login-overlay"></div>
+
+        <div id="login-popup" class="login-popup">
+            <h2 class="login-title">ĐĂNG NHẬP</h2>
+
+            <input type="text" class="login-input" placeholder="Tên đăng nhập">
+            <input type="password" class="login-input" placeholder="Mật khẩu">
+
+            <button class="login-btn-submit">Đăng nhập</button>
+
+            <div class="oauth google">
+                <img src="../static/images/google.png">
+                <span>Google</span>
+            </div>
+
+            <div class="oauth facebook">
+                <img src="../static/images/facebook.png">
+                <span>Facebook</span>
+            </div>
+
+            <p class="login-small">
+                Chưa có tài khoản? <a class="login-link" href="#">Tạo tài khoản mới</a>
+            </p>
+
+            <div class="login-footer-links">
+                <a class="login-link" href="#">Quên mật khẩu?</a>
+                <a class="login-link guest-continue" href="#">Tiếp tục với tư cách khách</a>
+            </div>
+        </div>
+
+        <!-- SIGN UP --> 
+        <div id="signup-overlay" class="login-overlay"></div>
+
+        <div id="signup-popup" class="login-popup">
+            <h2 class="login-title">Hãy cùng bắt đầu nào!</h2>
+
+            <input type="text" class="login-input" placeholder="Nhập số điện thoại hoặc email">
+
+            <button class="login-btn-submit">Tiếp tục</button>
+
+            <p class="login-small">
+                <a class="login-link back-to-login" href="#">← Quay lại trang đăng nhập</a>      
+            </p>
+
+            <p class="login-small" style="margin-top: 10px; color: #333;">
+                Nhiều tính năng hơn đang đợi bạn. Hãy đăng nhập để được mở khóa.
+            </p>
+
+            <p class="login-small">
+                <a class="login-link guest-continue" href="#">Tiếp tục với tư cách là khách</a>
+            </p>
+        </div>
+
+        <!-- step 2-->
+        <div id="signup2-overlay" class="login-overlay"></div>
+
+        <div id="signup2-popup" class="login-popup">
+            <h2 class="login-title">Hãy cùng bắt đầu nào!</h2>
+
+            <input type="text" class="login-input" placeholder="Tên đăng nhập">
+            <input type="password" class="login-input" placeholder="Mật khẩu (ít nhất 8 ký tự)">
+            <input type="password" class="login-input" placeholder="Xác nhận mật khẩu">
+
+            <button class="login-btn-submit">Tạo tài khoản</button>
+
+            <p class="login-small">
+                <a class="login-link back-to-signup1" href="#">← Quay lại trang đăng nhập</a>
+            </p>
+
+            <p class="login-small" style="margin-top: 10px; color: #333">
+                Nhiều tính năng hơn đang đợi bạn. Hãy đăng nhập để được mở khóa
+            </p>
+
+            <p class="login-small">
+                <a class="login-link guest-continue" href="#">Tiếp tục với tư cách là khách</a>
+            </p>
+        </div>
+
+        <!--FORGOT PASSWORD-->
+        <div id="forgot-overlay" class="login-overlay"></div>
+
+        <div id="forgot-popup" class="login-popup">
+            <h2 class="login-title">QUÊN MẬT KHẨU</h2>
+
+            <p class="login-small" style="text-align:center; font-size:17px; color:#000; font-weight: 600; margin-bottom: 18px;">
+                Nhập email hoặc số điện thoại để xác thực
+            </p>
+
+            <input type="text" class="login-input" placeholder="Example@gmail.com / 09 1234 5678">
+            <button class="login-btn-submit">Gửi</button>
+
+            <p class="login-small" style="margin-top: 14px;">
+                <a class="login-link back-to-login-from-forgot" href="#">← Quay lại trang đăng nhập</a>
+            </p>
+        </div>
+
+        <!-- FORGOT PASSWORD STEP 2 -->
+        <div id="forgot2-overlay" class="login-overlay"></div>
+
+        <div id="forgot2-popup" class="login-popup">
+            <h2 class="login-title">XÁC THỰC</h2>
+
+            <p class="login-small" style="text-align:center; font-size:18px; font-weight:600; color:#000; margin-bottom:20px;">
+                Nhập mã xác thực
+            </p>
+
+            <div class="otp-container" style="display:flex; justify-content:center; gap:16px; margin-bottom:20px;">
+                <input maxlength="1" class="otp-input" type="text">
+                <input maxlength="1" class="otp-input" type="text">
+                <input maxlength="1" class="otp-input" type="text">
+                <input maxlength="1" class="otp-input" type="text">
+            </div>
+
+            <p class="login-small" style="text-align:center; margin-bottom: 18px;">
+                Bạn không nhận được mã? <a href="#" class="login-link resend-otp">Gửi lại</a>
+            </p>
+
+            <button class="login-btn-submit">Xác thực</button>
+
+            <p class="login-small" style="margin-top: 14px;">
+                <a class="login-link back-to-forgot1" href="#">← Quay lại</a>
+            </p>
+        </div>
+
+        <!-- FORGOT PASSWORD STEP 3 -->
+        <div id="forgot3-overlay" class="login-overlay"></div>
+
+        <div id="forgot3-popup" class="login-popup">
+            <h2 class="login-title">MẬT KHẨU MỚI</h2>
+
+            <p class="login-small" style="text-align:center; font-size:18px; font-weight:600; color:#000; margin-bottom:20px;">
+                Nhập mật khẩu mới
+            </p>
+
+            <input type="password" class="login-input new-pass" placeholder="8 symbols at least">
+    
+            <p class="login-small" style="font-size:18px; font-weight:600; color:#000; margin:15px 0 10px;">
+                Xác nhận mật khẩu
+            </p>
+
+            <input type="password" class="login-input new-pass2" placeholder="********">
+
+            <button class="login-btn-submit confirm-new-pass">Xác nhận</button>
+
+            <p class="login-small" style="margin-top: 14px;">
+                <a class="login-link back-to-forgot2" href="#">← Quay lại</a>
+            </p>
+        </div>
+
+        <script src="../static/js/login.js"></script>
+
+        <footer class="footer">
+            <p>2025 SmartTour - Hệ thống gợi ý hành trình du lịch</p>
+        </footer>
+
+    </body>
+</html>

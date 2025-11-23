@@ -1,0 +1,136 @@
+/* ===== SERVICE HERO ===== */
+.sv-hero {
+    width: 100%;
+    height: 380px;
+    background-image: url('../images/service_background.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.sv-hero-overlay {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding-left: 80px;
+}
+
+.sv-hero-title {
+    color: white;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 32px;
+}
+
+/* SEARCH ROW */
+.sv-search-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 26px;
+}
+
+.sv-start-select,
+.sv-search-input {
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 0 12px;
+    width: 330px;
+}
+
+.sv-search-btn {
+    height: 40px;
+    padding: 0 18px;
+    background: #3498db;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ROUTE ROW */
+.sv-route-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    background: rgba(255,255,255,0.8);
+    padding: 10px 20px;
+    border-radius: 12px;
+    margin-bottom: 38px;
+}
+
+.sv-date-input, .sv-time-input {
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 0 10px;
+}
+
+/* BODY */
+.sv-content {
+    display: flex;
+    background: #C9BD93;
+    padding: 40px 60px;
+}
+
+/* LEFT */
+.sv-left {
+    width: 260px;
+    margin-right: 40px;
+}
+
+.sv-filter-box {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* RIGHT */
+.sv-right {
+    flex: 1;
+}
+
+.sv-suggest-title {
+    background: #ebb285;
+    border: 2px solid #c17f5d;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sv-section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 18px 0;
+}
+
+.sv-card {
+    width: 100%;
+    height: 240px;
+    background: #eee;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.sv-card-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.sv-card-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
