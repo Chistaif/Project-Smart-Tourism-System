@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
 import os
+from proto.message import MessageToJson
 from werkzeug.utils import secure_filename
 from flask_limiter import Limiter
 from flask_jwt_extended import (
@@ -51,6 +52,7 @@ from user.auth_service import (
     reset_password_service
 )
 from cloudinary_utils import upload_image_to_cloud
+from agent_utils import chat_with_tour_guide, generate_caption
 
 # Load environment variables
 load_dotenv()
@@ -285,101 +287,9 @@ def get_attraction_detail(attraction_id):
     
 
 
-
 # === Chức năng tạo tour ===
 # NOTE:
 # Thông tin cần: attractionIds, startLat, startLon, startTime, endTime
-# Thông tin trả về:
-# {
-#     'success': True|False,
-#     'data': {
-#         "timeline": [
-#         {
-#             "day": 1,
-#             "date": "25/12/2025",
-#             "time": "08:00",
-#             "type": "START",
-#             "name": "Điểm xuất phát",
-#             "detail": "Bắt đầu hành trình"
-#         },
-#         {
-#             "day": 1,
-#             "date": "25/12/2025", 
-#             "time": "12:00",
-#             "type": "LUNCH",
-#             "name": "Nghỉ ăn trưa",
-#             "detail": "Tự do thưởng thức ẩm thực địa phương",
-#             "duration": 60,
-#             "endTime": "13:00"
-#         },
-#         {
-#             "day": 1,
-#             "date": "25/12/2025",
-#             "time": "10:30",
-#             "type": "TRAVEL",
-#             "name": "Di chuyển đến Cố đô Huế",
-#             "detail": "Quãng đường: 85.2km (90 phút)",
-#             "duration": 90
-#         },
-#         {
-#             "day": 1,
-#             "date": "25/12/2025",
-#             "time": "12:00",
-#             "type": "VISIT",
-#             "id": 1,
-#             "name": "Cố đô Huế",
-#             "detail": "Tham quan, chụp ảnh.",
-#             "duration": 120,
-#             "endTime": "14:00",
-#             "lat": 16.4637,
-#             "lon": 107.5909,
-#             "imageUrl": "/static/images/hue.jpg"
-#         },
-#         {
-#             "day": 1,
-#             "date": "25/12/2025",
-#             "time": "18:00",
-#             "type": "DINNER",
-#             "name": "Nghỉ ăn tối",
-#             "detail": "Tự do thưởng thức ẩm thực địa phương",
-#             "duration": 60,
-#             "endTime": "19:00"
-#         },
-#         {
-#             "day": 1,
-#             "date": "25/12/2025",
-#             "time": "22:00",
-#             "type": "SLEEP",
-#             "name": "Nghỉ ngơi",
-#             "detail": "Kết thúc ngày, chuẩn bị cho ngày mai"
-#         },
-#         {
-#             "day": 2,
-#             "date": "26/12/2025",
-#             "time": "06:00",
-#             "type": "WAKE_UP",
-#             "name": "Thức dậy",
-#             "detail": "Bắt đầu ngày 2"
-#         }],
-#         "mapHtml": map_html,
-#         "invalidAttractions": [
-#          {
-#              "id": attr.id,
-#              "name": attr.name,
-#              "reason": reason
-#          },
-#          {
-#              "id": attr.id,
-#              "name": attr.name,
-#              "reason": reason
-#          }
-#            
-#         ],
-#         "finishTime": current_time.strftime("%H:%M"),
-#         "totalDestinations": len(visit_points),
-#         "totalDays": len(attractions_per_day)
-#     }
-# }
 @app.route('/api/quick-tour-creator', methods=['GET'])
 def creator():
     """
@@ -838,6 +748,76 @@ def create_blog():
         db.session.rollback()
         return jsonify({"success": False, "error": str(e)}), 500
 
+# ===========================================================================
+# ===                        AI / Chatbot Routes                          ===
+# ===========================================================================
+# CHATBOT cho trang service
+@app.route('/ai/chat', methods=['POST'])
+@jwt_required() # Chỉ cho user đăng nhập dùng
+def ai_chat():
+    """API Chatbot tư vấn du lịch
+    Frontend cần gửi JSON:
+    {
+        "message": "Ở đó có món gì ngon?",
+        "history": [
+            {"role": "user", "parts": ["Đà Lạt có gì vui?"]},
+            {"role": "model", "parts": ["Đà Lạt có hồ Xuân Hương..."]}
+        ]
+    }
+    """
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        message = data.get('message')
+        history = data.get('history', [])
+        
+        if not message:
+            return jsonify({"success": False, "error": "Tin nhắn trống"}), 400
+            
+        top_attractions = smart_recommendation_service(user_id=user_id, search_term=message, limit=10)
+       
+        context_lines = []
+        for a in top_attractions:
+            name = a.get('name')
+            desc = a.get('briefDescription')
+            score = a.get('recommendationScore', 0)
+            
+            # Chỉ đưa vào context những địa điểm thực sự liên quan (score > 0)
+            if score > 0:
+                context_lines.append(f"- {name}: {desc}")
+        
+        # Nếu không tìm thấy gì liên quan thì lấy 3 địa điểm nổi bật ngẫu nhiên
+        if not context_lines:
+             fallback_attrs = Attraction.query.limit(3).all()
+             for a in fallback_attrs:
+                 context_lines.append(f"- {a.name}: {a.brief_description}")
+
+        context_info = "Dữ liệu du lịch gợi ý:\n" + "\n".join(context_lines)
+        
+        reply = chat_with_tour_guide(message, context_data=f"Các địa điểm nổi bật: {context_info}")
+        
+        return jsonify({"success": True, "reply": reply}), 200
+        # NOTE: Frontend phải append reply này vào history ở phía client
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# CHATBOT tạo nội dung cho trang blog
+@app.route('/ai/generate-caption', methods=['POST'])
+@jwt_required() # Chỉ cho user đăng nhập dùng
+def ai_generate_caption():
+    """API tạo caption marketing tự động"""
+    try:
+        data = request.get_json()
+        attr_name = data.get('name')
+        features = data.get('features', '') # Ví dụ: "yên tĩnh, có hồ bơi, ngắm mây"
+        
+        if not attr_name:
+            return jsonify({"success": False, "error": "Cần tên địa điểm"}), 400
+            
+        content = generate_caption(attr_name, features)
+        return jsonify({"success": True, "data": content}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # ===========================================================================
 # ===                                                                     ===

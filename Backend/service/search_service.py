@@ -131,8 +131,8 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
     return [
         {
             **item["attraction"].to_json(),
-            "recommendation_score": item["score"], 
-            "match_reason": item["match_reason"]
+            "recommendationScore": item["score"], 
+            "matchReason": item["match_reason"]
         } 
         for item in final_results
     ]
