@@ -11,7 +11,13 @@ import BlogDetail from './pages/BlogDetail';
 import AttractionDetail from './pages/AttractionDetail';
 import { authAPI } from './utils/api';
 
-import homeImg from './asset/home.png';
+import test1 from './asset/box1.jpg';
+import test2 from './asset/box2.jpg';
+import test3 from './asset/box3.jpg';
+import homeImg from './asset/home_1.jpg';
+
+const initialImages = [homeImg, test1, test2, test3];
+
 
 function App() {
   const [currentBackground, setCurrentBackground] = useState(`url(${homeImg})`);
@@ -20,6 +26,21 @@ function App() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+
+  const [images, setImages] = useState(initialImages);
+
+  const swapImage = (clickedIndex) => {
+    const newImages = [...images];
+
+    // Swap ảnh index 0 (background) với ảnh được click
+    const temp = newImages[0];
+    newImages[0] = newImages[clickedIndex];
+    newImages[clickedIndex] = temp;
+
+    setImages(newImages);
+    setCurrentBackground(`url(${newImages[0]})`);
+  };
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
@@ -244,7 +265,7 @@ function App() {
         <Routes>
           <Route 
             path="/" 
-            element={<HomePage handleCardClick={handleCardClick} currentUser={user} />} 
+            element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} 
           />
           <Route 
             path="/service" 
