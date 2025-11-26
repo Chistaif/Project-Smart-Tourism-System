@@ -156,7 +156,7 @@
             "lon": 106.0142, 
             "rating": 4.8,
             "visitDuration": 240, 
-            "imageUrl": "https://example.com/images/hoi-lim-bac-ninh-tong-quan.jpg",
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909920/hoi-lim-e1453543168215_zpjwhc.jpg",
             "tags": ["Lễ hội", "Văn hóa", "Quan họ", "Bắc Ninh", "Di sản", "Tâm linh"],
             "datetimeStart": "13:01:YYYY_âm lịch", 
             "datetimeEnd": "15:01:YYYY_âm lịch"
@@ -511,7 +511,7 @@
             "lon": 108.1278, 
             "rating": 4.7,
             "visitDuration": 150, 
-            "imageUrl": "https://example.com/images/my-son-tong-quan.jpg",
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909680/thanh_dia_my_son_01-2_yqcymq.jpg",
             "tags": ["Di tích", "Văn hóa Chăm", "Ấn Độ giáo", "Di sản UNESCO", "Quảng Nam", "Kiến trúc"],
             "spotType": "Thánh địa",
             "ticketPrice": 150000.0, 

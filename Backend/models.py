@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 
 db = SQLAlchemy()
 
@@ -24,10 +24,15 @@ tour_attractions = db.Table('tour_attractions',
 class User(db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False, unique=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-    avatar_url = db.Column(db.String(100), nullable=True, default='default_avatar.png') 
+    avatar_url = db.Column(db.String(100), nullable=True, default='https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763910182/c6e56503cfdd87da299f72dc416023d4_s2kfhu.jpg') 
+    is_admin = db.Column(db.Boolean, default=False)
+    email_verified = db.Column(db.Boolean, default=False)
+    email_verification_code = db.Column(db.String(6), nullable=True)
+    email_code_expires = db.Column(db.DateTime, nullable=True)
+    last_login_at = db.Column(db.DateTime, nullable=True)
 
     # Relationships
     reviews = db.relationship('Review', back_populates='user', lazy=True)
@@ -39,6 +44,29 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def generate_verification_code(self):
+        """Tạo mã 6 số xác nhận email"""
+        import random
+        self.email_verification_code = str(random.randint(100000, 999999))
+        self.email_code_expires = datetime.utcnow() + timedelta(minutes=10)  # Code valid for 10 minutes
+        return self.email_verification_code
+
+    def verify_code(self, code):
+        """Xác thực logic"""
+        if not self.email_verification_code or not self.email_code_expires:
+            return False
+        
+        if datetime.utcnow() > self.email_code_expires:
+            return False  # Code expired
+        
+        return self.email_verification_code == code
+
+    def clear_verification_code(self):
+        """Xóa mã cũ để đảm bảo tính ngẫu nhiên -> tăng độ an toàn"""
+        self.email_verification_code = None
+        self.email_code_expires = None
+        self.email_verified = True
 
     def to_json(self):
         return {
@@ -91,7 +119,9 @@ class Attraction(db.Model):
             "averageRating": self.average_rating,
             "visitDuration": self.visit_duration,
             "imageUrl": self.image_url,
-            "tags": tag_list
+            "tags": tag_list,
+            "lat": self.lat,
+            "lon": self.lon
         }
 
 class Festival(Attraction):
@@ -160,6 +190,11 @@ class Review(db.Model):
 
     user = db.relationship('User', back_populates='reviews')
     attraction = db.relationship('Attraction', back_populates='reviews')
+
+    __table_args__ = (
+        db.Index('idx_review_user_attraction', 'user_id', 'attraction_id'),
+        db.Index('idx_review_created_at', 'created_at'),
+    )
 
     def to_json(self):
         return {

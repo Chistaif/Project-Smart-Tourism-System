@@ -1,8 +1,8 @@
 """
 Cái này để tạo db nếu đ có db
 """
-from app import app
-from models import db, User
+from Backend.app import app
+from Backend.models import db, User
 import os
 
 def migrate_database():
