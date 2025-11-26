@@ -60,7 +60,7 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
 
       <aside className="right">
         {images.slice(1).map((img, index) => (
-          <div className="card-col" key={index}>
+          <div className={`card-col col-${index}`} key={index}>
             <div className="img-card" onClick={() => swapImage(index + 1)}>
               <div className="inner" style={{ backgroundImage: `url(${img})` }} />
             </div>

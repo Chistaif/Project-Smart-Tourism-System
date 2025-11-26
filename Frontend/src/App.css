@@ -219,6 +219,7 @@ p.lead {
   flex-direction: column;
   gap: 26px;
   align-items: flex-end;
+  transition: transform 0.6s ease;
 }
 
 .img-card {
@@ -235,13 +236,15 @@ p.lead {
 }
 
 /* Tạo hiệu ứng bậc thang từ dưới lên */
-.right .card-col:nth-child(1) {
+.col-0 {
   transform: translateX(0);
 }
-.right .card-col:nth-child(2) {
+
+.col-1 {
   transform: translateX(-200px) translateY(-40px);
 }
-.right .card-col:nth-child(3) {
+
+.col-2 {
   transform: translateX(-400px) translateY(-80px);
 }
 
@@ -641,4 +644,25 @@ footer {
   .forgot-password {
     align-self: flex-end;
   }
+}
+
+.forgot-btn {
+    background: var(--accent);
+    color: #1a2e05;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(196, 179, 10, 0.3);
+    font-family: inherit;
+    text-align: center;
+  }
+
+.forgot-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(196, 179, 10, 0.4);
+  background: #d4c50b;
 }

@@ -97,7 +97,7 @@ function App() {
                 ×
               </button>
               
-              {popupMode === 'signup' ? (
+              {popupMode === 'signup' && (
                 <div className="signup-container">
                   <h2 className="signup-title">Tạo Tài Khoản</h2>
                   <p className="signup-subtitle">Tham gia Culture Compass và bắt đầu hành trình của bạn</p>
@@ -185,7 +185,9 @@ function App() {
                     <p>Đã có tài khoản? <a href="#" className="signup-link" onClick={(e) => { e.preventDefault(); switchMode('login'); }}>Đăng Nhập</a></p>
                   </div>
                 </div>
-              ) : (
+              )}
+
+              {popupMode === 'login' && (
                 <div className="signup-container">
                   <h2 className="signup-title">Chào Mừng Trở Lại</h2>
                   <p className="signup-subtitle">Đăng nhập để tiếp tục hành trình</p>
@@ -244,7 +246,7 @@ function App() {
                         <input type="checkbox" />
                         <span>Ghi nhớ đăng nhập</span>
                       </label>
-                      <a href="#" className="forgot-password">Quên mật khẩu?</a>
+                      <a href="#" className="forgot-password" onClick={(e) => {e.preventDefault(); switchMode('forgot'); }}>Quên mật khẩu?</a>
                     </div>
                     
                     <button type="submit" className="signup-btn" disabled={loading}>
@@ -254,6 +256,86 @@ function App() {
                   
                   <div className="signup-footer">
                     <p>Chưa có tài khoản? <a href="#" className="signup-link" onClick={(e) => { e.preventDefault(); switchMode('signup'); }}>Đăng Ký</a></p>
+                  </div>
+                </div>
+              )}
+
+              {popupMode === 'forgot' && (
+                <div className="signup-container">
+                  <h2 className="signup-title">Quên Mật Khẩu</h2>
+                  <p className="signup-subtitle">
+                    Nhập email để xác nhận
+                  </p>
+
+                  {error && <div className="error-message">{error}</div>}
+
+                  <form 
+                    classNmae="signup-form"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setError('');
+                      setLoading(true);
+
+                      const formData = new FormData(e.target);
+                      const email = formData.get('email');
+
+                      if(!email) {
+                        setError('Vui lòng nhập email trước khi xác thực');
+                        setLoading(false);
+                        return;
+                      }
+
+                      try {
+                        alert(
+                          'Nếu email tồn ại trong hệ thống, mã xác thực sẽ được gửi'
+                        );
+
+                        switchMode('login');
+                      } catch(err) {
+                        setError(
+                          err.message || 'Khong the gui email xac thuc, thu lai sau'
+                        );
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
+                      <label htmlFor="forgot-email">Email</label>
+                      <input
+                        type="email"
+                        id="forgot-email"
+                        name="email"
+                        placeholder="Nhap email cua ban"
+                        required
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+                      <button 
+                        type="submit"
+                        className="forgot-btn"
+                        disabled={loading}
+                      >
+                        {loading ? 'Đang gửi...' : 'Xác thực'}
+                      </button>
+                    </div>
+                  </form>
+
+                  <div className="signup-footer">
+                    <p>
+                      Nhớ mật khẩu rồi?{' '}
+                      <a
+                        href="#"
+                        className="signup-link"
+                        onClick={(e)=> {
+                          e.preventDefault();
+                          switchMode('login');
+                        }}
+                      >
+                        Quay lại đăng nhập
+                      </a>
+                    </p>
                   </div>
                 </div>
               )}
