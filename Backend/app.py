@@ -27,7 +27,7 @@ from models import (
     User,
 )
 from init_db import import_demo_data
-from service.search_service import search_service
+from service.search_service import smart_recommendation_service
 from service.attraction_service import (
     get_attraction_detail_service,
     create_review,
@@ -132,6 +132,7 @@ Ví dụ:
 @app.route('/api/search', methods=["GET"])
 @jwt_required(optional=True)
 def search():
+    # Xử lý thông tin đầu vào
     user_id = get_jwt_identity()
 
     types_list = request.args.getlist("typeList", [])
@@ -146,9 +147,10 @@ def search():
             except ValueError:
                 return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
 
-    # NOTE cho FE: userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
+    # NOTE userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
+    # Logic chính
     try:
-        data = search_service(types_list, search_term, user_id=user_id)
+        data = smart_recommendation_service(types_list, search_term, user_id=user_id)
         return jsonify({"success": True, "data": data}), 200
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 400
