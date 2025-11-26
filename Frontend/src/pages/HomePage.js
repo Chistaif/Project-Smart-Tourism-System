@@ -4,7 +4,7 @@ import test1 from '../asset/test1.png';
 import test2 from '../asset/test2.png';
 import test3 from '../asset/test3.png';
 
-export default function HomePage({ handleCardClick, currentUser }) {
+export default function HomePage({ handleCardClick, currentUser, images, swapImage}) {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -59,24 +59,15 @@ export default function HomePage({ handleCardClick, currentUser }) {
       </section>
 
       <aside className="right">
-        <div className="card-col">
-          <div className="img-card" onClick={() => handleCardClick(`url(${test3})`)}>
-            <div className="inner" style={{ backgroundImage: `url(${test3})` }} />
+        {images.slice(1).map((img, index) => (
+          <div className={`card-col col-${index}`} key={index}>
+            <div className="img-card" onClick={() => swapImage(index + 1)}>
+              <div className="inner" style={{ backgroundImage: `url(${img})` }} />
+            </div>
           </div>
-        </div>
-
-        <div className="card-col">
-          <div className="img-card" onClick={() => handleCardClick(`url(${test2})`)}>
-            <div className="inner" style={{ backgroundImage: `url(${test2})` }} />
-          </div>
-        </div>
-
-        <div className="card-col">
-          <div className="img-card" onClick={() => handleCardClick(`url(${test1})`)}>
-            <div className="inner" style={{ backgroundImage: `url(${test1})` }} />
-          </div>
-        </div>
+        ))}
       </aside>
+
     </main>
   );
 }
