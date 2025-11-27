@@ -128,6 +128,15 @@ class Attraction(db.Model):
             "lon": self.lon
         }
 
+    def to_json_brief(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "averageRating": self.average_rating,
+            "imageUrl": self.image_url,
+            "type": self.type
+        }
+
 class Festival(Attraction):
     __tablename__ = 'festival'
     id = db.Column(db.Integer, db.ForeignKey('attraction.id'), primary_key=True) 
