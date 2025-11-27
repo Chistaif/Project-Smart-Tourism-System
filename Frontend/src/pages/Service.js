@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { attractionsAPI } from '../utils/api';
 import './Service.css';
@@ -33,11 +33,7 @@ export default function Service({ currentUser }) {
   const [endDate, setEndDate] = useState('');
   const [budgetLevel, setBudgetLevel] = useState(1);
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [data, setData] = useState({
-    festivals: [],
-    culturalSpots: [],
-    otherAttractions: [],
-  });
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -52,11 +48,7 @@ export default function Service({ currentUser }) {
       if (!response.success) {
         throw new Error(response.error || 'Không thể tải dữ liệu');
       }
-      setData({
-        festivals: response.data.festivals || [],
-        culturalSpots: response.data.culturalSpots || [],
-        otherAttractions: response.data.otherAttractions || [],
-      });
+      setData(response.data || []);
     } catch (err) {
       console.error(err);
       setError(err.message || 'Không thể tải dữ liệu');
@@ -71,65 +63,32 @@ export default function Service({ currentUser }) {
   }, [currentUser]);
 
   const allAttractions = useMemo(() => {
-    const normalize = (items, category) =>
-      (items || []).map((item) => ({
-        ...item,
-        category,
-      }));
-    return [
-      ...normalize(data.festivals, 'Lễ hội'),
-      ...normalize(data.culturalSpots, 'Điểm văn hóa'),
-      ...normalize(data.otherAttractions, 'Khác'),
-    ];
+    return (data || []).map((item) => ({
+      ...item,
+      category: item.type === 'festival' ? 'Lễ hội' : 'Điểm văn hóa',
+    }));
   }, [data]);
 
   const highlightAttractions = useMemo(() => {
     return [...allAttractions]
-      .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
-      .slice(0, 4);
+      .sort((a, b) => (b.recommendationScore || 0) - (a.recommendationScore || 0))
+      .slice(0, 10);
   }, [allAttractions]);
 
-  const happeningFestivals = useMemo(() => {
-    return (data.festivals || []).slice(0, 4);
-  }, [data.festivals]);
+  const popularSuggestions = useMemo(() => {
+    const highlightIds = highlightAttractions.map(item => item.id);
+    return allAttractions.filter(item =>
+      item.type !== 'attraction' && !highlightIds.includes(item.id)
+    );
+  }, [allAttractions, highlightAttractions]);
 
-  const getItemsForType = useCallback((label) => {
-    const normalize = (items) => items || [];
-    const includesText = (items, keyword) =>
-      normalize(items).filter((item) => item.name?.toLowerCase().includes(keyword));
+  const nearbyDestinations = useMemo(() => {
+    const highlightIds = highlightAttractions.map(item => item.id);
+    return allAttractions.filter(item =>
+      item.type === 'attraction' && !highlightIds.includes(item.id)
+    );
+  }, [allAttractions, highlightAttractions]);
 
-    switch (label) {
-      case 'Lễ hội':
-        return normalize(data.festivals);
-      case 'Bảo tàng': {
-        const museumMatches = includesText(data.culturalSpots, 'bảo tàng');
-        return museumMatches.length > 0 ? museumMatches : normalize(data.culturalSpots);
-      }
-      case 'Đền/Chùa': {
-        const templeMatches = includesText(data.culturalSpots, 'chùa').concat(
-          includesText(data.culturalSpots, 'đền')
-        );
-        return templeMatches.length > 0 ? templeMatches : normalize(data.otherAttractions);
-      }
-      case 'Di tích':
-        return normalize(data.otherAttractions);
-      case 'Làng nghề': {
-        const craftMatches = includesText(data.culturalSpots, 'làng').concat(
-          includesText(data.otherAttractions, 'làng')
-        );
-        return craftMatches.length > 0 ? craftMatches : normalize(data.culturalSpots);
-      }
-      default:
-        return allAttractions;
-    }
-  }, [allAttractions, data]);
-
-  const typeRecommendations = useMemo(() => {
-    return TYPE_OPTIONS.map((type) => ({
-      ...type,
-      items: getItemsForType(type.value).slice(0, 3),
-    }));
-  }, [getItemsForType]);
 
   const handleTypeToggle = (value) => {
     setSelectedTypes((prev) =>
@@ -273,7 +232,7 @@ export default function Service({ currentUser }) {
           {loading ? (
             <p>Đang tải dữ liệu...</p>
           ) : highlightAttractions.length > 0 ? (
-            <div className="card-grid">
+            <div className="horizontal-scroll">
               {highlightAttractions.map((item) => (
                 <article
                   key={item.id}
@@ -281,14 +240,16 @@ export default function Service({ currentUser }) {
                   onClick={() => navigate(`/attractions/${item.id}`)}
                 >
                   {item.imageUrl && (
-                    <div className="spot-card-image" style={{ backgroundImage: `url(${item.imageUrl})` }} />
+                    <div className="spot-card-image" style={{ backgroundImage: `url(${item.imageUrl})` }}>
+                      <div className="rating-overlay">⭐ {item.averageRating ?? 'Chưa có'}</div>
+                    </div>
                   )}
                   <div className="spot-card-content">
                     <h3>{item.name}</h3>
                     <div className="spot-meta">
-                      <span>⭐ {item.averageRating ?? 'Chưa có'}</span>
                       {item.isFavorite && <span className="favorite-pill">Yêu thích</span>}
                     </div>
+                    {item.matchReason && <small className="match-reason">{item.matchReason}</small>}
                     <small>{item.category}</small>
                   </div>
                 </article>
@@ -300,86 +261,71 @@ export default function Service({ currentUser }) {
         </section>
 
         <section className="recommendation-block">
-          <h2>Các lễ hội đang diễn ra</h2>
+          <h2>Gợi ý phù hợp</h2>
           {loading ? (
             <p>Đang tải dữ liệu...</p>
-          ) : happeningFestivals.length > 0 ? (
-            <div className="festival-grid">
-              {happeningFestivals.map((item) => (
+          ) : popularSuggestions.length > 0 ? (
+            <div className="card-grid">
+              {popularSuggestions.map((item) => (
                 <article
                   key={item.id}
-                  className="festival-card"
-                  onClick={() => navigate(`/attractions/${item.id}`)}
-                >
-                  {item.imageUrl && <img src={item.imageUrl} alt={item.name} />}
-                  <div className="festival-content">
-                    <h3>{item.name}</h3>
-                    <p>⭐ {item.averageRating ?? 'Chưa có'} • Lễ hội</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <p>Hiện chưa có dữ liệu lễ hội.</p>
-          )}
-        </section>
-
-        <section className="recommendation-block">
-          <h2>Khám phá theo sở thích</h2>
-          <div className="type-columns">
-            {typeRecommendations.map((group) => (
-              <div key={group.value} className="type-column">
-                <header>
-                  <h3>{group.label}</h3>
-                </header>
-                {group.items.length > 0 ? (
-                  group.items.map((item) => (
-                    <button
-                      key={item.id}
-                      className="type-item"
-                      onClick={() => navigate(`/attractions/${item.id}`)}
-                    >
-                      <span>{item.name}</span>
-                      <strong>⭐ {item.averageRating ?? 'Chưa có'}</strong>
-                    </button>
-                  ))
-                ) : (
-                  <p className="empty">Chưa có dữ liệu</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="recommendation-block">
-          <h2>Tất cả kết quả</h2>
-          {loading ? (
-            <p>Đang tải dữ liệu...</p>
-          ) : allAttractions.length > 0 ? (
-            <div className="card-grid compact">
-              {allAttractions.map((item) => (
-                <article
-                  key={item.id}
-                  className="spot-card compact"
+                  className="spot-card"
                   onClick={() => navigate(`/attractions/${item.id}`)}
                 >
                   {item.imageUrl && (
-                    <div className="spot-card-image" style={{ backgroundImage: `url(${item.imageUrl})` }} />
+                    <div className="spot-card-image" style={{ backgroundImage: `url(${item.imageUrl})` }}>
+                      <div className="rating-overlay">⭐ {item.averageRating ?? 'Chưa có'}</div>
+                    </div>
                   )}
                   <div className="spot-card-content">
-                    <div className="spot-card-header">
-                      <h3>{item.name}</h3>
-                      <span>⭐ {item.averageRating ?? 'Chưa có'}</span>
+                    <h3>{item.name}</h3>
+                    <div className="spot-meta">
+                      {item.isFavorite && <span className="favorite-pill">Yêu thích</span>}
                     </div>
+                    {item.matchReason && <small className="match-reason">{item.matchReason}</small>}
                     <small>{item.category}</small>
                   </div>
                 </article>
               ))}
             </div>
           ) : (
-            <p>Không có điểm tham quan nào.</p>
+            <p>Không có gợi ý phổ biến.</p>
           )}
         </section>
+
+        <section className="recommendation-block">
+          <h2>Các điểm đến lân cận</h2>
+          {loading ? (
+            <p>Đang tải dữ liệu...</p>
+          ) : nearbyDestinations.length > 0 ? (
+            <div className="card-grid">
+              {nearbyDestinations.map((item) => (
+                <article
+                  key={item.id}
+                  className="spot-card"
+                  onClick={() => navigate(`/attractions/${item.id}`)}
+                >
+                  {item.imageUrl && (
+                    <div className="spot-card-image" style={{ backgroundImage: `url(${item.imageUrl})` }}>
+                      <div className="rating-overlay">⭐ {item.averageRating ?? 'Chưa có'}</div>
+                    </div>
+                  )}
+                  <div className="spot-card-content">
+                    <h3>{item.name}</h3>
+                    <div className="spot-meta">
+                      {item.isFavorite && <span className="favorite-pill">Yêu thích</span>}
+                    </div>
+                    {item.matchReason && <small className="match-reason">{item.matchReason}</small>}
+                    <small>{item.category}</small>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p>Không có điểm đến lân cận.</p>
+          )}
+        </section>
+
       </div>
     </div>
   );
