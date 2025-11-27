@@ -15,4 +15,3 @@ flask-limiter
 flask-admin
 flask-mail
 cloudinary
-google.generativeai

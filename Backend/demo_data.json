@@ -9,12 +9,6 @@
             "name": "Test User",
             "email": "test@example.com",
             "password": "password123"
-        },
-        {
-            "name": "ADMIN ĐZ",
-            "email": "thien217353@gmail.com",
-            "password": "I<3you3K",
-            "isAdmin": true
         }
     ],
 
