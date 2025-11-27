@@ -118,6 +118,16 @@ export const authAPI = {
     method: 'POST',
     body: JSON.stringify(credentials),
   }),
+
+  verifyOTP: (payload) => apiRequest('/auth/verify_email', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  resendOTP: (payload) => apiRequest('/auth/resend_code', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
   
   // Lấy thông tin người dùng theo ID
   getUser: (userId) => apiRequest(`/auth/user/${userId}`),

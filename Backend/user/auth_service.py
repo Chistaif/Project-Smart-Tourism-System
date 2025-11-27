@@ -54,8 +54,7 @@ def signup_service(data):
         db.session.commit()
         
         return {
-            # "user": new_user.to_json(),
-            **new_user.to_json(),
+            "user": new_user.to_json(),
             "message": "Đăng ký thành công. Vui lòng kiểm tra email để lấy mã xác thực.",
             "require_verification": True,
             "email_sent": sent_success
@@ -79,7 +78,7 @@ def login_service(data):
     if not user or not user.check_password(password):
         raise ValueError("Tên người dùng hoặc mật khẩu không đúng")
         
-    # Kiểm tra xác thực email
+    # Kiểm tra xác thực email (Optional: tùy logic của bạn có bắt buộc không)
     if not user.email_verified:
         return {
             "error": "Tài khoản chưa xác thực email",
@@ -92,8 +91,8 @@ def login_service(data):
     db.session.commit()
 
     # Tạo token
-    access_token = create_access_token(identity=str(user.user_id))
-    refresh_token = create_refresh_token(identity=str(user.user_id))
+    access_token = create_access_token(identity=user.user_id)
+    refresh_token = create_refresh_token(identity=user.user_id)
     
     return {
         "message": "Đăng nhập thành công",
@@ -138,11 +137,11 @@ def resend_verification_service(email):
     new_code = user.generate_verification_code()
     db.session.commit()
     
-    sent, msg = send_verification_email(user.username, email, new_code)
+    sent, msg = send_verification_email(email, new_code)
     if not sent:
         raise Exception("Không thể gửi email. Vui lòng thử lại sau.")
         
-    return {"message": msg}
+    return {"message": "Mã xác thực mới đã được gửi"}
 
 
 def forgot_password_service(email):

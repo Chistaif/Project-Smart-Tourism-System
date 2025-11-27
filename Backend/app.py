@@ -3,7 +3,6 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
 import os
-from proto.message import MessageToJson
 from werkzeug.utils import secure_filename
 from flask_limiter import Limiter
 from flask_jwt_extended import (
@@ -11,8 +10,7 @@ from flask_jwt_extended import (
     create_access_token, 
     create_refresh_token,
     jwt_required, 
-    get_jwt_identity,
-    verify_jwt_in_request
+    get_jwt_identity
 )
 from dotenv import load_dotenv
 
@@ -29,7 +27,7 @@ from models import (
     User,
 )
 from init_db import import_demo_data
-from service.search_service import smart_recommendation_service
+from service.search_service import search_service
 from service.attraction_service import (
     get_attraction_detail_service,
     create_review,
@@ -53,7 +51,6 @@ from user.auth_service import (
     reset_password_service
 )
 from cloudinary_utils import upload_image_to_cloud
-from agent_utils import chat_with_tour_guide, generate_caption
 
 # Load environment variables
 load_dotenv()
@@ -68,10 +65,10 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JSON_AS_ASCII'] = False
-    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'fixed-secret-key-for-testing')
+    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'asdfghjkmnbvcxzq')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 3600  # 1 hour
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 2592000  # 30 days
-    # app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
+    app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     
     # Enable CORS for React frontend
@@ -83,33 +80,19 @@ def create_app():
         }
     })
 
-    print("Current JWT Secret:", app.config['JWT_SECRET_KEY'])
-
     db.init_app(app=app)
     init_mail(app)
-    jwt_manager = JWTManager(app)
 
     with app.app_context():
         db.create_all()
         if Attraction.query.count() == 0:
             import_demo_data()
 
-    return app, jwt_manager
+    return app
 
-app, jwt = create_app()
+app = create_app()
 limiter = Limiter(app)
-
-# # === THÊM ĐOẠN NÀY ĐỂ DEBUG ===
-# @app.before_request
-# def log_request_info():
-#     if request.path.startswith('/api/'):
-#         print(f"\n=== DEBUG REQUEST: {request.method} {request.path} ===")
-#         # In ra header Authorization để xem có nhận được không
-#         auth_header = request.headers.get('Authorization')
-#         print(f"Authorization Header Received: {auth_header}")
-#         if auth_header:
-#             print(f"Token part: {auth_header.split(' ')[1] if len(auth_header.split(' ')) > 1 else 'Format sai'}")
-# ==============================
+jwt = JWTManager(app)
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
@@ -147,18 +130,9 @@ Ví dụ:
 /api/search?searchTerm=Hội%20An&typeList=Lễ%20hội&userId=1
 """
 @app.route('/api/search', methods=["GET"])
+@jwt_required(optional=True)
 def search():
-    # Xử lý thông tin đầu vào với JWT optional (sử dụng nếu hợp lệ, bỏ qua nếu không hợp lệ)
-    user_id = None
-    try:
-        # Thử lấy JWT identity nếu token hợp lệ
-        verify_jwt_in_request(optional=True)
-        user_id = get_jwt_identity()
-        print(f"DEBUG: Token hợp lệ, user_id từ JWT: {user_id}")
-    except Exception as e:
-        # Nếu token không hợp lệ hoặc không có, bỏ qua và tiếp tục
-        print(f"DEBUG: Token không hợp lệ hoặc không có: {str(e)}")
-        pass
+    user_id = get_jwt_identity()
 
     types_list = request.args.getlist("typeList", [])
     search_term = request.args.get("searchTerm", "").strip()
@@ -172,10 +146,9 @@ def search():
             except ValueError:
                 return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
 
-    # NOTE userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
-    # Logic chính
+    # NOTE cho FE: userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
     try:
-        data = smart_recommendation_service(types_list=types_list, search_term=search_term, user_id=user_id)
+        data = search_service(types_list, search_term, user_id=user_id)
         return jsonify({"success": True, "data": data}), 200
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 400
@@ -199,13 +172,9 @@ def search():
 #       - Response trả về detail + block `favorite` để đồng bộ UI.
 # Ghi nhớ: mọi response đều có dạng {"success": bool, "data": {...}} (riêng PATCH có thêm "favorite").
 @app.route('/api/attraction/<int:attraction_id>', methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
+@jwt_required(optional=True)
 def get_attraction_detail(attraction_id):
-    # Xử lý JWT optional
-    user_id = None
-    try:
-        user_id = get_jwt_identity()
-    except:
-        pass
+    user_id = get_jwt_identity()
 
     if request.method == "GET":
         """
@@ -314,9 +283,101 @@ def get_attraction_detail(attraction_id):
     
 
 
+
 # === Chức năng tạo tour ===
 # NOTE:
 # Thông tin cần: attractionIds, startLat, startLon, startTime, endTime
+# Thông tin trả về:
+# {
+#     'success': True|False,
+#     'data': {
+#         "timeline": [
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "08:00",
+#             "type": "START",
+#             "name": "Điểm xuất phát",
+#             "detail": "Bắt đầu hành trình"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025", 
+#             "time": "12:00",
+#             "type": "LUNCH",
+#             "name": "Nghỉ ăn trưa",
+#             "detail": "Tự do thưởng thức ẩm thực địa phương",
+#             "duration": 60,
+#             "endTime": "13:00"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "10:30",
+#             "type": "TRAVEL",
+#             "name": "Di chuyển đến Cố đô Huế",
+#             "detail": "Quãng đường: 85.2km (90 phút)",
+#             "duration": 90
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "12:00",
+#             "type": "VISIT",
+#             "id": 1,
+#             "name": "Cố đô Huế",
+#             "detail": "Tham quan, chụp ảnh.",
+#             "duration": 120,
+#             "endTime": "14:00",
+#             "lat": 16.4637,
+#             "lon": 107.5909,
+#             "imageUrl": "/static/images/hue.jpg"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "18:00",
+#             "type": "DINNER",
+#             "name": "Nghỉ ăn tối",
+#             "detail": "Tự do thưởng thức ẩm thực địa phương",
+#             "duration": 60,
+#             "endTime": "19:00"
+#         },
+#         {
+#             "day": 1,
+#             "date": "25/12/2025",
+#             "time": "22:00",
+#             "type": "SLEEP",
+#             "name": "Nghỉ ngơi",
+#             "detail": "Kết thúc ngày, chuẩn bị cho ngày mai"
+#         },
+#         {
+#             "day": 2,
+#             "date": "26/12/2025",
+#             "time": "06:00",
+#             "type": "WAKE_UP",
+#             "name": "Thức dậy",
+#             "detail": "Bắt đầu ngày 2"
+#         }],
+#         "mapHtml": map_html,
+#         "invalidAttractions": [
+#          {
+#              "id": attr.id,
+#              "name": attr.name,
+#              "reason": reason
+#          },
+#          {
+#              "id": attr.id,
+#              "name": attr.name,
+#              "reason": reason
+#          }
+#            
+#         ],
+#         "finishTime": current_time.strftime("%H:%M"),
+#         "totalDestinations": len(visit_points),
+#         "totalDays": len(attractions_per_day)
+#     }
+# }
 @app.route('/api/quick-tour-creator', methods=['GET'])
 def creator():
     """
@@ -386,6 +447,7 @@ def creator():
 
 
 @app.route('/api/save-tour', methods=['POST', 'PATCH'])
+@jwt_required(optional=True)
 def save_tour():
     """
     POST: Lưu tour mới
@@ -393,11 +455,7 @@ def save_tour():
     """
     try:
         # Lấy user_id từ JWT token (nếu có) hoặc từ request
-        user_id = None
-        try:
-            user_id = get_jwt_identity()
-        except:
-            pass
+        user_id = get_jwt_identity()  # Trả về None nếu không có token
 
         if request.method == 'POST':
             # === LƯU TOUR MỚI ===
@@ -674,7 +732,7 @@ def refresh_token():
     """Refresh access token"""
     try:
         current_user_id = get_jwt_identity()
-        new_access_token = create_access_token(identity=str(current_user_id))
+        new_access_token = create_access_token(identity=current_user_id)
         
         return jsonify({
             "success": True,
@@ -778,76 +836,6 @@ def create_blog():
         db.session.rollback()
         return jsonify({"success": False, "error": str(e)}), 500
 
-# ===========================================================================
-# ===                        AI / Chatbot Routes                          ===
-# ===========================================================================
-# CHATBOT cho trang service
-@app.route('/api/ai/chat', methods=['POST'])
-@jwt_required() # Chỉ cho user đăng nhập dùng
-def ai_chat():
-    """API Chatbot tư vấn du lịch
-    Frontend cần gửi JSON:
-    {
-        "message": "Ở đó có món gì ngon?",
-        "history": [
-            {"role": "user", "parts": ["Đà Lạt có gì vui?"]},
-            {"role": "model", "parts": ["Đà Lạt có hồ Xuân Hương..."]}
-        ]
-    }
-    """
-    try:
-        user_id = get_jwt_identity()
-        data = request.get_json()
-        message = data.get('message')
-        history = data.get('history', [])
-        
-        if not message:
-            return jsonify({"success": False, "error": "Tin nhắn trống"}), 400
-            
-        top_attractions = smart_recommendation_service(user_id=user_id, search_term=message, limit=10)
-       
-        context_lines = []
-        for a in top_attractions:
-            name = a.get('name')
-            desc = a.get('briefDescription')
-            score = a.get('recommendationScore', 0)
-            
-            # Chỉ đưa vào context những địa điểm thực sự liên quan (score > 0)
-            if score > 0:
-                context_lines.append(f"- {name}: {desc}")
-        
-        # Nếu không tìm thấy gì liên quan thì lấy 3 địa điểm nổi bật ngẫu nhiên
-        if not context_lines:
-             fallback_attrs = Attraction.query.limit(3).all()
-             for a in fallback_attrs:
-                 context_lines.append(f"- {a.name}: {a.brief_description}")
-
-        context_info = "Dữ liệu du lịch gợi ý:\n" + "\n".join(context_lines)
-        
-        reply = chat_with_tour_guide(message, context_data=f"Các địa điểm nổi bật: {context_info}")
-        
-        return jsonify({"success": True, "reply": reply}), 200
-        # NOTE: Frontend phải append reply này vào history ở phía client
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
-
-# CHATBOT tạo nội dung cho trang blog
-@app.route('/api/ai/generate-caption', methods=['POST'])
-@jwt_required() # Chỉ cho user đăng nhập dùng
-def ai_generate_caption():
-    """API tạo caption marketing tự động"""
-    try:
-        data = request.get_json()
-        attr_name = data.get('name')
-        features = data.get('features', '') # Ví dụ: "yên tĩnh, có hồ bơi, ngắm mây"
-        
-        if not attr_name:
-            return jsonify({"success": False, "error": "Cần tên địa điểm"}), 400
-            
-        content = generate_caption(attr_name, features)
-        return jsonify({"success": True, "data": content}), 200
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
 
 # ===========================================================================
 # ===                                                                     ===

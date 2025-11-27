@@ -28,6 +28,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
 
+  const [verifyEmail, setVerifyEmail] = useState("");
+
   const [images, setImages] = useState(initialImages);
 
   const swapImage = (clickedIndex) => {
@@ -115,22 +117,16 @@ function App() {
                     const email = formData.get('email');
                     const password = formData.get('password');
                     const confirmPassword = formData.get('confirmPassword');
-
-                    if(password !== confirmPassword) {
-                      setError("Mật khẩu không trùng khớp");
-                      setLoading(false);
-                      return;
-                    }
-                    const userData = {username, email, password};    
-                    const response = await authAPI.signup(userData);
+                    setVerifyEmail(email);
+              
+                    const userData = {username, email, password, confirmPassword};    
                     
                     try {
                       const response = await authAPI.signup(userData);
                       if (response.success) {
-                        setUser(response.user);
-                        localStorage.setItem('currentUser', JSON.stringify(response.user));
-                        alert('Đăng ký thành công!');
-                        closePopup();
+                        switchMode('verify');
+                      } else {
+                        setError(response.message);
                       }
                     } catch (err) {
                       setError(err.message || 'Đăng ký thất bại');
@@ -210,9 +206,7 @@ function App() {
                     const credentials = {
                       username: formData.get('username'),
                       password: formData.get('password')
-                    };
-                    const response = await authAPI.login(credentials);
-                    
+                    };                    
                     try {
                       const response = await authAPI.login(credentials);
                       if (response.success) {
@@ -278,7 +272,7 @@ function App() {
                   {error && <div className="error-message">{error}</div>}
 
                   <form 
-                    classNmae="signup-form"
+                    className="signup-form"
                     onSubmit={async (e) => {
                       e.preventDefault();
                       setError('');
@@ -342,6 +336,88 @@ function App() {
                         }}
                       >
                         Quay lại đăng nhập
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {popupMode === 'verify' && (
+                <div className="signup-container">
+                  <h2 className="signup-title">Xác Thực Email</h2>
+                  <p className="signup-subtitle">
+                    Mã OTP gồm 6 số đã được gửi tới email: <b>{verifyEmail}</b>
+                  </p>
+
+                  {error && <div className="error-message">{error}</div>}
+
+                  <form className="signup-form"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setError('');
+                      setLoading(true);
+
+                      const formData = new FormData(e.target);
+                      const otp = formData.get('otp');
+
+                      if(otp.length !== 6) {
+                        setError("Mã OTP phải gồm 6 số");
+                        setLoading(false);
+                        return;
+                      }
+
+                      try {
+                        const response = await authAPI.verifyOTP({
+                          email: verifyEmail,
+                          code: otp,
+                        });
+
+                        if(response.success) {
+                          alert("Xác thực thành công!");
+                          switchMode('login')
+                        } else {
+                          setError(response.message || "OTP Không đúng");
+                        }
+                      } catch(err) {
+                        setError(err.message || "Xác thực thất bại");
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
+                      <label>Nhập mã OTP</label>
+                      <input 
+                        type="text"
+                        name="otp"
+                        placeholder="Nhập mã OTP(gồm 6 số)"
+                        maxLength="6"
+                        required
+                      />
+                    </div>
+
+                    <button type="submit" className="forgot-btn" disabled={loading}>
+                      {loading ? "Đang xác thực..." : "Xác thực OTP"}
+                    </button>
+                  </form>
+
+                  <div className="signup-footer">
+                    <p>
+                      Không nhận được mã?{" "}
+                      <a href="#" className="signup-link"
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          setLoading(true);
+                          try {
+                            await authAPI.resendOTP({email:verifyEmail});
+                            alert("Đã gửi lại mã OTP!");
+                          } catch {
+                            alert("Không thể gửi lại OTP");
+                          }
+                          setLoading(false);
+                        }}
+                      >
+                        Gửi lại OTP 
                       </a>
                     </p>
                   </div>

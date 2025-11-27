@@ -1,139 +1,127 @@
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
-from models import db, Attraction, Festival, CulturalSpot, Tag, FavoriteAttraction, User
-
-# NEW SEARCH LOGIC
-def get_user_interest_tags(user_id):
-    """
-    Bước 1: Phân tích sở thích người dùng.
-    Lấy danh sách các Tag từ những địa điểm mà User đã bấm "Yêu thích".
-    """
-    # TH: chx login
-    if not user_id:
-        return set()
-    
-    # Join bảng Favorite -> Attraction -> Tags
-    favorite_tags = db.session.query(Tag.tag_name)\
-        .join(Attraction.tags)\
-        .join(FavoriteAttraction)\
-        .filter(FavoriteAttraction.user_id == user_id)\
-        .all()
-    
-    # Trả về set các tag (VD: {'Biển', 'Ẩm thực', 'Di tích'})
-    return {t[0] for t in favorite_tags}
+from models import db, Attraction, Festival, CulturalSpot, Tag, FavoriteAttraction
 
 
-def calculate_score(attraction, interest_tags, search_keywords):
-    """
-    Bước 2: Hàm tính điểm cho 1 địa điểm dựa trên các tiêu chí
-    1. Khớp search keyword 5-10đ
-    2: Khớp tag sở thích   3đ/tag
-    3. Rating              1.5đ/sao
-    4. Số review 1đ        0.1đ/bài
-    """
-    score = 0
-
-    attr_tags = {t.tag_name for t in attraction.tags}
-
-    # --- Tiêu chí 1 ---
-    if search_keywords:
-        # Kiểm tra xem tên/mô tả 
-        query_lower = search_keywords.lower()
-        if query_lower in attraction.name.lower():
-            score += 10  # Khớp tên -> ưu tiên cực cao
-        elif query_lower in attraction.brief_description.lower():
-            score += 5
-            
-        # Kiểm tra tag
-        for tag in attr_tags:
-            if tag.lower() in query_lower:
-                score += 5 
-
-    # --- Tiêu chí 2 ---
-    matched_interests = attr_tags.intersection(interest_tags)
-    score += len(matched_interests) * 3
-    
-    # --- Tiêu chí 3 ---
-    if attraction.average_rating:
-        score += attraction.average_rating * 1.5
-        
-    # --- Tiêu chí 4 ---
-    review_count = len(attraction.reviews)
-    score += review_count * 0.1
-
-    return score
-
-def smart_recommendation_service(types_list=[], user_id=None, search_term=None, limit=50):
-    """
-    Service chính để search,
-    giới hạn top 50 để tránh việc hiển thị tràn lan 
-    """
-    # Lọc theo types_list trước khi tính điểm
-    query = Attraction.query
-
-    if types_list:
-        # Chuẩn hóa types_list
-        normalized_types = [
-            t.strip() for t in types_list
-            if isinstance(t, str) and t.strip()
-        ]
-        
-        if normalized_types:
-            festival_alias = aliased(Festival)
-            cultural_spot_alias = aliased(CulturalSpot)
-            
-            # Join với các bảng con
-            query = query.outerjoin(festival_alias, festival_alias.id == Attraction.id)
-            query = query.outerjoin(cultural_spot_alias, cultural_spot_alias.id == Attraction.id)
-            
-            type_conditions = []
-            
-            # Tách festival và cultural spot types
-            spot_types_from_list = [t for t in normalized_types if t != 'Lễ hội']
-            
-            # Điều kiện cho festival
-            if 'Lễ hội' in normalized_types:
-                type_conditions.append(Attraction.type == 'festival')
-            
-            # Điều kiện cho cultural spots
-            if spot_types_from_list:
-                type_conditions.append(cultural_spot_alias.spot_type.in_(spot_types_from_list))
-            
-            # Áp dụng bộ lọc types
-            if type_conditions:
-                query = query.filter(or_(*type_conditions))
-    
-    # Lấy danh sách attractions đã được lọc
-    all_attractions = query.distinct().all()
-
-    # lấy sở thích
-    interest_tags = get_user_interest_tags(user_id)
-    
-    # Tính điểm cho từng địa điểm
-    scored_results = []
-    for attr in all_attractions:
-        score = calculate_score(attr, interest_tags, search_term)
-        
-        # Chỉ lấy những địa điểm có điểm > 0 (có liên quan)
-        # Hoặc nếu không tìm kiếm gì thì lấy hết để gợi ý ngẫu nhiên
-        if score > 0 or (not search_term and not user_id):
-            scored_results.append({
-                "attraction": attr,
-                "score": score,
-                "match_reason": "Phù hợp sở thích" if score > 5 else "Gợi ý phổ biến"
-            })
-    
-    # Sắp xếp theo điểm từ cao xuống thấp
-    scored_results.sort(key=lambda x: x["score"], reverse=True)
-    
-    # Cắt lấy Top N
-    final_results = scored_results[:limit]
-    
-    return [
-        {
-            **item["attraction"].to_json(),
-            "recommendationScore": item["score"], 
-            "matchReason": item["match_reason"]
-        } 
-        for item in final_results
+def search_service(types_list, search_term, user_id=None):
+    types_list = types_list or []
+    if not isinstance(types_list, (list, tuple)):
+        types_list = [types_list]
+    normalized_types = [
+        t.strip() for t in types_list
+        if isinstance(t, str) and t.strip()
     ]
+
+    festival_alias = aliased(Festival, flat=True)
+    cultural_spot_alias = aliased(CulturalSpot, flat=True)
+
+    query = db.session.query(Attraction)
+    query = query.outerjoin(festival_alias, festival_alias.id == Attraction.id)
+    query = query.outerjoin(cultural_spot_alias, cultural_spot_alias.id == Attraction.id)
+    query = query.outerjoin(Attraction.tags)
+
+    # Lọc theo nội dung tìm kiếm (tên địa điểm / tên tỉnh tp / tag)
+    if search_term:
+        search_pattern = f"%{search_term}%"
+        query = query.filter(
+            or_(Attraction.name.ilike(search_pattern),
+                Attraction.location.ilike(search_pattern),
+                Attraction.tags.any(Tag.tag_name.ilike(search_pattern))
+            )
+        )
+
+    # Chuẩn hóa & validate loại (Lễ hội / Bảo tàng / ...)
+    # -> Nếu frontend gửi typeList sai chính tả, ta báo lỗi 400 rõ ràng
+    if normalized_types:
+        # Cho phép 'Lễ hội' + tất cả spot_type hiện có trong DB
+        allowed_types = {'Lễ hội'}
+        existing_spot_types = (
+            db.session.query(CulturalSpot.spot_type)
+            .distinct()
+            .all()
+        )
+        allowed_types.update(
+            value for value, in existing_spot_types if value
+        )
+
+        invalid_types = [t for t in normalized_types if t not in allowed_types]
+        if invalid_types:
+            raise ValueError(
+                f"Loại không hợp lệ: {', '.join(invalid_types)}"
+            )
+
+        type_conditions = []
+
+        # Tách các loại CulturalSpot (Bảo tàng, Làng nghề, v.v.)
+        spot_types_from_list = [t for t in normalized_types if t != 'Lễ hội']
+
+        # Nếu người dùng check "Lễ hội"
+        if 'Lễ hội' in normalized_types:
+            type_conditions.append(Attraction.type == 'festival')
+
+        # Nếu người dùng check các loại khác
+        if spot_types_from_list:
+            type_conditions.append(cultural_spot_alias.spot_type.in_(spot_types_from_list))
+
+        # (Lấy những điểm LÀ 'Lễ hội' HOẶC CÓ 'spot_type' nằm trong danh sách)
+        if type_conditions:
+            query = query.filter(or_(*type_conditions))
+
+    # # Bộ lọc Ngày
+    # # Chỉ lấy (Attraction.type != 'festival') HOẶC (Festival.time_end >= date)
+    # query = query.filter(
+    #     or_(
+    #         Attraction.type != 'festival',
+    #         Festival.time_end >= date
+    #     )
+    # ).distinct()
+    # results = query.all()
+
+    # Nếu user đang đăng nhập thì ưu tiên các địa điểm đã đánh dấu Favorite
+    favorite_ids = set()
+    if user_id is not None:
+        favorite_rows = (
+            FavoriteAttraction.query
+            .with_entities(FavoriteAttraction.attraction_id)
+            .filter_by(user_id=user_id)
+            .all()
+        )
+        favorite_ids = {row[0] for row in favorite_rows}
+
+    festivals_list = []
+    cultural_spots_list = []
+    other_attractions_list = []
+    for r in query.distinct():
+        is_favorite = r.id in favorite_ids
+        item_data = {
+            "id": r.id,
+            "name": r.name,
+            "imageUrl": r.image_url, 
+            "averageRating": r.average_rating,
+            "isFavorite": is_favorite
+        }
+        if r.type == 'festival': 
+            festivals_list.append(item_data)
+        elif r.type == 'cultural_spot': 
+            cultural_spots_list.append(item_data)
+        else: other_attractions_list.append(item_data)
+
+    def sort_items(items):
+        items.sort(
+            key=lambda item: (
+                item.get("isFavorite", False),
+                item.get('averageRating', 0) or 0
+            ),
+            reverse=True
+        )
+
+    sort_items(festivals_list)
+    sort_items(cultural_spots_list)
+    sort_items(other_attractions_list)
+
+    result_data = {
+        "festivals": festivals_list,
+        "culturalSpots": cultural_spots_list,
+        "otherAttractions": other_attractions_list
+    }
+    return result_data

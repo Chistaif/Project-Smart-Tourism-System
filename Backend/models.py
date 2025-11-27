@@ -27,7 +27,7 @@ class User(db.Model):
     username = db.Column(db.String(100), nullable=False, unique=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-    avatar_url = db.Column(db.String(500), nullable=True, default='https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763910182/c6e56503cfdd87da299f72dc416023d4_s2kfhu.jpg') 
+    avatar_url = db.Column(db.String(100), nullable=True, default='https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763910182/c6e56503cfdd87da299f72dc416023d4_s2kfhu.jpg') 
     is_admin = db.Column(db.Boolean, default=False)
     email_verified = db.Column(db.Boolean, default=False)
     email_verification_code = db.Column(db.String(6), nullable=True)
@@ -60,11 +60,7 @@ class User(db.Model):
         if datetime.utcnow() > self.email_code_expires:
             return False  # Code expired
         
-        if self.email_verification_code == code:
-            self.email_verified = 1
-            return True
-
-        return False
+        return self.email_verification_code == code
 
     def clear_verification_code(self):
         """Xóa mã cũ để đảm bảo tính ngẫu nhiên -> tăng độ an toàn"""
@@ -96,7 +92,7 @@ class Attraction(db.Model):
     visit_duration = db.Column(db.Integer)
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
-    image_url = db.Column(db.String(500))
+    image_url = db.Column(db.String(200))
 
     type = db.Column(db.String(50))
 
