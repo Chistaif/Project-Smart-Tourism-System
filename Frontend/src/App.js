@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
+
 import AttractionDetail from './pages/AttractionDetail';
 import { authAPI } from './utils/api';
 
@@ -110,12 +111,18 @@ function App() {
                     setLoading(true);
                     
                     const formData = new FormData(e.target);
-                    const userData = {
-                      username: formData.get('username'),
-                      email: formData.get('email'),
-                      password: formData.get('password'),
-                      confirmPassword: formData.get('confirmPassword')
-                    };
+                    const username = formData.get('username');
+                    const email = formData.get('email');
+                    const password = formData.get('password');
+                    const confirmPassword = formData.get('confirmPassword');
+
+                    if(password !== confirmPassword) {
+                      setError("Mật khẩu không trùng khớp");
+                      setLoading(false);
+                      return;
+                    }
+                    const userData = {username, email, password};    
+                    const response = await authAPI.signup(userData);
                     
                     try {
                       const response = await authAPI.signup(userData);
@@ -201,9 +208,10 @@ function App() {
                     
                     const formData = new FormData(e.target);
                     const credentials = {
-                      email: formData.get('email'),
+                      username: formData.get('username'),
                       password: formData.get('password')
                     };
+                    const response = await authAPI.login(credentials);
                     
                     try {
                       const response = await authAPI.login(credentials);
@@ -220,12 +228,12 @@ function App() {
                     }
                   }}>
                     <div className="form-group">
-                      <label htmlFor="login-email">Email</label>
+                      <label htmlFor="login-username">Tên Đăng Nhập</label>
                       <input 
-                        type="email" 
-                        id="login-email" 
-                        name="email" 
-                        placeholder="Nhập email của bạn"
+                        type="text" 
+                        id="login-username" 
+                        name="username" 
+                        placeholder="Nhập tên đăng nhập"
                         required
                       />
                     </div>
@@ -287,13 +295,13 @@ function App() {
 
                       try {
                         alert(
-                          'Nếu email tồn ại trong hệ thống, mã xác thực sẽ được gửi'
+                          'Nếu email tồn tại trong hệ thống, mã xác thực sẽ được gửi'
                         );
 
                         switchMode('login');
                       } catch(err) {
                         setError(
-                          err.message || 'Khong the gui email xac thuc, thu lai sau'
+                          err.message || 'Không thể gửi email xác thực, thử lại sau'
                         );
                       } finally {
                         setLoading(false);
@@ -306,7 +314,7 @@ function App() {
                         type="email"
                         id="forgot-email"
                         name="email"
-                        placeholder="Nhap email cua ban"
+                        placeholder="Nhập email của bạn"
                         required
                       />
                     </div>
@@ -356,6 +364,7 @@ function App() {
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} />} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />
+
         </Routes>
 
         <footer>
