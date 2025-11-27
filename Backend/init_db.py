@@ -60,7 +60,8 @@ def import_demo_data(json_path="demo_data.json"):
             new_user = User(
                 username=u["name"], # Dùng "name" làm "username"
                 email=u["email"],
-                avatar_url=u.get("avatarUrl") 
+                avatar_url=u.get("avatarUrl"),
+                is_admin=u.get("isAdmin", False)
             )
             # Dùng hàm set_password để băm mật khẩu
             new_user.set_password(u["password"])

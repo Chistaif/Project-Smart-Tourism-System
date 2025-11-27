@@ -62,7 +62,7 @@ def send_reset_password_email(user_name, user_email, reset_code):
             '''
         )
         mail.send(msg)
-        return True, "Email đã được gửi"
+        return True, f"Mã xác nhận đã được gửi đến {user_email}. Vui lòng kiểm tra hộp thư."
     except Exception as e:
         print(f"❌ Lỗi gửi email reset: {e}")
         # Debug cho dev

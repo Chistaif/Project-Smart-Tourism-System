@@ -157,6 +157,8 @@ main.hero {
   backdrop-filter: blur(var(--glass-blur));
   border-radius: 14px;
   box-shadow: var(--shadow);
+
+  transform: translateY(-120px);
 }
 
 .eyebrow {
@@ -241,11 +243,11 @@ p.lead {
 }
 
 .col-1 {
-  transform: translateX(-200px) translateY(-40px);
+  transform: translateX(-210px) translateY(-100px);
 }
 
 .col-2 {
-  transform: translateX(-400px) translateY(-80px);
+  transform: translateX(-420px) translateY(-200px);
 }
 
 .img-card:hover {
