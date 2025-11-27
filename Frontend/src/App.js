@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
+
 import AttractionDetail from './pages/AttractionDetail';
 import { authAPI } from './utils/api';
 
@@ -26,6 +27,8 @@ function App() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+
+  const [verifyEmail, setVerifyEmail] = useState("");
 
   const [images, setImages] = useState(initialImages);
 
@@ -110,20 +113,20 @@ function App() {
                     setLoading(true);
                     
                     const formData = new FormData(e.target);
-                    const userData = {
-                      username: formData.get('username'),
-                      email: formData.get('email'),
-                      password: formData.get('password'),
-                      confirmPassword: formData.get('confirmPassword')
-                    };
+                    const username = formData.get('username');
+                    const email = formData.get('email');
+                    const password = formData.get('password');
+                    const confirmPassword = formData.get('confirmPassword');
+                    setVerifyEmail(email);
+              
+                    const userData = {username, email, password, confirmPassword};    
                     
                     try {
                       const response = await authAPI.signup(userData);
                       if (response.success) {
-                        setUser(response.user);
-                        localStorage.setItem('currentUser', JSON.stringify(response.user));
-                        alert('Đăng ký thành công!');
-                        closePopup();
+                        switchMode('verify');
+                      } else {
+                        setError(response.message);
                       }
                     } catch (err) {
                       setError(err.message || 'Đăng ký thất bại');
@@ -201,10 +204,9 @@ function App() {
                     
                     const formData = new FormData(e.target);
                     const credentials = {
-                      email: formData.get('email'),
+                      username: formData.get('username'),
                       password: formData.get('password')
-                    };
-                    
+                    };                    
                     try {
                       const response = await authAPI.login(credentials);
                       if (response.success) {
@@ -220,12 +222,12 @@ function App() {
                     }
                   }}>
                     <div className="form-group">
-                      <label htmlFor="login-email">Email</label>
+                      <label htmlFor="login-username">Tên Đăng Nhập</label>
                       <input 
-                        type="email" 
-                        id="login-email" 
-                        name="email" 
-                        placeholder="Nhập email của bạn"
+                        type="text" 
+                        id="login-username" 
+                        name="username" 
+                        placeholder="Nhập tên đăng nhập"
                         required
                       />
                     </div>
@@ -270,7 +272,7 @@ function App() {
                   {error && <div className="error-message">{error}</div>}
 
                   <form 
-                    classNmae="signup-form"
+                    className="signup-form"
                     onSubmit={async (e) => {
                       e.preventDefault();
                       setError('');
@@ -287,13 +289,13 @@ function App() {
 
                       try {
                         alert(
-                          'Nếu email tồn ại trong hệ thống, mã xác thực sẽ được gửi'
+                          'Nếu email tồn tại trong hệ thống, mã xác thực sẽ được gửi'
                         );
 
                         switchMode('login');
                       } catch(err) {
                         setError(
-                          err.message || 'Khong the gui email xac thuc, thu lai sau'
+                          err.message || 'Không thể gửi email xác thực, thử lại sau'
                         );
                       } finally {
                         setLoading(false);
@@ -306,7 +308,7 @@ function App() {
                         type="email"
                         id="forgot-email"
                         name="email"
-                        placeholder="Nhap email cua ban"
+                        placeholder="Nhập email của bạn"
                         required
                       />
                     </div>
@@ -339,6 +341,88 @@ function App() {
                   </div>
                 </div>
               )}
+
+              {popupMode === 'verify' && (
+                <div className="signup-container">
+                  <h2 className="signup-title">Xác Thực Email</h2>
+                  <p className="signup-subtitle">
+                    Mã OTP gồm 6 số đã được gửi tới email: <b>{verifyEmail}</b>
+                  </p>
+
+                  {error && <div className="error-message">{error}</div>}
+
+                  <form className="signup-form"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setError('');
+                      setLoading(true);
+
+                      const formData = new FormData(e.target);
+                      const otp = formData.get('otp');
+
+                      if(otp.length !== 6) {
+                        setError("Mã OTP phải gồm 6 số");
+                        setLoading(false);
+                        return;
+                      }
+
+                      try {
+                        const response = await authAPI.verifyOTP({
+                          email: verifyEmail,
+                          code: otp,
+                        });
+
+                        if(response.success) {
+                          alert("Xác thực thành công!");
+                          switchMode('login')
+                        } else {
+                          setError(response.message || "OTP Không đúng");
+                        }
+                      } catch(err) {
+                        setError(err.message || "Xác thực thất bại");
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
+                      <label>Nhập mã OTP</label>
+                      <input 
+                        type="text"
+                        name="otp"
+                        placeholder="Nhập mã OTP(gồm 6 số)"
+                        maxLength="6"
+                        required
+                      />
+                    </div>
+
+                    <button type="submit" className="forgot-btn" disabled={loading}>
+                      {loading ? "Đang xác thực..." : "Xác thực OTP"}
+                    </button>
+                  </form>
+
+                  <div className="signup-footer">
+                    <p>
+                      Không nhận được mã?{" "}
+                      <a href="#" className="signup-link"
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          setLoading(true);
+                          try {
+                            await authAPI.resendOTP({email:verifyEmail});
+                            alert("Đã gửi lại mã OTP!");
+                          } catch {
+                            alert("Không thể gửi lại OTP");
+                          }
+                          setLoading(false);
+                        }}
+                      >
+                        Gửi lại OTP 
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -356,6 +440,7 @@ function App() {
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} />} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />
+
         </Routes>
 
         <footer>
