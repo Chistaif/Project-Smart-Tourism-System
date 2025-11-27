@@ -119,12 +119,12 @@ export const authAPI = {
     body: JSON.stringify(credentials),
   }),
 
-  verifyOTP: (payload) => apiRequest('/auth/verify_email', {
+  verifyOTP: (payload) => apiRequest('/auth/verify-email', {
     method: 'POST',
     body: JSON.stringify(payload),
   }),
 
-  resendOTP: (payload) => apiRequest('/auth/resend_code', {
+  resendOTP: (payload) => apiRequest('/auth/resend-code', {
     method: 'POST',
     body: JSON.stringify(payload),
   }),

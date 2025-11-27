@@ -116,7 +116,7 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
         
         # Chỉ lấy những địa điểm có điểm > 0 (có liên quan)
         # Hoặc nếu không tìm kiếm gì thì lấy hết để gợi ý ngẫu nhiên
-        if score > 0 or (not search_term and not user_id):
+        if score > 0 or not search_term:
             scored_results.append({
                 "attraction": attr,
                 "score": score,

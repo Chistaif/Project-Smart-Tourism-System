@@ -140,7 +140,7 @@ def test_ai_chat(token):
     """Test Chatbot tư vấn"""
     headers = {"Authorization": f"Bearer {token}"} if token else {}
     payload = {
-        "message": "Tư vấn cho mình chuyến đi biển cho cặp đôi",
+        "message": "Tư vấn cho mình nơi nào đó thơ mộng, phù hợp để đi date với em ny",
         "history": []
     }
     res = requests.post(f"{BASE_URL}/ai/chat", json=payload, headers=headers)
@@ -166,9 +166,9 @@ if __name__ == "__main__":
     # user = test_signup()
     # test_resend_code(user['email'])
     # test_verify(user['email'], '857638')
-    # token = test_login('user_1764203958', 'Password123@')
+    token = test_login('duy', '123EDCvfr$')
     # test_search(token)
-    # test_ai_chat(token)
+    test_ai_chat(token)
     # test_ai_caption(token)
 
     # test_forgot_password('test_1764203958@gmail.com')
