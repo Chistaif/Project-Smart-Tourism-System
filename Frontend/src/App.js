@@ -8,8 +8,8 @@ import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
-
 import AttractionDetail from './pages/AttractionDetail';
+import UserPage from './pages/UserPage';
 import { authAPI } from './utils/api';
 
 import test1 from './asset/box1.jpg';
@@ -110,27 +110,35 @@ function App() {
                     setError('');
                     setLoading(true);
                     
-                    const formData = new FormData(e.target);
-                    const username = formData.get('username');
-                    const email = formData.get('email');
-                    const password = formData.get('password');
-                    const confirmPassword = formData.get('confirmPassword');
-
-                    if(password !== confirmPassword) {
-                      setError("Mật khẩu không trùng khớp");
-                      setLoading(false);
-                      return;
-                    }
-                    const userData = {username, email, password};    
-                    const response = await authAPI.signup(userData);
-                    
                     try {
+                      const formData = new FormData(e.target);
+                      const username = (formData.get('username') || '').trim();
+                      const email = (formData.get('email') || '').trim().toLowerCase();
+                      const password = String(formData.get('password') || '').trim();
+                      const confirmPassword = String(formData.get('confirmPassword') || '').trim();
+
+                      // Validate password length first
+                      if(!password || password.length < 6) {
+                        setError("Mật khẩu phải có ít nhất 6 ký tự");
+                        return;
+                      }
+
+                      // Compare passwords
+                      if(password !== confirmPassword) {
+                        setError("Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại.");
+                        return;
+                      }
+                      
+                      const userData = {username, email, password};    
                       const response = await authAPI.signup(userData);
+                      
                       if (response.success) {
                         setUser(response.user);
                         localStorage.setItem('currentUser', JSON.stringify(response.user));
                         alert('Đăng ký thành công!');
                         closePopup();
+                      } else {
+                        setError(response.error || 'Đăng ký thất bại');
                       }
                     } catch (err) {
                       setError(err.message || 'Đăng ký thất bại');
@@ -206,20 +214,21 @@ function App() {
                     setError('');
                     setLoading(true);
                     
-                    const formData = new FormData(e.target);
-                    const credentials = {
-                      username: formData.get('username'),
-                      password: formData.get('password')
-                    };
-                    const response = await authAPI.login(credentials);
-                    
                     try {
+                      const formData = new FormData(e.target);
+                      const credentials = {
+                        username: formData.get('username'),
+                        password: formData.get('password')
+                      };
+                      
                       const response = await authAPI.login(credentials);
                       if (response.success) {
                         setUser(response.user);
                         localStorage.setItem('currentUser', JSON.stringify(response.user));
                         alert('Đăng nhập thành công!');
                         closePopup();
+                      } else {
+                        setError(response.error || 'Đăng nhập thất bại');
                       }
                     } catch (err) {
                       setError(err.message || 'Đăng nhập thất bại');
@@ -363,6 +372,7 @@ function App() {
           />
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} />} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
+          <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />
 
         </Routes>

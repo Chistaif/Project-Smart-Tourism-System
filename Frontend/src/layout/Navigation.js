@@ -29,11 +29,13 @@ export default function Navigation({ openPopup, openLogin, openSignup, user, onL
 
       {user ? (
         <div className="user-info">
-          <div className="user-avatar">{getInitials(user.username)}</div>
-          <div className="user-details">
-            <span>{user.username}</span>
-            <small>{user.email}</small>
-          </div>
+          <Link to="/user" className="user-link">
+            <div className="user-avatar">{getInitials(user.username)}</div>
+            <div className="user-details">
+              <span>{user.username}</span>
+              <small>{user.email}</small>
+            </div>
+          </Link>
           <button className="btn" onClick={onLogout}>Đăng Xuất</button>
         </div>
       ) : (

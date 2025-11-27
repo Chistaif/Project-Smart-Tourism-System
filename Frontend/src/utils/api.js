@@ -123,6 +123,15 @@ export const authAPI = {
   getUser: (userId) => apiRequest(`/auth/user/${userId}`),
 };
 
+// API functions for user profile
+export const userAPI = {
+  // Lấy danh sách địa điểm yêu thích
+  getFavorites: (userId) => apiRequest(`/user/${userId}/favorites`),
+  
+  // Lấy lịch sử đánh giá
+  getReviews: (userId) => apiRequest(`/user/${userId}/reviews`),
+};
+
 // API functions for blogs
 export const blogsAPI = {
   // Lấy tất cả blogs
@@ -163,6 +172,7 @@ export default {
   attractionsAPI,
   authAPI,
   blogsAPI,
+  userAPI,
   healthCheck,
 };
 

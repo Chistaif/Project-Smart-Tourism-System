@@ -3,7 +3,6 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
 import os
-from proto.message import MessageToJson
 from werkzeug.utils import secure_filename
 from flask_limiter import Limiter
 from flask_jwt_extended import (
@@ -42,6 +41,10 @@ from service.save_tour_service import (
     get_saved_tours_service,    
     save_tour_service,
     unsave_tour_service
+)
+from service.user_service import (
+    get_user_favorites_service,
+    get_user_reviews_service
 )
 from user.email_utils import init_mail
 from user.auth_service import (
@@ -639,6 +642,31 @@ def get_users():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+@app.route('/api/user/<int:user_id>/favorites', methods=['GET'])
+def get_user_favorites(user_id):
+    """Lấy danh sách địa điểm yêu thích của user"""
+    try:
+        favorites = get_user_favorites_service(user_id)
+        return jsonify({
+            "success": True,
+            "data": favorites,
+            "total": len(favorites)
+        }), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/api/user/<int:user_id>/reviews', methods=['GET'])
+def get_user_reviews(user_id):
+    """Lấy lịch sử đánh giá của user"""
+    try:
+        reviews = get_user_reviews_service(user_id)
+        return jsonify({
+            "success": True,
+            "data": reviews,
+            "total": len(reviews)
+        }), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/auth/forgot-password', methods=['POST'])
 @limiter.limit("3 per minute")
