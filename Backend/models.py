@@ -60,7 +60,11 @@ class User(db.Model):
         if datetime.utcnow() > self.email_code_expires:
             return False  # Code expired
         
-        return self.email_verification_code == code
+        if self.email_verification_code == code:
+            self.email_verified = 1
+            return True
+
+        return False
 
     def clear_verification_code(self):
         """Xóa mã cũ để đảm bảo tính ngẫu nhiên -> tăng độ an toàn"""

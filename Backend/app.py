@@ -11,7 +11,8 @@ from flask_jwt_extended import (
     create_access_token, 
     create_refresh_token,
     jwt_required, 
-    get_jwt_identity
+    get_jwt_identity,
+    verify_jwt_in_request
 )
 from dotenv import load_dotenv
 
@@ -67,10 +68,10 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JSON_AS_ASCII'] = False
-    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'asdfghjkmnbvcxzq')
+    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'fixed-secret-key-for-testing')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 3600  # 1 hour
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 2592000  # 30 days
-    app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
+    # app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     
     # Enable CORS for React frontend
@@ -82,19 +83,33 @@ def create_app():
         }
     })
 
+    print("Current JWT Secret:", app.config['JWT_SECRET_KEY'])
+
     db.init_app(app=app)
     init_mail(app)
+    jwt_manager = JWTManager(app)
 
     with app.app_context():
         db.create_all()
         if Attraction.query.count() == 0:
             import_demo_data()
 
-    return app
+    return app, jwt_manager
 
-app = create_app()
+app, jwt = create_app()
 limiter = Limiter(app)
-jwt = JWTManager(app)
+
+# # === THÊM ĐOẠN NÀY ĐỂ DEBUG ===
+# @app.before_request
+# def log_request_info():
+#     if request.path.startswith('/api/'):
+#         print(f"\n=== DEBUG REQUEST: {request.method} {request.path} ===")
+#         # In ra header Authorization để xem có nhận được không
+#         auth_header = request.headers.get('Authorization')
+#         print(f"Authorization Header Received: {auth_header}")
+#         if auth_header:
+#             print(f"Token part: {auth_header.split(' ')[1] if len(auth_header.split(' ')) > 1 else 'Format sai'}")
+# ==============================
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
@@ -132,10 +147,18 @@ Ví dụ:
 /api/search?searchTerm=Hội%20An&typeList=Lễ%20hội&userId=1
 """
 @app.route('/api/search', methods=["GET"])
-@jwt_required(optional=True)
 def search():
-    # Xử lý thông tin đầu vào
-    user_id = get_jwt_identity()
+    # Xử lý thông tin đầu vào với JWT optional (sử dụng nếu hợp lệ, bỏ qua nếu không hợp lệ)
+    user_id = None
+    try:
+        # Thử lấy JWT identity nếu token hợp lệ
+        verify_jwt_in_request(optional=True)
+        user_id = get_jwt_identity()
+        print(f"DEBUG: Token hợp lệ, user_id từ JWT: {user_id}")
+    except Exception as e:
+        # Nếu token không hợp lệ hoặc không có, bỏ qua và tiếp tục
+        print(f"DEBUG: Token không hợp lệ hoặc không có: {str(e)}")
+        pass
 
     types_list = request.args.getlist("typeList", [])
     search_term = request.args.get("searchTerm", "").strip()
@@ -152,7 +175,7 @@ def search():
     # NOTE userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
     # Logic chính
     try:
-        data = smart_recommendation_service(types_list, search_term, user_id=user_id)
+        data = smart_recommendation_service(types_list=types_list, search_term=search_term, user_id=user_id)
         return jsonify({"success": True, "data": data}), 200
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 400
@@ -176,9 +199,13 @@ def search():
 #       - Response trả về detail + block `favorite` để đồng bộ UI.
 # Ghi nhớ: mọi response đều có dạng {"success": bool, "data": {...}} (riêng PATCH có thêm "favorite").
 @app.route('/api/attraction/<int:attraction_id>', methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
-@jwt_required(optional=True)
 def get_attraction_detail(attraction_id):
-    user_id = get_jwt_identity()
+    # Xử lý JWT optional
+    user_id = None
+    try:
+        user_id = get_jwt_identity()
+    except:
+        pass
 
     if request.method == "GET":
         """
@@ -359,7 +386,6 @@ def creator():
 
 
 @app.route('/api/save-tour', methods=['POST', 'PATCH'])
-@jwt_required(optional=True)
 def save_tour():
     """
     POST: Lưu tour mới
@@ -367,7 +393,11 @@ def save_tour():
     """
     try:
         # Lấy user_id từ JWT token (nếu có) hoặc từ request
-        user_id = get_jwt_identity()  # Trả về None nếu không có token
+        user_id = None
+        try:
+            user_id = get_jwt_identity()
+        except:
+            pass
 
         if request.method == 'POST':
             # === LƯU TOUR MỚI ===
@@ -644,7 +674,7 @@ def refresh_token():
     """Refresh access token"""
     try:
         current_user_id = get_jwt_identity()
-        new_access_token = create_access_token(identity=current_user_id)
+        new_access_token = create_access_token(identity=str(current_user_id))
         
         return jsonify({
             "success": True,
@@ -752,7 +782,7 @@ def create_blog():
 # ===                        AI / Chatbot Routes                          ===
 # ===========================================================================
 # CHATBOT cho trang service
-@app.route('/ai/chat', methods=['POST'])
+@app.route('/api/ai/chat', methods=['POST'])
 @jwt_required() # Chỉ cho user đăng nhập dùng
 def ai_chat():
     """API Chatbot tư vấn du lịch
@@ -802,7 +832,7 @@ def ai_chat():
         return jsonify({"success": False, "error": str(e)}), 500
 
 # CHATBOT tạo nội dung cho trang blog
-@app.route('/ai/generate-caption', methods=['POST'])
+@app.route('/api/ai/generate-caption', methods=['POST'])
 @jwt_required() # Chỉ cho user đăng nhập dùng
 def ai_generate_caption():
     """API tạo caption marketing tự động"""

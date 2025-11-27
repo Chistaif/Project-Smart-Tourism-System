@@ -33,7 +33,7 @@ def chat_with_tour_guide(user_message, context_data=None, chat_history=[]):
         return "Hệ thống đang bảo trì."
 
     model = genai.GenerativeModel(
-        'gemini-1.5-flash',
+        'gemini-2.5-flash',
         system_instruction=MARKETING_SYSTEM_INSTRUCTION
     )
 
@@ -57,12 +57,14 @@ def chat_with_tour_guide(user_message, context_data=None, chat_history=[]):
         prompt = f"""
         [Thông tin hệ thống cung cấp: {context_data}]
         Câu hỏi của khách: {user_message}
+        Yêu cầu: trả lời ngắn gọn, xúc tích nhưng phải cuốn hút.
         """
 
     try:
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
+        print(f"Error calling Google AI API: {str(e)}")  # Debug log
         return "Xin lỗi, mình đang suy nghĩ chút, bạn hỏi lại sau nhé!"
 
 
@@ -74,7 +76,7 @@ def generate_caption(attraction_name, features=None):
         return "Hệ thống đang bảo trì."
 
     model = genai.GenerativeModel(
-        'gemini-1.5-flash',
+        'gemini-2.5-flash',
         system_instruction=MARKETING_SYSTEM_INSTRUCTION
     )
 
@@ -92,7 +94,7 @@ def generate_caption(attraction_name, features=None):
         return f"Lỗi AI: {str(e)}"
 
 
-def generate_caption(tour):
+def generate_tour_description(tour):
     """
     Hàm chuyên dùng nội bộ để sinh ra tour name hấp dẫn
     """
@@ -100,7 +102,7 @@ def generate_caption(tour):
         return "Hệ thống đang bảo trì."
 
     model = genai.GenerativeModel(
-        'gemini-1.5-flash',
+        'gemini-2.5-flash',
         system_instruction=MARKETING_SYSTEM_INSTRUCTION
     )
     

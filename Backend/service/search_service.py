@@ -33,6 +33,8 @@ def calculate_score(attraction, interest_tags, search_keywords):
     """
     score = 0
 
+    attr_tags = {t.tag_name for t in attraction.tags}
+
     # --- Tiêu chí 1 ---
     if search_keywords:
         # Kiểm tra xem tên/mô tả 
@@ -46,9 +48,8 @@ def calculate_score(attraction, interest_tags, search_keywords):
         for tag in attr_tags:
             if tag.lower() in query_lower:
                 score += 5 
-    
+
     # --- Tiêu chí 2 ---
-    attr_tags = {t.tag_name for t in attraction.tags}
     matched_interests = attr_tags.intersection(interest_tags)
     score += len(matched_interests) * 3
     
@@ -57,7 +58,7 @@ def calculate_score(attraction, interest_tags, search_keywords):
         score += attraction.average_rating * 1.5
         
     # --- Tiêu chí 4 ---
-    review_count = len(attraction.reviews.count())
+    review_count = len(attraction.reviews)
     score += review_count * 0.1
 
     return score
