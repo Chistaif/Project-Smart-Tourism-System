@@ -1,33 +1,29 @@
-# from models import db, SavedTour, Attraction
-# import pandas as pd        
-# import requests   
-# import polyline
-# import numpy as np
-# from sklearn.cluster import KMeans
-# from geopy.distance import geodesic
-# from datetime import datetime, timedelta
-
-
 import requests
 import folium
 import re
 from datetime import datetime, timedelta
 from geopy.distance import geodesic
 from models import Attraction, Festival, CulturalSpot
+import numpy as np
+from sklearn.mixture import GaussianMixture
 
 # --- CẤU HÌNH ---
-LUNCH_START_HOUR = 11       # Bắt đầu giờ ăn trưa
-LUNCH_END_HOUR = 13         # Kết thúc khung giờ được phép chèn ăn trưa
-LUNCH_DURATION_MIN = 60     # Thời gian ăn trưa (phút)
+BREAKFAST_START_HOUR = 6       # Bắt đầu khung giờ ăn sáng
+BREAKFAST_END_HOUR = 7.30      # Kết thúc khung giờ cho phép bắt đầu ăn sáng
+BREAKFAST_DURATION_MIN = 60    # Thời gian ăn sáng 
 
-DINNER_START_HOUR = 18      # Bắt đầu giờ ăn tối (MỚI)
-DINNER_END_HOUR = 20        # Kết thúc khung giờ ăn tối (MỚI)
-DINNER_DURATION_MIN = 60    # Thời gian ăn tối (phút) (MỚI)
+LUNCH_START_HOUR = 11          # Bắt đầu giờ ăn trưa
+LUNCH_END_HOUR = 13            # Kết thúc khung giờ được phép chèn ăn trưa
+LUNCH_DURATION_MIN = 60        # Thời gian ăn trưa 
 
-SLEEP_START_HOUR = 22       # Giờ ngủ (MỚI)
-WAKE_UP_HOUR = 6           # Giờ thức dậy (MỚI)
+DINNER_START_HOUR = 18         # Bắt đầu giờ ăn tối 
+DINNER_END_HOUR = 20           # Kết thúc khung giờ ăn tối 
+DINNER_DURATION_MIN = 60       # Thời gian ăn tối 
 
-FALLBACK_SPEED_KMH = 30
+SLEEP_START_HOUR = 22          # Giờ ngủ 
+WAKE_UP_HOUR = 6               # Giờ thức dậy 
+
+FALLBACK_SPEED_KMH = 30        # Đặt tốc độ tb khi di chuyển
 
 def get_routing_info(coord_start, coord_end, vehicle='car'):
     """
@@ -48,9 +44,9 @@ def get_routing_info(coord_start, coord_end, vehicle='car'):
         
         if data.get("code") == "Ok":
             route = data["routes"][0]
-            duration_min = round(route["duration"] / 60)
-            distance_km = round(route["distance"] / 1000, 2)
-            geometry = route["geometry"] # GeoJSON lineString
+            duration_min = round(route["duration"] / 60)     # mặc định là h
+            distance_km = round(route["distance"] / 1000, 2) # mặc định là m
+            geometry = route["geometry"]                     # GeoJSON lineString
             return distance_km, duration_min, geometry
             
     except Exception as e:
@@ -59,14 +55,16 @@ def get_routing_info(coord_start, coord_end, vehicle='car'):
     # --- FALLBACK (Nếu OSRM lỗi) ---
     dist = geodesic(coord_start, coord_end).km
     speed = 5 if dist < 1 else FALLBACK_SPEED_KMH
-    duration = round((dist / speed) * 60) + 5 # Cộng 5p thời gian dây thun
+    duration = round((dist / speed) * 60)
     return round(dist, 2), duration, None
+
 
 def parse_opening_hours(open_str):
     """
     Parse chuỗi giờ mở cửa (VD: "08:00 - 17:00") thành float (8.0, 17.0).
     """
-    if not open_str: return None
+    if not open_str: 
+        return None
     try:
         # Regex tìm giờ:phút AM/PM
         times = re.findall(r'(\d{1,2}):?(\d{2})?\s*(AM|PM)?', open_str, re.IGNORECASE)
@@ -74,8 +72,10 @@ def parse_opening_hours(open_str):
             def to_24h(h, m, ampm):
                 h = int(h)
                 if ampm:
-                    if ampm.upper() == 'PM' and h != 12: h += 12
-                    if ampm.upper() == 'AM' and h == 12: h = 0
+                    if ampm.upper() == 'PM' and h != 12: 
+                        h += 12
+                    if ampm.upper() == 'AM' and h == 12: 
+                        h = 0
                 return h + (int(m)/60 if m else 0)
 
             start = to_24h(*times[0])
@@ -110,11 +110,158 @@ def is_attraction_available(attraction, current_time):
     
     return True, ""
 
+def calculate_time_balance_score(model, attractions, num_days):
+    """
+    Đánh giá xem việc chia nhóm hiện tại có công bằng về mặt thời gian giữa các ngày không
+    """
+    labels = model.predict([[
+        a.lat/180, a.lon/180, 
+        a.visit_duration/240, 
+        30/120,  # Giả sử travel time trung bình
+        0.5
+    ] for a in attractions])
+    
+    # Tính thời gian ước tính cho mỗi cụm
+    cluster_times = {}
+    for i, label in enumerate(labels):
+        if label not in cluster_times:
+            cluster_times[label] = 0
+        cluster_times[label] += attractions[i].visit_duration + 30 
+    
+    # Tính variance của thời gian
+    times = list(cluster_times.values())
+    if len(times) <= 1:
+        return float('inf')
+        
+    mean_time = sum(times) / len(times)
+    variance = sum((t - mean_time)**2 for t in times) / len(times)
+    
+    return variance  # Thấp = cân bằng tốt
+
+def calculate_opening_score(attraction, current_time):
+    """
+    Tính điểm phù hợp dựa trên giờ mở cửa (0 - 1 đ)
+    """
+    if not hasattr(attraction, 'opening_hours'):
+        return 0.5  # trung lập
+    
+    try:
+        hours = parse_opening_hours(attraction.opening_hours)
+        if not hours:
+            return 0.5
+            
+        start_h, end_h = hours
+        current_h = current_time.hour + current_time.minute/60
+        
+        # Tính khoảng cách đến khung giờ mở cửa
+        if current_h < start_h:
+            distance = start_h - current_h
+        elif current_h > end_h:
+            distance = current_h - end_h
+        else:
+            return 1.0  # Đang mở cửa
+        
+        return max(0, 1 - distance/12)  # 12 tiếng là max distance
+        
+    except:
+        return 0.5
+
+def redistribute_clusters_by_time(labels, attractions, num_days, start_location):
+    """
+    Post-processing để cân bằng thời gian giữa các ngày
+    """
+    # Gom nhóm theo labels
+    clusters = {}
+    for idx, label in enumerate(labels):
+        if label not in clusters:
+            clusters[label] = []
+        clusters[label].append(attractions[idx])
+    
+    # Tính thời gian cho mỗi cụm
+    cluster_times = {}
+    for label, items in clusters.items():
+        total_time = 0
+        for attr in items:
+            # Tính thời gian di chuyển + tham quan
+            dist, travel, _ = get_routing_info(start_location, (attr.lat, attr.lon))
+            total_time += travel + attr.visit_duration
+        cluster_times[label] = total_time
+    
+    # Sort theo thời gian (ngày ngắn nhất trước)
+    sorted_clusters = sorted(clusters.items(), key=lambda x: cluster_times[x[0]])
+    
+    # Đảm bảo đủ num_days cụm
+    result = []
+    for label, items in sorted_clusters[:num_days]:
+        result.append(items)
+    
+    # Nếu thiếu cụm, tạo cụm rỗng
+    while len(result) < num_days:
+        result.append([])
+    
+    return result
+
+def cluster_attractions_by_time_and_space(attractions, num_days, start_location, start_time):
+    """
+    Chia điểm đến thành các cụm bằng Gaussian Mixture Models
+    """
+    if not attractions:
+        return []
+        
+    # 1. Tính feature vectors với yếu tố thời gian + không gian 
+    features = []
+    for attr in attractions:
+        # Tính thời gian di chuyển từ start
+        dist_km, travel_min, _ = get_routing_info(start_location, (attr.lat, attr.lon))
+        
+        # Feature vector
+        feature = [
+            attr.lat / 180.0,                    # Vị trí (normalized)
+            attr.lon / 180.0,                    # Vị trí (normalized) 
+            attr.visit_duration / 240.0,         # Thời gian tham quan (normalized to hours)
+            travel_min / 120.0,                  # Thời gian di chuyển (normalized)
+            calculate_opening_score(attr, start_time),  # Điểm phù hợp giờ mở cửa
+        ]
+        features.append(feature)
+    
+    
+    # Thử nghiệm với số cụm khác nhau 
+    best_model = None
+    best_score = float('inf')
+    
+    for n_clusters in range(max(1, num_days-1), num_days+2):
+        gmm = GaussianMixture(n_components=n_clusters, random_state=42)
+        gmm.fit(features)
+        
+        # Tính score dựa trên time balance
+        score = calculate_time_balance_score(gmm, attractions, num_days)
+        if score < best_score:
+            best_score = score
+            best_model = gmm
+    
+    # 3. Phân cụm và tối ưu
+    labels = best_model.predict(features)
+    
+    # 4. Post-processing: Balance thời gian giữa các ngày
+    clusters = redistribute_clusters_by_time(labels, attractions, num_days, start_location)
+    
+    return clusters
+
+
 def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str, end_datetime_str):
     """
-    Hàm chính để tạo lịch trình nhiều ngày.
+    Hàm chính tạo lịch trình. Giới thiệu logic ngắn gọn:
+    1: Lọc các điểm đến phù hợp với thời gian user đưa
+    2: Tính số ngày và chia điểm đến thành các nhóm
+    3: Lập tour chi tiết (áp dụng thuật toán tham lam), trong mỗi ngày:
+        - Chọn điểm gần nhất từ vị trí hiện tại
+        - Tính routing time + visit time
+        - Chèn meal breaks khi cần thiết
+        - Cập nhật timeline và vị trí
+        - Chèn các điểm đến dư qua ngày hôm sau (nếu có)
+    4: Vẽ bản đồ tĩnh bằng folium 
     """
-    # 1. Parse thời gian bắt đầu và kết thúc
+    # Parse thời gian
     try:
         current_time = datetime.strptime(start_datetime_str, "%d/%m/%Y %H:%M")
         end_time = datetime.strptime(end_datetime_str, "%d/%m/%Y %H:%M")
@@ -122,7 +269,7 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         current_time = datetime.now()
         end_time = current_time + timedelta(days=1)
 
-    # 2. Lấy dữ liệu & Lọc (Validate)
+    # 1. Lấy dữ liệu & Validate
     raw_attractions = Attraction.query.filter(Attraction.id.in_(attraction_ids)).all()
     valid_attractions = []
     invalid_attractions = [] 
@@ -147,49 +294,49 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
             "totalDestinations": 0,
             "totalDays": 0
         }
-
-    # 3. Phân chia attractions theo ngày
-    days = []
-    current_day_start = current_time
-    day_index = 1
     
-    # Chia attractions thành các nhóm theo ngày
-    attractions_per_day = []
-    
-    # Tính số ngày có thể
+    # 2. Tính số ngày
     total_days = (end_time.date() - current_time.date()).days + 1
     if total_days <= 0:
         total_days = 1
     
-    # Phân bổ attractions đều cho các ngày
-    attractions_copy = valid_attractions.copy()
-    base_per_day = len(attractions_copy) // total_days
-    extra = len(attractions_copy) % total_days
+    # Chia địa điểm thành các nhóm cho từng ngày
+    attractions_per_day = cluster_attractions_by_time_and_space(
+        valid_attractions, 
+        total_days, 
+        (start_lat, start_lon), 
+        current_time
+    )
     
-    start_idx = 0
-    for day in range(total_days):
-        day_count = base_per_day + (1 if day < extra else 0)
-        day_attractions = attractions_copy[start_idx:start_idx + day_count]
-        attractions_per_day.append(day_attractions)
-        start_idx += day_count
+    total_days = len(attractions_per_day)
 
-    # 4. Xử lý từng ngày
+    # 3. Xử lý từng ngày (Routing chi tiết)
     all_timeline = []
     all_route_geometries = []
-    curr_loc = (start_lat, start_lon)
+    
+    # Vị trí cuối cùng của ngày hôm trước = điểm bắt đầu ngày hôm sau
+    curr_loc = (start_lat, start_lon) 
+    daily_routes_map = {}
+
+    # Danh sách điểm dư từ ngày trước
+    remaining_points = []
     
     for day_idx, day_attractions in enumerate(attractions_per_day):
-        if not day_attractions:
+        # Kết hợp điểm dư + điểm mới
+        current_day_points = remaining_points + day_attractions
+        remaining_points = []  # Reset cho ngày mới
+
+        if not current_day_points:
             continue
             
         day_timeline = []
         day_route_geometries = []
         
-        # Reset daily flags
-        has_had_lunch = False
-        has_had_dinner = False
+        has_breakfast = False
+        has_lunch = False
+        has_dinner = False
         
-        # Sự kiện: Bắt đầu ngày (chỉ ngày đầu tiên)
+        # [EVENT START/WAKE UP]
         if day_idx == 0:
             day_timeline.append({
                 "day": day_idx + 1,
@@ -199,82 +346,85 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                 "name": "Điểm xuất phát",
                 "detail": "Bắt đầu hành trình"
             })
-        
-        # Sự kiện: Thức dậy (các ngày sau)
         else:
-            wake_up_time = current_time.replace(hour=WAKE_UP_HOUR, minute=0)
+            # Ngày mới bắt đầu lúc 6:00 + cập nhật lại thời gian hiện tại
+            next_day_morning = current_time.replace(hour=WAKE_UP_HOUR, minute=0)
+            if next_day_morning < current_time: 
+                next_day_morning += timedelta(days=1)
+            current_time = next_day_morning
+            
             day_timeline.append({
                 "day": day_idx + 1,
                 "date": current_time.strftime("%d/%m/%Y"),
-                "time": wake_up_time.strftime("%H:%M"),
+                "time": current_time.strftime("%H:%M"),
                 "type": "WAKE_UP",
                 "name": "Thức dậy",
                 "detail": f"Bắt đầu ngày {day_idx + 1}"
             })
-            current_time = wake_up_time
 
-        unvisited = day_attractions.copy()
+        # Logic Routing "Nearest Neighbor" trong nội bộ ngày 
+        unvisited = current_day_points.copy()
         
         while unvisited:
-            # --- LOGIC ĂN TRƯA ---
-            if not has_had_lunch and LUNCH_START_HOUR <= current_time.hour < LUNCH_END_HOUR:
-                lunch_end = current_time + timedelta(minutes=LUNCH_DURATION_MIN)
-                # Check không vượt quá giờ ngủ
-                if lunch_end.hour >= SLEEP_START_HOUR:
-                    break
-                    
+            # === LOGIC ĂN SÁNG ===
+            if not has_breakfast and BREAKFAST_START_HOUR <= current_time.hour < BREAKFAST_END_HOUR:
+                breakfast_end = current_time + timedelta(minutes=BREAKFAST_DURATION_MIN)
+                
                 day_timeline.append({
                     "day": day_idx + 1,
                     "date": current_time.strftime("%d/%m/%Y"),
                     "time": current_time.strftime("%H:%M"),
-                    "type": "LUNCH",
-                    "name": "Nghỉ ăn trưa",
-                    "detail": "Tự do thưởng thức ẩm thực địa phương",
-                    "duration": LUNCH_DURATION_MIN,
-                    "endTime": lunch_end.strftime("%H:%M")
+                    "type": "BREAKFAST", 
+                    "name": "Ăn sáng",
+                    "detail": "Nạp năng lượng cho ngày mới",
+                    "duration": BREAKFAST_DURATION_MIN,
+                    "endTime": breakfast_end.strftime("%H:%M")
+                })
+                current_time = breakfast_end
+                has_breakfast = True
+                continue
+
+            # === LOGIC ĂN TRƯA ===
+            if not has_lunch and LUNCH_START_HOUR <= current_time.hour < LUNCH_END_HOUR:
+                lunch_end = current_time + timedelta(minutes=LUNCH_DURATION_MIN)
+                day_timeline.append({
+                    "day": day_idx + 1, "date": current_time.strftime("%d/%m/%Y"),
+                    "time": current_time.strftime("%H:%M"), "type": "LUNCH",
+                    "name": "Nghỉ ăn trưa", "duration": LUNCH_DURATION_MIN
                 })
                 current_time = lunch_end
-                has_had_lunch = True
+                has_lunch = True
                 continue
 
-            # --- LOGIC ĂN TỐI ---
-            if not has_had_dinner and DINNER_START_HOUR <= current_time.hour < DINNER_END_HOUR:
+            # === LOGIC ĂN TỐI ===
+            if not has_dinner and DINNER_START_HOUR <= current_time.hour < DINNER_END_HOUR:
                 dinner_end = current_time + timedelta(minutes=DINNER_DURATION_MIN)
-                # Check không vượt quá giờ ngủ
-                if dinner_end.hour >= SLEEP_START_HOUR:
-                    break
-                    
                 day_timeline.append({
-                    "day": day_idx + 1,
-                    "date": current_time.strftime("%d/%m/%Y"),
-                    "time": current_time.strftime("%H:%M"),
-                    "type": "DINNER",
-                    "name": "Nghỉ ăn tối",
-                    "detail": "Tự do thưởng thức ẩm thực địa phương",
-                    "duration": DINNER_DURATION_MIN,
-                    "endTime": dinner_end.strftime("%H:%M")
+                    "day": day_idx + 1, "date": current_time.strftime("%d/%m/%Y"),
+                    "time": current_time.strftime("%H:%M"), "type": "DINNER",
+                    "name": "Nghỉ ăn tối", "duration": DINNER_DURATION_MIN
                 })
                 current_time = dinner_end
-                has_had_dinner = True
+                has_dinner = True
                 continue
 
-            # Check nếu quá giờ ngủ thì dừng
             if current_time.hour >= SLEEP_START_HOUR:
+                remaining_points = unvisited.copy()
+                print(f"[REMAINING] Ngày {day_idx + 1}: {len(remaining_points)} điểm chưa đi được")
                 break
 
-            # --- TÌM ĐIỂM TIẾP THEO ---
+            # --- TÌM ĐIỂM TIẾP THEO (Nearest Neighbor) ---
+            # Tìm điểm gần nhất trong cụm hiện tại
             nearest = min(unvisited, key=lambda x: geodesic(curr_loc, (x.lat, x.lon)).km)
             
-            # Tính thời gian di chuyển
             dist_km, travel_minutes, geometry = get_routing_info(curr_loc, (nearest.lat, nearest.lon))
-            
             arrival_time = current_time + timedelta(minutes=travel_minutes)
             
-            # Check nếu đến nơi quá giờ ngủ thì dừng
             if arrival_time.hour >= SLEEP_START_HOUR:
+                remaining_points = unvisited.copy()
+                print(f"[REMAINING] Ngày {day_idx + 1}: {len(remaining_points)} điểm chưa đi được")
                 break
             
-            # Thêm sự kiện: Di chuyển
             day_timeline.append({
                 "day": day_idx + 1,
                 "date": current_time.strftime("%d/%m/%Y"),
@@ -285,24 +435,22 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                 "duration": travel_minutes
             })
 
-            # Lưu đường đi
             if geometry:
                 path = [[p[1], p[0]] for p in geometry['coordinates']]
                 day_route_geometries.append(path)
             else:
                 day_route_geometries.append([curr_loc, (nearest.lat, nearest.lon)])
 
-            # --- THAM QUAN ---
+            # Tham quan
             visit_min = nearest.visit_duration if nearest.visit_duration else 60
             departure_time = arrival_time + timedelta(minutes=visit_min)
             
-            # Check nếu tham quan xong quá giờ ngủ thì dừng
             if departure_time.hour >= SLEEP_START_HOUR:
+                remaining_points = unvisited.copy()
+                print(f"[REMAINING] Ngày {day_idx + 1}: {len(remaining_points)} điểm chưa đi được")
                 break
             
-            # Check availability tại thời điểm đến
             is_open, status = is_attraction_available(nearest, arrival_time)
-            note = "" if is_open else f"(LƯU Ý: {status})"
 
             day_timeline.append({
                 "day": day_idx + 1,
@@ -311,69 +459,95 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                 "type": "VISIT",
                 "id": nearest.id,
                 "name": nearest.name,
-                "detail": f"Tham quan, chụp ảnh. {note}",
+                "detail": f"Tham quan. Lưu ý: {status}",
                 "duration": visit_min,
-                "endTime": departure_time.strftime("%H:%M"),
-                "lat": nearest.lat,
-                "lon": nearest.lon,
+                "lat": nearest.lat, "lon": nearest.lon,
                 "imageUrl": nearest.image_url
             })
 
-            # Cập nhật trạng thái
             current_time = departure_time
             curr_loc = (nearest.lat, nearest.lon)
             unvisited.remove(nearest)
 
-        # Thêm sự kiện ngủ nghỉ
-        sleep_time = current_time.replace(hour=SLEEP_START_HOUR, minute=0) if current_time.hour < SLEEP_START_HOUR else current_time
+        # Kết thúc ngày, auto cho user nghỉ ngơi khi ko còn điểm đến phù hợp trong ngày
+        sleep_time = current_time
+        if current_time.hour < SLEEP_START_HOUR:
+            sleep_time = current_time.replace(hour=SLEEP_START_HOUR, minute=0)
+             
         day_timeline.append({
             "day": day_idx + 1,
             "date": current_time.strftime("%d/%m/%Y"),
             "time": sleep_time.strftime("%H:%M"),
             "type": "SLEEP",
             "name": "Nghỉ ngơi",
-            "detail": "Kết thúc ngày, chuẩn bị cho ngày mai"
+            "detail": "Kết thúc ngày"
         })
         
         # Cập nhật cho ngày tiếp theo
         current_time = sleep_time + timedelta(days=1)
         current_time = current_time.replace(hour=WAKE_UP_HOUR, minute=0)
         
-        # Thêm vào timeline chung
+        # Lưu đường + lịch trình
+        daily_routes_map[day_idx + 1] = day_route_geometries
         all_timeline.extend(day_timeline)
         all_route_geometries.extend(day_route_geometries)
 
-    # 5. Tạo Map HTML
+        if remaining_points:
+            remaining_points.sort(key=lambda x: geodesic(curr_loc, (x.lat, x.lon)).km)
+
+    # 4. Tạo Map với màu sắc theo yêu cầu
     m = folium.Map(location=[start_lat, start_lon], zoom_start=14)
-    
-    # Marker Start
-    folium.Marker(
-        [start_lat, start_lon], 
-        popup="Start Point", 
-        icon=folium.Icon(color='green', icon='play')
-    ).add_to(m)
 
-    # Vẽ đường đi
+    # Start point - XANH LÁ
+    folium.Marker([start_lat, start_lon], popup="Start", icon=folium.Icon(color='green', icon='play')).add_to(m)
+
+    # Đường đi - MÀU ĐỎ
     for path in all_route_geometries:
-        folium.PolyLine(path, color="#3388ff", weight=4, opacity=0.8).add_to(m)
+        folium.PolyLine(path, color="red", weight=4, opacity=0.8).add_to(m)
 
-    # Marker các điểm đến
+    # Visit points - MÀU VÀNG
     visit_points = [t for t in all_timeline if t['type'] == 'VISIT']
     for idx, p in enumerate(visit_points):
         folium.Marker(
             [p['lat'], p['lon']],
-            popup=f"<b>{idx+1}. {p['name']}</b><br>Ngày {p['day']}: {p['time']}",
-            icon=folium.Icon(color='red', icon='camera')
+            popup=f"<b>{idx+1}. {p['name']}</b><br>Ngày {p['day']}",
+            icon=folium.Icon(color='orange', icon='camera')
         ).add_to(m)
 
     map_html = m._repr_html_()
 
+    # === TÍNH TOÁN CLUSTER DATA CHO FRONTEND ===
+    clusters_data = []
+    
+    for day_idx in range(total_days):
+        day_num = day_idx + 1
+        
+        # Lấy điểm đến
+        day_points = [
+            t for t in all_timeline 
+            if t['day'] == day_num and t.get('lat') and t.get('lon')
+        ]
+        
+        # Tính tâm nhóm
+        center_lat, center_lon = start_lat, start_lon
+        if day_points:
+            center_lat = sum([p['lat'] for p in day_points]) / len(day_points)
+            center_lon = sum([p['lon'] for p in day_points]) / len(day_points)
+            
+        clusters_data.append({
+            "day": day_num,
+            "center": [center_lat, center_lon],
+            "points": day_points,
+            "summary": f"Ngày {day_num}: {len(day_points)} điểm đến",
+            "route": daily_routes_map.get(day_num, []) 
+        })
+
     return {
         "timeline": all_timeline,
-        "mapHtml": map_html,
-        "invalidAttractions": invalid_attractions,
+        "mapHtml": map_html, 
+        "clusters": clusters_data, # <--- DATA MỚI CHO FRONTEND
+        "startPoint": [start_lat, start_lon],
         "finishTime": current_time.strftime("%H:%M"),
         "totalDestinations": len(visit_points),
-        "totalDays": len(attractions_per_day)
+        "totalDays": total_days
     }
-
