@@ -190,6 +190,18 @@ export default function AttractionDetail({ currentUser }) {
   const heading = info?.name || 'Địa điểm';
   const tags = info?.tags || [];
 
+
+  const renderFormattedText = (text) => {
+    if (!text) return "";
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={index} style={{ color: '#c4b30a' }}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  };
+
   return (
     <div className="attraction-detail-page">
       <div className="attraction-detail-inner">
@@ -252,13 +264,15 @@ export default function AttractionDetail({ currentUser }) {
                       </div>
                     )}
                     {section.type === 'list' && Array.isArray(section.items) ? (
-                      <ul>
-                        {section.items.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
+                    <ul>
+                      {section.items.map((item, idx) => ( // Thêm idx để làm key an toàn hơn
+                        <li key={idx}>
+                            {renderFormattedText(item)} {/* Áp dụng hàm xử lý text in đậm */}
+                        </li>
+                      ))}
+                    </ul>
                     ) : (
-                      <p>{section.content}</p>
+                      <p>{renderFormattedText(section.content)}</p>
                     )}
                   </article>
                 ))
@@ -352,4 +366,3 @@ export default function AttractionDetail({ currentUser }) {
     </div>
   );
 }
-
