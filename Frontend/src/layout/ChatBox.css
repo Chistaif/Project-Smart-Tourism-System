@@ -1,0 +1,194 @@
+/* Nút bong bóng chat */
+.chat-widget {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000; /* Đảm bảo luôn nổi trên cùng */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chat-toggle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c4b30a, #d4c50b); /* Màu accent của bạn */
+  color: white;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+}
+
+.chat-toggle:hover {
+  transform: scale(1.1);
+}
+
+.custom-chat-logo {
+  width: 35px;        
+  height: 35px;   
+  object-fit: contain; 
+  pointer-events: none;
+  display: block;
+
+  transform: translateY(3px);
+}
+
+/* Khung cửa sổ chat */
+.chat-box {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 350px;
+  height: 500px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-header {
+  background: #1f2937; /* Màu tối giống theme */
+  color: white;
+  padding: 15px 20px;
+  border-bottom: 3px solid #c4b30a;
+}
+
+.chat-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Khu vực tin nhắn */
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.message.user {
+  align-self: flex-end;
+  background: #c4b30a; /* Màu accent */
+  color: #1a2e05;
+  border-bottom-right-radius: 2px;
+}
+
+.message.model {
+  align-self: flex-start;
+  background: white;
+  color: #333;
+  border: 1px solid #e5e7eb;
+  border-bottom-left-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Khu vực nhập liệu */
+.chat-input-area {
+  padding: 15px;
+  background: white;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.chat-input-area input:focus {
+  border-color: #c4b30a;
+}
+
+.chat-input-area button {
+  background: #1f2937;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-input-area button:hover {
+  background: #c4b30a;
+}
+
+.chat-input-area button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Khung chứa thông báo đăng nhập */
+.chat-login-require {
+  flex: 1; /* Chiếm toàn bộ không gian còn lại của hộp chat */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Căn giữa theo chiều ngang */
+  justify-content: center; /* Căn giữa theo chiều dọc */
+  padding: 30px;
+  text-align: center;
+  color: #4b5563; /* Màu chữ xám đậm */
+  background-color: #f9fafb; /* Màu nền xám rất nhạt */
+}
+
+/* Đoạn văn bản thông báo */
+.chat-login-require p {
+  margin-bottom: 15px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Nút Đăng nhập ngay */
+.chat-login-btn {
+  background: linear-gradient(135deg, #c4b30a, #d4c50b); /* Màu vàng accent giống theme */
+  color: #1a2e05; /* Màu chữ tối */
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px; /* Bo tròn nút */
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(196, 179, 10, 0.3); /* Đổ bóng nhẹ */
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi di chuột vào nút */
+.chat-login-btn:hover {
+  transform: translateY(-2px); /* Nút nổi lên nhẹ */
+  box-shadow: 0 6px 15px rgba(196, 179, 10, 0.4);
+}

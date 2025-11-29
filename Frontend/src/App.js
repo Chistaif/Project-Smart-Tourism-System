@@ -4,6 +4,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navigation from './layout/Navigation';
+import ChatAssistant from './layout/ChatBox';
 import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
@@ -60,7 +61,12 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
+    // Xóa thông tin user
     localStorage.removeItem('currentUser');
+    
+    // Xóa token chìa khóa
+    localStorage.removeItem('access_token');
+    alert("Đã đăng xuất thành công!");
   };
 
   const openPopup = (mode = 'signup') => {
@@ -212,10 +218,17 @@ function App() {
                     try {
                       const response = await authAPI.login(credentials);
                       if (response.success) {
-                        setUser(response.user);
-                        localStorage.setItem('currentUser', JSON.stringify(response.user));
-                        alert('Đăng nhập thành công!');
-                        closePopup();
+                          setUser(response.user);
+                          
+                          // 1. Lưu thông tin user
+                          localStorage.setItem('currentUser', JSON.stringify(response.user));
+                          
+                          // 2. Lưu TOKEN (Thêm dòng này để Chatbot hoạt động)
+                          // Backend trả về key là 'access_token'
+                          localStorage.setItem('access_token', response.access_token); 
+                          
+                          alert('Đăng nhập thành công!');
+                          closePopup();
                       } else {
                         setError(response.error || 'Đăng nhập thất bại');
                       }
@@ -451,6 +464,12 @@ function App() {
         <footer>
           <small>© 2025 Culture Compass</small>
         </footer>
+
+        <ChatAssistant 
+          user={user} 
+          openLogin={() => openPopup('login')} 
+        />
+
       </div>
     </Router>
   );
