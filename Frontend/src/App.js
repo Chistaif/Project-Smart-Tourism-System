@@ -27,6 +27,7 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [popupMode, setPopupMode] = useState('signup'); // 'signup' or 'login'
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -203,8 +204,9 @@ function App() {
                   <h2 className="signup-title">Chào Mừng Trở Lại</h2>
                   <p className="signup-subtitle">Đăng nhập để tiếp tục hành trình</p>
                   
-                  {error && <div className="error-message">{error}</div>}
-                  
+                  {success && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
+                                    
                   <form className="signup-form" onSubmit={async (e) => {
                     e.preventDefault();
                     setError('');
@@ -227,13 +229,20 @@ function App() {
                           // Backend trả về key là 'access_token'
                           localStorage.setItem('access_token', response.access_token); 
                           
-                          alert('Đăng nhập thành công!');
-                          closePopup();
+                          setSuccess("Đăng nhập thành công!");
+                          setError("");
+
+                          setTimeout(() => {
+                            closePopup();
+                            setSuccess("");
+                          }, 1200);
                       } else {
                         setError(response.error || 'Đăng nhập thất bại');
+                        setSuccess("");
                       }
                     } catch (err) {
                       setError(err.message || 'Đăng nhập thất bại');
+                      setSuccess("");
                     } finally {
                       setLoading(false);
                     }
@@ -286,7 +295,8 @@ function App() {
                     Nhập email để xác nhận
                   </p>
 
-                  {error && <div className="error-message">{error}</div>}
+                  {success && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
 
                   <form 
                     className="signup-form"
@@ -305,14 +315,16 @@ function App() {
                       }
 
                       try {
-                        alert(
-                          'Nếu email tồn tại trong hệ thống, mã xác thực sẽ được gửi'
-                        );
-
-                        switchMode('login');
+                        const response = await authAPI.forgotPassword({email});
+                        if(response.success) {
+                          alert("Mã xác thực đã được gửi tới email. Vui lòng kiểm tra hộp thư.");
+                          switchMode('login');
+                        } else {
+                          setError(response.error || "Không thể gửi mã xác thực");
+                        }
                       } catch(err) {
                         setError(
-                          err.message || 'Không thể gửi email xác thực, thử lại sau'
+                          err.message || 'Không thể gửi email xác thực'
                         );
                       } finally {
                         setLoading(false);
@@ -366,7 +378,8 @@ function App() {
                     Mã OTP gồm 6 số đã được gửi tới email: <b>{verifyEmail}</b>
                   </p>
 
-                  {error && <div className="error-message">{error}</div>}
+                  {error && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
 
                   <form className="signup-form"
                     onSubmit={async (e) => {

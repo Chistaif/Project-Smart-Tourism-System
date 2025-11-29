@@ -128,6 +128,11 @@ export const authAPI = {
     method: 'POST',
     body: JSON.stringify(payload),
   }),
+
+  forgotPassword: (payload) => apiRequest('/auth/forgot_password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
   
   // Lấy thông tin người dùng theo ID
   getUser: (userId) => apiRequest(`/auth/user/${userId}`),
