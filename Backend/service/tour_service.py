@@ -6,6 +6,11 @@ from geopy.distance import geodesic
 from models import Attraction, Festival, CulturalSpot
 import numpy as np
 from sklearn.mixture import GaussianMixture
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+GRAPHHOPPER_API_KEY = os.getenv('GRAPHHOPPER_API_KEY')
 
 # --- CẤU HÌNH ---
 BREAKFAST_START_HOUR = 6       # Bắt đầu khung giờ ăn sáng
@@ -27,36 +32,85 @@ FALLBACK_SPEED_KMH = 30        # Đặt tốc độ tb khi di chuyển
 
 def get_routing_info(coord_start, coord_end, vehicle='car'):
     """
-    Lấy thông tin di chuyển thực tế từ OSRM.
+    Lấy thông tin di chuyển từ GraphHopper Local Server.
     Input: tuple (lat, lon)
     Output: (distance_km, duration_minutes, polyline_geometry)
     """
-    # OSRM yêu cầu format: lon,lat
-    start_str = f"{coord_start[1]},{coord_start[0]}"
-    end_str = f"{coord_end[1]},{coord_end[0]}"
-    
-    # Mode: 'driving' (lái xe), 'foot' (đi bộ)
-    url = f"http://router.project-osrm.org/route/v1/driving/{start_str};{end_str}?overview=full&geometries=geojson"
-    
+    # GraphHopper Local Server endpoint
+    base_url = "http://localhost:8989/route"
+
+    # Parameters cho GraphHopper Local Server (GET request)
+    params = {
+        'point': [f"{coord_start[0]},{coord_start[1]}", f"{coord_end[0]},{coord_end[1]}"],
+        'profile': vehicle,
+        'locale': 'vi',
+        'instructions': 'false',  # Không cần instructions để giảm response size
+        'points_encoded': 'false',
+        'calc_points': 'true',
+        'type': 'json'
+    }
+
     try:
-        response = requests.get(url, timeout=3) # Timeout 3s
+        response = requests.get(base_url, params=params, timeout=15)
         data = response.json()
-        
-        if data.get("code") == "Ok":
-            route = data["routes"][0]
-            duration_min = round(route["duration"] / 60)     # mặc định là h
-            distance_km = round(route["distance"] / 1000, 2) # mặc định là m
-            geometry = route["geometry"]                     # GeoJSON lineString
+
+        if response.status_code == 200 and 'paths' in data and len(data['paths']) > 0:
+            path = data['paths'][0]
+
+            # GraphHopper trả về distance (m) và time (ms)
+            distance_km = round(path['distance'] / 1000, 2)
+            duration_min = round(path['time'] / (1000 * 60))  # Convert ms to minutes
+
+            # Convert points to GeoJSON format
+            geometry = None
+            if 'points' in path and path['points']['coordinates']:
+                # GraphHopper trả về [[lon, lat], [lon, lat], ...]
+                coordinates = path['points']['coordinates']
+                geometry = {
+                    'type': 'LineString',
+                    'coordinates': coordinates
+                }
+
+            print(f"[GraphHopper Local] Distance: {distance_km}km, Duration: {duration_min}min")
             return distance_km, duration_min, geometry
-            
+
+        else:
+            print(f"[GraphHopper Error] Status: {response.status_code}, Message: {data.get('message', 'Unknown error')}")
+
+    except requests.exceptions.ConnectionError:
+        print(f"[GraphHopper Failed] Cannot connect to local server at {base_url}. Make sure GraphHopper is running.")
+        print("  To start GraphHopper: java -jar graphhopper-web-*.jar server config.yml")
+    except requests.exceptions.Timeout:
+        print(f"[GraphHopper Failed] Request timeout after 15s")
     except Exception as e:
-        print(f"[OSRM Error] {e}. Using fallback calculation.")
-    
-    # --- FALLBACK (Nếu OSRM lỗi) ---
+        print(f"[GraphHopper Failed] {e}")
+
+    # --- FALLBACK: Geodesic calculation ---
+    print(f"[GraphHopper Fallback] Using geodesic calculation for {coord_start} -> {coord_end}")
     dist = geodesic(coord_start, coord_end).km
-    speed = 5 if dist < 1 else FALLBACK_SPEED_KMH
+
+    # Intelligent speed calculation
+    if dist < 1:      # Trong vòng 1km
+        speed = 5     # Đi bộ
+    elif dist < 5:    # 1-5km
+        speed = 15    # Xe máy/thành phố
+    elif dist < 20:   # 5-20km
+        speed = 25    # Đường quốc lộ
+    else:             # >20km
+        speed = FALLBACK_SPEED_KMH  # Cao tốc
+
     duration = round((dist / speed) * 60)
-    return round(dist, 2), duration, None
+
+    # Create simple geometry (straight line)
+    geometry = {
+        'type': 'LineString',
+        'coordinates': [
+            [coord_start[1], coord_start[0]],  # [lon, lat]
+            [coord_end[1], coord_end[0]]       # [lon, lat]
+        ]
+    }
+
+    return round(dist, 2), duration, geometry
 
 
 def parse_opening_hours(open_str):

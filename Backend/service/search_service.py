@@ -1,6 +1,7 @@
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
-from models import db, Attraction, Festival, CulturalSpot, Tag, FavoriteAttraction, User
+from models import db, Attraction, Festival, CulturalSpot, Tag, FavoriteAttraction
+from .tour_service import get_routing_info
 
 # NEW SEARCH LOGIC
 def get_user_interest_tags(user_id):
@@ -137,3 +138,35 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
         } 
         for item in final_results
     ]
+
+
+def get_nearby_attr(attraction_id):
+    target = Attraction.query.get(attraction_id)
+    if not target:
+        raise LookupError("Không tìm thấy địa điểm")
+
+    nearby_attractions = Attraction.query.filter(Attraction.id.in_(target.nearby_attractions)).all()
+    return {a.to_json_brief() for a in nearby_attractions}
+
+
+def precompute_nearby_attractions(radius=3):
+    print(f"Starting pre-computation of nearby attractions with radius {radius}km...")
+
+    all_attractions = Attraction.query.all()
+    total_count = len(all_attractions)
+    processed_count = 0
+
+    for attraction in all_attractions:
+        nearby_ids = []
+
+        for other in all_attractions:
+            if attraction.id != other.id:
+                distance_km, _, _ = get_routing_info((attraction.lat, attraction.lon), (other.lat, other.lon))
+                if distance_km <= radius:
+                    nearby_ids.append(other.id)
+
+        attraction.nearby_attractions = nearby_ids
+        processed_count += 1
+
+    db.session.commit()
+    print(f"Successfully pre-computed nearby attractions for {total_count} attractions!")

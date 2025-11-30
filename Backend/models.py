@@ -97,6 +97,7 @@ class Attraction(db.Model):
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
     image_url = db.Column(db.String(500))
+    nearby_attractions = db.Column(db.JSON, default=list)
 
     type = db.Column(db.String(50))
 
