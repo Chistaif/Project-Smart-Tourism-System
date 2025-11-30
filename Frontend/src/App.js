@@ -467,7 +467,7 @@ function App() {
             path="/service" 
             element={<Service currentUser={user} />} 
           />
-          <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} />} />
+          <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />

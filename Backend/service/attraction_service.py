@@ -153,15 +153,27 @@ def update_review(attraction_id, data):
     update_attraction_rating_service(attraction_id)
     return review.to_json()
 
-
 def delete_review(attraction_id, data):
-    payload = _validate_review_payload(data, require_review_id=True)
-    review = _get_review_or_404(payload["review_id"], attraction_id)
-    _assert_owner(review, payload["user_id"])
+    # 1. Lấy dữ liệu
+    review_id = data.get('reviewId')
+    user_id = data.get('userId')
 
+    if not review_id or not user_id:
+        raise ValueError("Thiếu thông tin reviewId hoặc userId")
+
+    # 2. Tìm review trong database
+    review = _get_review_or_404(review_id, attraction_id)
+    
+    # 3. Kiểm tra quyền sở hữu
+    _assert_owner(review, int(user_id))
+
+    # 4. Xóa
     db.session.delete(review)
     db.session.commit()
+    
+    # 5. Cập nhật lại điểm số
     update_attraction_rating_service(attraction_id)
+    
     return True
 
 
