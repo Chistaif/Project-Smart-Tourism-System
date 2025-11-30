@@ -171,9 +171,7 @@ const handleDeleteReview = async (reviewId) => {
   if (loading) return <div className="attraction-loading">Đang tải thông tin...</div>;
   if (error) return <div className="attraction-error">{error}</div>;
 
-  // =================================================================
   // VIEW 1: GIAO DIỆN TÓM TẮT (Summary Card)
-  // =================================================================
   if (!showFullDetail) {
     return (
       <div className="summary-page-container">
@@ -232,9 +230,7 @@ const handleDeleteReview = async (reviewId) => {
     );
   }
 
-  // =================================================================
   // VIEW 2: GIAO DIỆN CHI TIẾT (Full Detail)
-  // =================================================================
   return (
     <div className="attraction-detail-page full-view">
       <div className="attraction-detail-inner">
