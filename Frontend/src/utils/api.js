@@ -119,17 +119,31 @@ export const authAPI = {
     body: JSON.stringify(credentials),
   }),
 
+  //Xac thuc OTP cho login
   verifyOTP: (payload) => apiRequest('/auth/verify-email', {
     method: 'POST',
     body: JSON.stringify(payload),
   }),
 
+  //Gui lai OTP
   resendOTP: (payload) => apiRequest('/auth/resend-code', {
     method: 'POST',
     body: JSON.stringify(payload),
   }),
 
-  forgotPassword: (payload) => apiRequest('/auth/forgot_password', {
+  //QUEN MAT KHAU
+  forgotPassword: (payload) => apiRequest('/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  //Xac thuc OTP cho QUEN MAT KHAU
+  verifyForgotOTP: (payload) => apiRequest('/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  resetPassword: (payload) => apiRequest('/auth/reset-password', {
     method: 'POST',
     body: JSON.stringify(payload),
   }),
