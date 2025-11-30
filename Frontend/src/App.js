@@ -4,6 +4,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navigation from './layout/Navigation';
+import ChatAssistant from './layout/ChatBox';
 import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
@@ -26,6 +27,7 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [popupMode, setPopupMode] = useState('signup'); // 'signup' or 'login'
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -60,7 +62,12 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
+    // Xóa thông tin user
     localStorage.removeItem('currentUser');
+    
+    // Xóa token chìa khóa
+    localStorage.removeItem('access_token');
+    alert("Đã đăng xuất thành công!");
   };
 
   const openPopup = (mode = 'signup') => {
@@ -197,8 +204,9 @@ function App() {
                   <h2 className="signup-title">Chào Mừng Trở Lại</h2>
                   <p className="signup-subtitle">Đăng nhập để tiếp tục hành trình</p>
                   
-                  {error && <div className="error-message">{error}</div>}
-                  
+                  {success && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
+                                    
                   <form className="signup-form" onSubmit={async (e) => {
                     e.preventDefault();
                     setError('');
@@ -212,15 +220,29 @@ function App() {
                     try {
                       const response = await authAPI.login(credentials);
                       if (response.success) {
-                        setUser(response.user);
-                        localStorage.setItem('currentUser', JSON.stringify(response.user));
-                        alert('Đăng nhập thành công!');
-                        closePopup();
+                          setUser(response.user);
+                          
+                          // 1. Lưu thông tin user
+                          localStorage.setItem('currentUser', JSON.stringify(response.user));
+                          
+                          // 2. Lưu TOKEN (Thêm dòng này để Chatbot hoạt động)
+                          // Backend trả về key là 'access_token'
+                          localStorage.setItem('access_token', response.access_token); 
+                          
+                          setSuccess("Đăng nhập thành công!");
+                          setError("");
+
+                          setTimeout(() => {
+                            closePopup();
+                            setSuccess("");
+                          }, 1200);
                       } else {
                         setError(response.error || 'Đăng nhập thất bại');
+                        setSuccess("");
                       }
                     } catch (err) {
                       setError(err.message || 'Đăng nhập thất bại');
+                      setSuccess("");
                     } finally {
                       setLoading(false);
                     }
@@ -273,7 +295,8 @@ function App() {
                     Nhập email để xác nhận
                   </p>
 
-                  {error && <div className="error-message">{error}</div>}
+                  {success && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
 
                   <form 
                     className="signup-form"
@@ -292,14 +315,17 @@ function App() {
                       }
 
                       try {
-                        alert(
-                          'Nếu email tồn tại trong hệ thống, mã xác thực sẽ được gửi'
-                        );
-
-                        switchMode('login');
+                        const response = await authAPI.forgotPassword({email});
+                        if(response.success) {
+                          setSuccess("Mã xác thục đã được gửi! Vui lòng kiểm tra email.");
+                          setVerifyEmail(email);
+                          switchMode('forgot_verify');
+                        } else {
+                          setError(response.error || "Không thể gửi mã xác thực");
+                        }
                       } catch(err) {
                         setError(
-                          err.message || 'Không thể gửi email xác thực, thử lại sau'
+                          err.message || 'Không thể gửi email xác thực'
                         );
                       } finally {
                         setLoading(false);
@@ -353,7 +379,8 @@ function App() {
                     Mã OTP gồm 6 số đã được gửi tới email: <b>{verifyEmail}</b>
                   </p>
 
-                  {error && <div className="error-message">{error}</div>}
+                  {error && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
 
                   <form className="signup-form"
                     onSubmit={async (e) => {
@@ -427,6 +454,189 @@ function App() {
                   </div>
                 </div>
               )}
+
+              {popupMode === 'forgot_verify' && (
+                <div className="signup-container">
+                  <h2 className="signup-title">Xác thực</h2>
+                  <p className="signup-subtitle">
+                    Mã xác thực 6 số đã được gửi đến: <b>{verifyEmail}</b>
+                  </p>
+
+                  {success && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
+
+                  <form 
+                    className="signup-form"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setError('');
+                      setLoading(true);
+                      const formData = new FormData(e.target);
+                      const otp = formData.get('otp');
+
+                      if(!otp || otp.length !== 6) {
+                        setError("Mã OTP phải gồm 6 số");
+                        setLoading(false);
+                        return;
+                      }
+
+                      try {
+                        const response = await authAPI.verifyForgotOTP({
+                          email: verifyEmail,
+                          code: otp
+                        });
+
+                        if(response.success) {
+                          setSuccess("Xác thực thành công! Hãy đặt lại mật khẩu.");
+                          switchMode('reset_password');
+                        } else {
+                          setError(response.error || "Mã OTP không đúng");
+                        }
+                      } catch(err) {
+                        setError(err.message || "Lỗi xác thực OTP");
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
+                      <label>Nhập mã OTP (6 số)</label>
+                      <input 
+                        type="text"
+                        maxLength="6"
+                        name="otp"
+                        placeholder="______"
+                        required
+                      />
+                    </div>
+
+                    <button type="submit" className="forgot-btn" disabled={loading}>
+                      {loading ? "Đang xác thực.." : "Xác thực"}
+                    </button>
+                  </form>
+
+                  <div className="signup-footer">
+                    <p>
+                      Bạn không nhận được mã?{" "}
+                      <a 
+                        href="#"
+                        className="signup-link"
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          try {
+                            await authAPI.resendOTP({email: verifyEmail});
+                            setSuccess("Đã gửi lại mã xác thực!");
+                          } catch {
+                            setError("Không thể gửi lại mã OTP");
+                          }
+                        }}
+                      >
+                        Gửi lại
+                      </a>
+                    </p>
+
+                    <p style={{marginTop: "8px"}}>
+                      <a 
+                        href="#"
+                        className="signup-link"
+                        onClick={() => switchMode('forgot')}
+                      >
+                        ← Quay lại
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {popupMode === 'reset_password' && (
+                <div className="signup-container">
+                  <h2 className="signup-title">Mật Khẩu Mới</h2>
+                  <p className="signup-subtitle">
+                    Nhập mật khẩu mới cho tài khoản: <b>{verifyEmail}</b>
+                  </p>
+
+                  {success && <div className="popup-message-success">{success}</div>}
+                  {error && <div className="popup-message-error">{error}</div>}
+
+                  <form 
+                    className="signup-form"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setError('');
+                      setLoading(true);
+
+                      const formData = new FormData(e.target);
+                      const newPassword = formData.get('newPassword');
+                      const confirmPassword = formData.get('confirmPassword');
+
+                      if(newPassword.length < 8) {
+                        setError("Mật khẩu phải ít nhất 8 ký tự");
+                        setLoading(false);
+                        return;
+                      }
+
+                      try {
+                        const response = await authAPI.resetPassword({
+                          email: verifyEmail,
+                          code: null,
+                          newPassword,
+                          confirmPassword
+                        });
+
+                        if(response.message) {
+                          setSuccess("Đặt mật khẩu thành công! Vui lòng đăng nhập.");
+                          setTimeout(() => {
+                            switchMode('login');
+                            setSuccess('');
+                          }, 1500);
+                        } else {
+                          setError("Không thể đặt lại mật khẩu");
+                        }
+                      } catch(err) {
+                        setError(err.message || "Lỗi khi đặt mật khẩu");
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
+                      <label>Mật khẩu mới</label>
+                      <input
+                        type="password"
+                        name="newPassword"
+                        placeholder="Ít nhất 8 ký tự"
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Xác nhận mật khẩu</label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Nhập lại mật khẩu"
+                        required
+                      />
+                    </div>
+
+                    <button type="submit" className="forgot-btn" disabled={loading}>
+                      {loading ? "Đang xử lý..." : "Xác nhận"}
+                    </button>
+                  </form>
+
+                  <div className="signup-footer">
+                    <p style={{marginTop:"10px"}}>
+                      <a 
+                        href="#"
+                        className="signup-link"
+                        onClick={() => switchMode('login')}
+                      >
+                        ← Quay lại đăng nhập
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -451,6 +661,12 @@ function App() {
         <footer>
           <small>© 2025 Culture Compass</small>
         </footer>
+
+        <ChatAssistant 
+          user={user} 
+          openLogin={() => openPopup('login')} 
+        />
+
       </div>
     </Router>
   );

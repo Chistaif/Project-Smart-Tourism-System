@@ -6,7 +6,7 @@
 
 .service-hero {
   background-image: linear-gradient(180deg, rgba(12, 16, 33, 0.4), rgba(12, 16, 33, 0.85)),
-    url('../asset/test2.png');
+    url('../asset/servicebackground.jpg');
   background-size: cover;
   background-position: center;
   padding: 72px 32px 40px;
