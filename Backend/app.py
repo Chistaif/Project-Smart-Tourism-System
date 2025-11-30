@@ -28,7 +28,7 @@ from models import (
     User,
 )
 from init_db import import_demo_data
-from service.search_service import smart_recommendation_service
+from service.search_service import precompute_nearby_attractions, smart_recommendation_service, get_nearby_attr
 from service.attraction_service import (
     get_attraction_detail_service,
     create_review,
@@ -86,8 +86,6 @@ def create_app():
         }
     })
 
-    print("Current JWT Secret:", app.config['JWT_SECRET_KEY'])
-
     db.init_app(app=app)
     init_mail(app)
     jwt_manager = JWTManager(app)
@@ -96,6 +94,7 @@ def create_app():
         db.create_all()
         if Attraction.query.count() == 0:
             import_demo_data()
+            precompute_nearby_attractions()
 
     return app, jwt_manager
 
@@ -185,6 +184,17 @@ def search():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
+
+@app.route('/api/nearby/<int:attractionId>', methods=['GET'])
+def get_attraction_nearby(attractionId):
+    try:
+        nearby = get_nearby_attr(attractionId)
+        return jsonify({"success": True, **nearby}), 200
+    except LookupError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 # NOTE cho frontend:
