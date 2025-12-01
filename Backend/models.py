@@ -143,6 +143,9 @@ class Festival(Attraction):
     id = db.Column(db.Integer, db.ForeignKey('attraction.id'), primary_key=True) 
     time_start = db.Column(db.DateTime)
     time_end = db.Column(db.DateTime)
+    original_start = db.Column(db.String(50))
+    original_end = db.Column(db.String(50)) 
+    is_lunar = db.Column(db.Boolean, default=False)
 
     __mapper_args__ = {
         'polymorphic_identity': 'festival', # Giá trị của cột 'type'
@@ -153,6 +156,11 @@ class Festival(Attraction):
         data.update({
             "timeStart": self.time_start.isoformat() if self.time_start else None,
             "timeEnd": self.time_end.isoformat() if self.time_end else None,
+
+            "isLunar": self.is_lunar,
+            "originalStart": self.original_start,
+            "originalEnd": self.original_end,
+            
             "type": "festival"
         })
         return data

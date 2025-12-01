@@ -16,3 +16,4 @@ flask-admin
 flask-mail
 cloudinary
 google.generativeai
+lunardate

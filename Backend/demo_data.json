@@ -3,12 +3,62 @@
         {
             "name": "Chitai",
             "email": "chitai@gmail.com",
-            "password": "12345iloveu"
+            "password": "123EDCxsw@"
         },
         {
             "name": "Test User",
             "email": "test@example.com",
-            "password": "password123"
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Nguyễn Văn An",
+            "email": "nguyenvanan@example.com",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Trần Thị Bích",
+            "email": "bichtran@test.vn",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Le Hoang Nam",
+            "email": "namlh@tech.com",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Phạm Thu Hà",
+            "email": "thuha.pham@outlook.com",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Kevin Nguyen",
+            "email": "kevin.n@us-travel.com",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Đỗ Minh Khôi",
+            "email": "khoiminh@design.vn",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Võ Thị Sáu",
+            "email": "sausau@history.vn",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Sarah Jenkins",
+            "email": "sarah.j@travelblog.net",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Bùi Tiến Dũng",
+            "email": "dungbui@sport.vn",
+            "password": "123EDCxsw@"
+        },
+        {
+            "name": "Lý Lan",
+            "email": "lanyan@books.com",
+            "password": "123EDCxsw@"
         }
     ],
 
@@ -59,8 +109,8 @@
             "visitDuration": 720, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764220317/vov_san_khau_dem_khai_man_festival_hue_2022_ukfc2j.webp",
             "tags": ["Lễ hội", "Văn hóa", "Di sản", "Cung đình", "Huế", "Nghệ thuật quốc tế", "Ẩm thực"],
-            "datetimeStart": "01:06:YYYY", 
-            "datetimeEnd": "09:06:YYYY" 
+            "datetimeStart": "01/06", 
+            "datetimeEnd": "09/06" 
         },
         {
             "name": "Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF)",
@@ -108,8 +158,8 @@
             "visitDuration": 180, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764220507/le-hoi-phao-hoa-quoc-te-da-nang-diff-2025-tat-tan-tat-nhung-dieu-ban-can-biet-01_enq9zk.jpg",
             "tags": ["Lễ hội", "Pháo hoa", "Sự kiện", "Đà Nẵng", "Quốc tế", "Nghệ thuật"],
-            "datetimeStart": "08:06:2024", 
-            "datetimeEnd": "13:07:2024" 
+            "datetimeStart": "08/06", 
+            "datetimeEnd": "13/07" 
         },
         {
             "name": "Hội Lim Bắc Ninh",
@@ -158,8 +208,8 @@
             "visitDuration": 240, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909920/hoi-lim-e1453543168215_zpjwhc.jpg",
             "tags": ["Lễ hội", "Văn hóa", "Quan họ", "Bắc Ninh", "Di sản", "Tâm linh"],
-            "datetimeStart": "13:01:YYYY_âm lịch", 
-            "datetimeEnd": "15:01:YYYY_âm lịch"
+            "datetimeStart": "13/01 âm lịch", 
+            "datetimeEnd": "15/01 âm lịch"
         },
         {
             "name": "Lễ hội Chùa Hương (Hương Sơn)",
@@ -208,8 +258,8 @@
             "visitDuration": 480, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764221392/9bb90dc9-le-hoi-chua-huong-1_jzr5da.jpg", 
             "tags": ["Lễ hội", "Tâm linh", "Hà Nội", "Hành hương", "Phật giáo", "Núi non"],
-            "datetimeStart": "06:01:YYYY_âm lịch",
-            "datetimeEnd": "30:03:YYYY_âm lịch" 
+            "datetimeStart": "06/01 âm lịch",
+            "datetimeEnd": "30/03 âm lịch" 
         },
        {
             "name": "Lễ hội Tháp Bà Ponagar",
@@ -258,8 +308,8 @@
             "visitDuration": 180, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764222873/le-hoi-thap-ba-ponagar-3_1636860786_kjes0q.jpg",
             "tags": ["Lễ hội", "Văn hóa Chăm", "Tâm linh", "Nha Trang", "Di tích", "Di sản quốc gia"],
-            "datetimeStart": "20:03:YYYY_âm lịch",
-            "datetimeEnd": "23:03:YYYY_âm lịch"
+            "datetimeStart": "20/03 âm lịch",
+            "datetimeEnd": "23/03 âm lịch"
         },
         {
             "name": "Lễ hội Chôl Chnăm Thmây",
@@ -308,11 +358,315 @@
             "visitDuration": 720, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764223292/kho-me-1-1585842188628566903511-640x425_ezcf0p.jpg",
             "tags": ["Lễ hội", "Văn hóa Khmer", "Tết cổ truyền", "Miền Tây", "Sóc Trăng", "Tâm linh"],
-            "datetimeStart": "13:04:YYYY", 
-            "datetimeEnd": "15:04:YYYY"
+            "datetimeStart": "13/04", 
+            "datetimeEnd": "15/04"
+        },
+        {
+            "name": "Lễ hội Đền Hùng",
+            "location": "Phú Thọ, Việt Nam",
+            "briefDescription": "Ngày Quốc giỗ linh thiêng của dân tộc Việt Nam, nơi con cháu rồng tiên hội tụ để tưởng nhớ công lao dựng nước của các Vua Hùng.",
+            "detailDescription": {
+                "mainTitle": "Trải nghiệm bùng nổ tại Đại tiệc Carnival Hạ Long",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Sân khấu thực cảnh và Công nghệ đỉnh cao",
+                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764509932/den_20hung_if0apr.jpg",
+                    "content": "Điểm nhấn của lễ hội là sân khấu khổng lồ hướng ra vịnh di sản, kết hợp công nghệ âm thanh, ánh sáng 3D Mapping hiện đại. Chương trình nghệ thuật thường quy tụ các ca sĩ hạng A và hàng ngàn diễn viên, tái hiện các huyền thoại lịch sử và vẻ đẹp non nước Hạ Long một cách sống động, choáng ngợp."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Vũ điệu đường phố và Xe hoa rực rỡ",
+                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764509934/dh_kpl9yr.jpg",
+                    "content": "Khuấy động không khí là màn diễu hành hoành tráng của các đoàn xe hoa (floats) được trang trí cầu kỳ theo các chủ đề biển đảo. Tại đây, du khách sẽ hòa mình vào những vũ điệu Samba nóng bỏng của các vũ công quốc tế và các màn trình diễn nghệ thuật đường phố náo nhiệt dọc bờ biển Bãi Cháy."
+                },
+                {
+                    "type": "heading",
+                    "level": 3,
+                    "title": "III. Màn pháo hoa tầm cao mãn nhãn",
+                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510000/tuan-van-hoa-du-lich-dat-to-phu-tho-2025_wxmb9w.jpg",
+                    "content": "Kết thúc đêm hội luôn là màn bắn pháo hoa tầm cao kéo dài 15-20 phút, thắp sáng bầu trời đêm Hạ Long, tạo nên khoảnh khắc thăng hoa cảm xúc khó quên cho hàng vạn du khách."
+                },
+                {
+                    "type": "list",
+                    "title": "Cẩm nang tham dự chi tiết",
+                    "items": [
+                    "Thời gian: Sự kiện chính thường bắt đầu lúc 20:00 ngày 30/04 hoặc 01/05, nhưng các hoạt động đường phố diễn ra từ chiều.",
+                    "Vị trí xem: Khu vực khán đài Quảng trường Sun Carnival (cần vé/giấy mời) hoặc xem tự do dọc đường bao biển Bãi Cháy.",
+                    "Giao thông: Đường bao biển thường cấm xe từ 16:00. Bạn nên gửi xe tại các bãi đỗ quy định ở Cái Dăm hoặc khu Sun World rồi đi bộ vào.",
+                    "Mẹo nhỏ: Nên đặt phòng khách sạn trước ít nhất 1 tháng vì tình trạng 'cháy phòng' diễn ra hằng năm.",
+                    "Trang phục: Ưu tiên trang phục thoáng mát, giày thể thao êm ái vì bạn sẽ phải đi bộ rất nhiều qua các khu vực diễn."
+                    ]
+                }
+                ]
+            },
+            "lat": 21.3778,
+            "lon": 105.2272,
+            "rating": 4.5,
+            "visitDuration": 360,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764509881/le-hoi-den-hung-3-1024x632_uixrsw.jpg",
+            "tags": [
+                "Lễ hội",
+                "Lịch sử",
+                "Tâm linh",
+                "Di sản UNESCO"
+            ],
+            "datetimeStart": "10/03 âm lịch",
+            "datetimeEnd": "11/03 âm lịch"
+        },
+        {
+            "name": "Lễ hội Carnival Hạ Long",
+            "location": "Hạ Long, Quảng Ninh",
+            "briefDescription": "Đại tiệc âm nhạc, ánh sáng và vũ điệu đường phố rực rỡ, sự kiện tâm điểm kích hoạt mùa du lịch biển hè.",
+            "detailDescription": {
+              "mainTitle": "Bùng nổ cảm xúc tại Carnival Hạ Long",
+              "sections": [
+                {
+                  "type": "heading",
+                  "level": 1,
+                  "title": "I. Bữa tiệc của Âm thanh và Ánh sáng",
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510069/0c169822-carnaval-ha-long-1-min_ypi7xh.jpg",
+                  "content": "Carnival Hạ Long biến đường phố Bãi Cháy thành sân khấu khổng lồ với các đoàn diễu hành xe hoa lộng lẫy, vũ công trong trang phục rực rỡ và những màn trình diễn nghệ thuật thực cảnh. Điểm nhấn là đại tiệc âm nhạc EDM sôi động kết hợp cùng màn bắn pháo hoa tầm cao mãn nhãn bên bờ di sản."
+                },
+                {
+                  "type": "list",
+                  "title": "Kinh nghiệm tham dự",
+                  "items": [
+                    "Thời gian: Thường diễn ra vào dịp lễ 30/04 - 01/05 (Buổi tối từ 20:00).",
+                    "Vị trí: Nên chọn chỗ đứng sớm tại khu vực Quảng trường biển hoặc các quán cafe trên cao để có tầm nhìn bao quát.",
+                    "Trang phục: Nên mặc quần áo thoáng mát, năng động, giày thể thao hoặc giày bệt vì sẽ phải đi bộ và đứng khá lâu.",
+                    "Lưu ý: Hạn chế mang theo nhiều tư trang quý giá vì lượng người đổ về rất đông đúc."
+                  ]
+                }
+              ]
+            },
+            "lat": 20.9593,
+            "lon": 107.0432,
+            "rating": 4.5,
+            "visitDuration": 360,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510071/132497961408302481_jd8a2c.jpg",
+            "tags": [
+              "Lễ hội",
+              "Âm nhạc",
+              "Du lịch biển",
+              "Giải trí"
+            ],
+            "datetimeStart": "30/04",
+            "datetimeEnd": "02/05"
+        },
+        {
+            "name": "Festival Hoa Đà Lạt",
+            "location": "Đà Lạt, Lâm Đồng",
+            "briefDescription": "Thành phố ngàn hoa khoe sắc rực rỡ trong không khí se lạnh của cao nguyên, tôn vinh người trồng hoa và giá trị của các loài hoa quý.",
+            "detailDescription": {
+              "mainTitle": "Lạc bước giữa thiên đường hoa cao nguyên",
+              "sections": [
+                {
+                  "type": "heading",
+                  "level": 1,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510132/Dalat-flower-festival-01_1686414916_o3iojw.jpg",
+                  "title": "I. Những không gian hoa nghệ thuật",
+                  "content": "Trong thời gian lễ hội, hồ Xuân Hương và các tuyến phố chính biến thành những đại cảnh hoa khổng lồ. Du khách sẽ được chiêm ngưỡng các tiểu cảnh được kết tạo công phu từ hoa hồng, cẩm tú cầu, mimosa và các loài hoa đặc hữu chỉ có tại Đà Lạt."
+                },
+                {
+                  "type": "heading",
+                  "level": 2,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510134/15-15744117032031889125856_jehryj.jpg",
+                  "title": "II. Phiên chợ rau hoa và Phố trà - cà phê",
+                  "content": "Không chỉ ngắm cảnh, du khách còn được tham quan các phiên chợ giới thiệu đặc sản rau củ quả Đà Lạt chất lượng cao, thưởng thức hương vị trà Bảo Lộc và cà phê Arabica thượng hạng trong không gian văn hóa cồng chiêng Tây Nguyên."
+                },
+                {
+                  "type": "list",
+                  "title": "Kinh nghiệm du lịch mùa Festival",
+                  "items": [
+                    "Thời gian: Định kỳ 2 năm một lần, thường vào cuối tháng 12 (mùa đẹp nhất trong năm).",
+                    "Trang phục: Thời tiết tháng 12 rất lạnh (đêm có thể xuống 10 độ C), hãy chuẩn bị áo ấm, khăn len và mũ.",
+                    "Chụp ảnh: Nên đi vào buổi sáng sớm (7:00 - 9:00) hoặc chiều tà (15:00 - 17:00) để có ánh sáng đẹp nhất.",
+                    "Lưu ý: Giá phòng khách sạn thường tăng gấp 2-3 lần, cần đặt trước ít nhất 2 tháng."
+                  ]
+                }
+              ]
+            },
+            "lat": 11.9404,
+            "lon": 108.4583,
+            "rating": 4.6,
+            "visitDuration": 480,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510127/tour_festival_hoa_da_lat_l6269i.jpg",
+            "tags": ["Lễ hội", "Thiên nhiên", "Hoa", "Lãng mạn"],
+            "datetimeStart": "20/12",
+            "datetimeEnd": "24/12"
+        },
+        {
+            "name": "Lễ hội Hoa Tam Giác Mạch",
+            "location": "Hà Giang (Đồng Văn, Mèo Vạc)",
+            "briefDescription": "Sắc hoa phớt hồng phủ kín cao nguyên đá, nơi vẻ đẹp thiên nhiên hòa quyện cùng tiếng khèn Mông gọi bạn tình.",
+            "detailDescription": {
+              "mainTitle": "Bản tình ca trên Cao nguyên đá",
+              "sections": [
+                {
+                  "type": "heading",
+                  "level": 1,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510252/tgm_202_tp5bj5.jpg",
+                  "title": "I. Thảm hoa giữa lưng chừng trời",
+                  "content": "Vào mùa lễ hội, những cánh đồng hoa tam giác mạch chuyển từ màu trắng sang phớt hồng và tím đỏ, trải dài ngút ngàn trên các sườn núi đá tai mèo xám xịt. Đây là khung cảnh 'check-in' trứ danh thu hút hàng vạn nhiếp ảnh gia và du khách trẻ."
+                },
+                {
+                  "type": "heading",
+                  "level": 2,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510253/le-hoi-hoa-tam-giac-mach-vietmountain02_lice53.jpg",
+                  "title": "II. Trải nghiệm văn hóa H'Mông",
+                  "content": "Không chỉ ngắm hoa, du khách còn được đắm mình trong không gian văn hóa khèn Mông, tham gia lễ hội đường phố, thưởng thức bánh tam giác mạch nướng nóng hổi và rượu ngô men lá nồng nàn tại phố cổ Đồng Văn."
+                },
+                {
+                  "type": "list",
+                  "title": "Lưu ý chinh phục Hà Giang",
+                  "items": [
+                    "Thời gian: Kéo dài từ tháng 10 đến hết tháng 12 (chính hội thường vào giữa tháng 10).",
+                    "Di chuyển: Đường đèo Mã Pí Lèng rất đẹp nhưng nguy hiểm, nếu tay lái yếu nên thuê xe ô tô hoặc 'xe ôm' bản địa.",
+                    "Trang phục: Mang áo khoác dày, khăn quàng vì nhiệt độ vùng núi rất thấp, đặc biệt vào ban đêm.",
+                    "Điểm ngắm hoa đẹp nhất: Sủng Là, Lũng Cú, Phố Cáo."
+                  ]
+                }
+              ]
+            },
+            "lat": 23.2783,
+            "lon": 105.3023,
+            "rating": 4.7,
+            "visitDuration": 1440,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510251/le-hoi-hoa-tam-giac-mach-Ha-Giang-4176_qxn0xe.png",
+            "tags": ["Thiên nhiên", "Núi rừng", "Phượt", "Văn hóa tộc người"],
+            "datetimeStart": "01/10",
+            "datetimeEnd": "31/12"
+        },
+        {
+            "name": "Lễ hội Cà phê Buôn Ma Thuột",
+            "location": "Buôn Ma Thuột, Đắk Lắk",
+            "briefDescription": "Ngày hội lớn nhất Tây Nguyên tôn vinh hạt cà phê Việt Nam và văn hóa Cồng chiêng hào hùng.",
+            "detailDescription": {
+              "mainTitle": "Hương sắc đại ngàn Tây Nguyên",
+              "sections": [
+                {
+                  "type": "heading",
+                  "level": 1,
+                  "imageUrl": "",
+                  "title": "I. Thưởng thức cà phê miễn phí",
+                  "content": "Đây là thiên đường cho các tín đồ cà phê. Du khách được thưởng thức miễn phí hàng trăm loại cà phê trứ danh tại các tuyến phố, tham quan hội chợ triển lãm và tìm hiểu quy trình từ hạt cà phê đến ly espresso thơm lừng."
+                },
+                {
+                  "type": "heading",
+                  "level": 2,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510520/6-15521281800511887117949-1654594606323646125780_badd6b45_v52l6c.jpg",
+                  "title": "II. Lễ hội đường phố và Đua voi (mô phỏng)",
+                  "content": "Thành phố trở nên sôi động với các đoàn diễu hành nghệ thuật, âm vang tiếng cồng chiêng và các điệu múa xoang. Hiện nay để bảo vệ động vật, lễ hội chuyển sang các hoạt động voi thân thiện như tiệc buffet cho voi, thi trang điểm cho voi thay vì đua voi, cưỡi voi."
+                },
+                {
+                  "type": "list",
+                  "title": "Thông tin tham dự",
+                  "items": [
+                    "Thời gian: Định kỳ 2 năm một lần, thường vào tháng 3 (tháng đẹp nhất Tây Nguyên, 'mùa con ong đi lấy mật').",
+                    "Điểm đến: Bảo tàng Thế giới Cà phê, Làng cà phê Trung Nguyên, Buôn Đôn.",
+                    "Mua sắm: Đây là dịp tốt nhất để mua cà phê hạt, cà phê bột chính gốc giá tốt.",
+                    "Di chuyển: Có thể thuê xe máy để tự do khám phá các thác nước hùng vĩ (Dray Nur, Dray Sap) lân cận."
+                  ]
+                }
+              ]
+            },
+            "lat": 12.6669,
+            "lon": 108.0382,
+            "rating": 4.5,
+            "visitDuration": 360,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510350/6usib-17416543741831978340653_rg4otg.jpg",
+            "tags": ["Lễ hội", "Cà phê", "Tây Nguyên", "Ẩm thực"],
+            "datetimeStart": "10/03",
+            "datetimeEnd": "14/03"
+        },
+        {
+            "name": "Lễ hội Ok Om Bok",
+            "location": "Sóc Trăng (và Trà Vinh)",
+            "briefDescription": "Lễ cúng Trăng của đồng bào Khmer Nam Bộ, kịch tính với giải đua ghe Ngo 'dậy sóng' sông Maspero.",
+            "detailDescription": {
+              "mainTitle": "Sôi động lễ hội sông nước miền Tây",
+              "sections": [
+                {
+                  "type": "heading",
+                  "level": 1,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510603/what-to-do-in-mekong-delta-7_elqgym.jpg",
+                  "title": "I. Giải đua ghe Ngo kịch tính",
+                  "content": "Tâm điểm của lễ hội là cuộc đua ghe Ngo. Những chiếc ghe dài ngoằng, trang trí hoa văn sặc sỡ, chứa 50-60 tay chèo vạm vỡ cùng bứt tốc trong tiếng hò reo, tiếng trống, tiếng còi cổ vũ vang dội cả một khúc sông. Đây là môn thể thao vua của người Khmer."
+                },
+                {
+                  "type": "heading",
+                  "level": 2,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510616/le-hoi-cung-trang-ok-om-bok-106599310120_aop1th.jpg",
+                  "title": "II. Nghi thức Cúng Trăng và Thả đèn gió",
+                  "content": "Vào buổi tối, người dân tổ chức lễ Cúng Trăng (cầu mùa màng bội thu) và nghi thức Đút Cốm Dẹp (đặc sản làm từ nếp non). Du khách cũng sẽ được chiêm ngưỡng những chiếc đèn gió, đèn nước lung linh được thả lên trời và xuống sông."
+                },
+                {
+                  "type": "list",
+                  "title": "Lưu ý khi xem đua ghe",
+                  "items": [
+                    "Thời gian: 14 - 15 tháng 10 Âm lịch (Rằm tháng 10).",
+                    "Vị trí: Bờ sông Maspero (TP. Sóc Trăng) là nơi diễn ra đua ghe. Cần đến rất sớm (trước 2-3 tiếng) để có chỗ đứng sát bờ sông.",
+                    "Thời tiết: Miền Tây mùa này có thể có mưa rào bất chợt hoặc nắng gắt, nên mang theo ô/dù.",
+                    "Đặc sản: Nhất định phải thử Bún nước lèo Sóc Trăng và Bánh pía."
+                  ]
+                }
+              ]
+            },
+            "lat": 9.6033,
+            "lon": 105.9722,
+            "rating": 4.6,
+            "visitDuration": 300,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510617/0611travinh2-1730943723149-1730943723313616078724_qnayg4.jpg",
+            "tags": ["Văn hóa", "Khmer", "Thể thao", "Sông nước"],
+            "datetimeStart": "14/10 âm lịch",
+            "datetimeEnd": "15/10 âm lịch"
+        },
+        {
+            "name": "Lễ hội Vía Bà Chúa Xứ",
+            "location": "Châu Đốc, An Giang",
+            "briefDescription": "Lễ hội tâm linh lớn nhất vùng đất Chín Rồng, thu hút hàng triệu lượt khách hành hương cầu tài lộc, bình an.",
+            "detailDescription": {
+              "mainTitle": "Hành hương về miền đất thiêng Châu Đốc",
+              "sections": [
+                {
+                  "type": "heading",
+                  "level": 1,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510704/via-ba-chua-xu-1-17333201124752026798127-1733360704193-17333607044041893060762_qanq3o.jpg",
+                  "title": "I. Nghi lễ Tắm Bà linh thiêng",
+                  "content": "Nghi thức quan trọng nhất là Lễ Tắm Bà diễn ra vào đêm 23, rạng sáng 24/4 âm lịch. Bức tượng Bà Chúa Xứ uy nghiêm được lau rửa bằng nước thơm và thay y phục mới lộng lẫy. Hàng ngàn người thức trắng đêm để chứng kiến khoảnh khắc này và xin lộc Bà."
+                },
+                {
+                  "type": "heading",
+                  "level": 2,
+                  "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510703/via-ba_kyg5am.jpg",
+                  "title": "II. Không khí lễ hội đêm không ngủ",
+                  "content": "Khu vực Miếu Bà vào mùa lễ hội đông vui như trẩy hội suốt 24/24h. Xung quanh là các hoạt động múa lân sư rồng, hát bội truyền thống. Chợ Châu Đốc gần đó cũng nhộn nhịp với 'vương quốc mắm' và các đặc sản biên giới."
+                },
+                {
+                  "type": "list",
+                  "title": "Kinh nghiệm hành hương",
+                  "items": [
+                    "Thời gian: Từ 22 đến 27 tháng 4 Âm lịch (Chính lễ ngày 23-24).",
+                    "Cảnh báo: Khu vực này cực kỳ đông đúc, tình trạng chèo kéo khách mua hương hoa, chim phóng sinh, xem bói diễn ra phức tạp. Nên chuẩn bị đồ lễ từ nhà và giữ chặt tư trang.",
+                    "Trang phục: Kín đáo, lịch sự.",
+                    "Đặc sản: Thốt nốt lạnh, Bún cá Châu Đốc, Mắm thái."
+                  ]
+                }
+              ]
+            },
+            "lat": 10.6974,
+            "lon": 105.0743,
+            "rating": 4.8,
+            "visitDuration": 300,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510703/le_hoi_via_ba_chua_xu_nui_sam_duoc_unesco_cong_nhan_la_di_san_the_gioi_be17695de0_nornnu.jpg",
+            "tags": ["Tâm linh", "Tín ngưỡng", "Miền Tây", "Hành hương"],
+            "datetimeStart": "22/04 âm lịch",
+            "datetimeEnd": "27/04 âm lịch"
         }
     ],
-
     "culturalSpots": [
         {
             "name": "Bảo tàng Dân tộc học Việt Nam",
@@ -410,8 +764,8 @@
             "rating": 4.6,
             "visitDuration": 90, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764224394/lang-khai-dinh_yubnmg.jpg",
-            "tags": ["Di tích", "Cung đình", "Kiến trúc", "Huế", "Lăng tẩm", "Lịch sử"],
-            "spotType": "Lăng tẩm",
+            "tags": ["Di tích lịch sử", "Cung đình", "Kiến trúc", "Huế", "Lăng tẩm", "Lịch sử"],
+            "spotType": "Di tích lịch sử",
             "ticketPrice": 150000.0, 
             "openHours": "07:00 AM - 05:30 PM"
         },
@@ -461,7 +815,7 @@
             "rating": 4.8,
             "visitDuration": 480,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764296986/codohue_kddi0y.jpg",
-            "tags": ["Văn hóa", "Di sản UNESCO", "Lịch sử", "Kiến trúc Cung đình", "Huế", "Triều Nguyễn"],
+            "tags": ["Di tích lịch sử", "Văn hóa", "Di sản UNESCO", "Lịch sử", "Kiến trúc Cung đình", "Huế", "Triều Nguyễn"],
             "spotType": "Di tích Lịch sử",
             "ticketPrice": 200000.0,
             "openHours": "Mùa hè: 6:30 AM - 6:00 PM; Mùa đông: 7:00 AM - 5:30 PM"
@@ -512,8 +866,8 @@
             "rating": 4.7,
             "visitDuration": 150, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909680/thanh_dia_my_son_01-2_yqcymq.jpg",
-            "tags": ["Di tích", "Văn hóa Chăm", "Ấn Độ giáo", "Di sản UNESCO", "Quảng Nam", "Kiến trúc"],
-            "spotType": "Thánh địa",
+            "tags": ["Di tích lịch sử", "Văn hóa Chăm", "Ấn Độ giáo", "Di sản UNESCO", "Quảng Nam", "Kiến trúc"],
+            "spotType": "Di tích lịch sử",
             "ticketPrice": 150000.0, 
             "openHours": "06:30 AM - 05:30 PM"
         },
@@ -563,9 +917,429 @@
             "visitDuration": 480, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764297924/231-gia_lai-huytinhphoto_40gmail_ekv2os.jpg",
             "tags": ["Văn hóa", "Di sản UNESCO", "Tâm linh", "Âm nhạc", "Tây Nguyên", "Dân tộc thiểu số"],
-            "spotType": "Không gian Văn hóa",
+            "spotType": "Di tích lịch sử",
             "ticketPrice": 0.0, 
-            "openHours": "Cả ngày (Khuôn viên làng)"
+            "openHours": "00:00 AM - 12:00 PM"
+        },
+        {
+            "name": "Bảo tàng Dân tộc học Việt Nam",
+            "location": "Cầu Giấy, Hà Nội",
+            "briefDescription": "Nơi trưng bày và lưu giữ di sản văn hóa vật thể và phi vật thể của 54 dân tộc anh em, được thiết kế hiện đại và thân thiện.",
+            "detailDescription": {
+                "mainTitle": "Khám phá bản sắc 54 dân tộc",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Tòa nhà Trống Đồng (Trong nhà)",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510772/28655152-bao-tang-dan-toc-hoc-viet-nam-4_c8evkd.jpg",
+                        "content": "Khu vực trưng bày theo chủ đề về cuộc sống, y phục, nghi lễ của 54 dân tộc. Các hiện vật được bài trí khoa học với chú thích song ngữ, giúp người xem dễ dàng tìm hiểu."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Vườn kiến trúc (Ngoài trời)",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510867/3_w8gumw.jpg",
+                        "content": "Điểm đặc sắc nhất là khu trưng bày ngoài trời với các ngôi nhà tỉ lệ 1:1 như nhà Rông Ba Na, nhà dài Ê Đê, nhà sàn Tày... Du khách có thể bước vào bên trong để trải nghiệm không gian sống thực tế."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin tham quan",
+                        "items": [
+                            "Giờ mở cửa: 08:30 - 17:30 (Trừ thứ Hai).",
+                            "Hoạt động: Xem múa rối nước vào cuối tuần.",
+                            "Giá vé: 40.000 VNĐ."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.0404,
+            "lon": 105.7987,
+            "rating": 4.7,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510771/bao-tang-dan-toc-hoc-viet-nam-1-1108_cpqr1z.jpg",
+            "tags": ["Văn hóa", "Giáo dục", "Dân tộc", "Kiến trúc"],
+            "spotType": "Bảo tàng",
+            "ticketPrice": 40000.0,
+            "openHours": "08:30 AM - 05:30 PM"
+        },
+        {
+            "name": "Lăng Khải Định",
+            "location": "Hương Thủy, Thừa Thiên Huế",
+            "briefDescription": "Lăng mộ độc đáo nhất triều Nguyễn với sự giao thoa táo bạo giữa kiến trúc cung đình Á Đông và phong cách Gothic phương Tây.",
+            "detailDescription": {
+                "mainTitle": "Đỉnh cao nghệ thuật sành sứ",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc Đông - Tây kết hợp",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510914/lang_khai_dinh_hue_06_satanb.jpg",
+                        "content": "Khác với vẻ trầm mặc của các lăng khác, Lăng Khải Định nổi bật với vật liệu xi măng, sắt thép và các trụ cổng hình tháp ảnh hưởng từ Ấn Độ giáo."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Cung Thiên Định lộng lẫy",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510914/Le_tombeau_de_khaidinh_1280x800_wwmc0n.jpg",
+                        "content": "Nội thất bên trong khiến du khách choáng ngợp bởi nghệ thuật khảm sành sứ và thủy tinh ghép thành các bức tranh tứ quý, bát bửu vô cùng tinh xảo và bền màu theo thời gian."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Địa hình: Nhiều bậc thang dốc, cần sức khỏe tốt.",
+                            "Trang phục: Cần mặc lịch sự, kín đáo.",
+                            "Chụp ảnh: Nội thất bên trong rất đẹp nhưng ánh sáng hơi tối."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.3990,
+            "lon": 107.5902,
+            "rating": 4.6,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510972/AL18g_TDCajw64CZuBZIWg1Ed4y4pY2Bgh3P-mdFAHO9lfwBBv80zgw4qjTXKroHP_Yo5uyyj38m2UA_s1200_cesy05.jpg",
+            "tags": ["Lịch sử", "Kiến trúc", "Huế", "Nghệ thuật"],
+            "spotType": "Di tích lịch sử",
+            "ticketPrice": 150000.0,
+            "openHours": "07:00 AM - 05:30 PM"
+        },
+        {
+            "name": "Làng gốm Bát Tràng",
+            "location": "Gia Lâm, Hà Nội",
+            "briefDescription": "Làng nghề gốm sứ 700 năm tuổi ven sông Hồng, nơi du khách có thể tự tay vuốt nặn những sản phẩm gốm độc đáo.",
+            "detailDescription": {
+                "mainTitle": "Trải nghiệm làm nghệ nhân gốm",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Sân chơi vuốt nặn gốm",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511028/nghe-nhan-16868857004851326065658_jh2hfx.jpg",
+                        "content": "Hầu hết các xưởng gốm tại đây đều có dịch vụ cho khách trải nghiệm dùng bàn xoay để tự tay làm cốc, bát. Sau đó, bạn có thể tô màu và nung sản phẩm mang về làm kỷ niệm."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Bảo tàng Gốm Bát Tràng",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511027/langombattrang_wrnbyg.jpg",
+                        "content": "Công trình kiến trúc ấn tượng với hình dáng 7 bàn xoay gốm đấu vào nhau. Đây là nơi trưng bày các sản phẩm gốm tinh hoa và kể câu chuyện lịch sử của làng nghề."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Mẹo nhỏ",
+                        "items": [
+                            "Mua sắm: Nên mặc cả nhẹ khi mua hàng tại chợ gốm.",
+                            "Di chuyển: Có thể đi xe buýt hoặc tàu thủy trên sông Hồng đến làng.",
+                            "Ẩm thực: Thử món Canh măng mực đặc sản cỗ Bát Tràng."
+                        ]
+                    }
+                ]
+            },
+            "lat": 20.9754,
+            "lon": 105.9126,
+            "rating": 4.5,
+            "visitDuration": 240,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511038/lang-gom-bat-trang-3_y0uxc5.jpg",
+            "tags": ["Thủ công", "Sáng tạo", "Mua sắm", "Gia đình"],
+            "spotType": "Làng nghề",
+            "ticketPrice": 0.0,
+            "openHours": "08:00 AM - 06:00 PM"
+        },
+        {
+            "name": "Chùa Thiên Mụ",
+            "location": "Thành phố Huế, Thừa Thiên Huế",
+            "briefDescription": "Ngôi cổ tự linh thiêng bậc nhất xứ Huế nằm bên dòng sông Hương, gắn liền với biểu tượng Tháp Phước Duyên.",
+            "detailDescription": {
+                "mainTitle": "Đệ nhất cổ tự xứ Đàng Trong",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Tháp Phước Duyên",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511130/Phuoc_duyen_pkcchn.jpg",
+                        "content": "Ngọn tháp 7 tầng hình bát giác cao 21m sừng sững bên bờ sông là biểu tượng của chùa. Mỗi tầng tháp đều thờ tượng Phật. Phía sau tháp là cổng tam quan dẫn vào chánh điện uy nghiêm."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Chiếc xe Austin lịch sử",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511174/chiec-xe-austin-co-o-chu-thien-mu_uo5npf.jpg",
+                        "content": "Trong khuôn viên chùa trưng bày chiếc xe ô tô màu xanh của Hòa thượng Thích Quảng Đức, người đã tự thiêu để phản đối đàn áp Phật giáo năm 1963, một chứng tích lịch sử gây xúc động mạnh."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Vé tham quan: Miễn phí.",
+                            "Di chuyển: Nên đi thuyền rồng trên sông Hương để ghé thăm chùa.",
+                            "Thời điểm: Đẹp nhất vào buổi chiều tà ngắm hoàng hôn trên sông Hương."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.4534,
+            "lon": 107.5442,
+            "rating": 4.8,
+            "visitDuration": 60,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511123/ThienMuPagoda_ksvw72.jpg",
+            "tags": ["Tâm linh", "Phật giáo", "Huế", "Sông Hương"],
+            "spotType": "Đền/Chùa",
+            "ticketPrice": 0.0,
+            "openHours": "07:00 AM - 06:00 PM"
+        },
+        {
+            "name": "Phố cổ Hội An",
+            "location": "Hội An, Quảng Nam",
+            "briefDescription": "Di sản văn hóa thế giới với những ngôi nhà cổ tường vàng, mái ngói rêu phong và không gian đèn lồng lung linh huyền ảo.",
+            "detailDescription": {
+                "mainTitle": "Ký ức thương cảng Faifo",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Chùa Cầu và Nhà cổ",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511300/Japanese-Bridge-Hoi-An_1733408109_hfonvi.jpg",
+                        "content": "Chùa Cầu Nhật Bản là biểu tượng không thể bỏ qua. Bên cạnh đó là hệ thống nhà cổ (Tấn Ký, Phùng Hưng) và các Hội quán người Hoa rực rỡ sắc màu, minh chứng cho sự giao thoa văn hóa Đông - Tây."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Đêm phố cổ",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511301/4b7b1b31738c303ced73f43b025a40c1_hqraqg.jpg",
+                        "content": "Khi màn đêm buông xuống, phố cổ cấm xe động cơ, nhường chỗ cho ánh sáng của hàng ngàn chiếc đèn lồng. Hoạt động thả đèn hoa đăng trên sông Hoài và chơi bài chòi là trải nghiệm đáng nhớ."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Vé tham quan: Cần mua vé gói để vào bên trong các di tích.",
+                            "Ẩm thực: Nhất định phải thử Cao lầu, Bánh mì Phượng, Nước mót.",
+                            "Thời gian: Nên đi dạo từ 16:00 đến tối."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.8801,
+            "lon": 108.3380,
+            "rating": 4.9,
+            "visitDuration": 240,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511221/hoi-an-quang-nam-vntrip-1_r7ibf3.jpg",
+            "tags": ["Di sản UNESCO", "Lãng mạn", "Kiến trúc", "Văn hóa"],
+            "spotType": "Di tích lịch sử",
+            "ticketPrice": 80000.0,
+            "openHours": "07:00 AM - 09:30 PM"
+        },
+        {
+            "name": "Bảo tàng Chứng tích Chiến tranh",
+            "location": "Quận 3, TP. Hồ Chí Minh",
+            "briefDescription": "Bảo tàng chuyên đề nghiên cứu, sưu tầm và trưng bày các tư liệu, hiện vật về hậu quả tàn khốc của các cuộc chiến tranh tại Việt Nam.",
+            "detailDescription": {
+                "mainTitle": "Thông điệp hòa bình từ quá khứ đau thương",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Hiện vật ngoài trời",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511353/bao-tang-chung-tich-chien-tranh-1-e1504148866695_cpqoz2.jpg",
+                        "content": "Sân bảo tàng trưng bày các loại khí tài quân sự hạng nặng như máy bay phản lực, trực thăng Chinook, xe tăng, pháo 105mm... từng được quân đội Mỹ sử dụng tại chiến trường Việt Nam."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Các phòng trưng bày chuyên đề",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511355/bao-tang-chung-tich-chien-tranh-3-1634_o8v5si.jpg",
+                        "content": "Bên trong là các bộ sưu tập ảnh 'Hồi niệm', phòng trưng bày về hậu quả chất độc da cam, và khu tái hiện 'Chuồng cọp' Côn Đảo gây xúc động mạnh về sự tàn khốc của chiến tranh."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Cảm xúc: Bảo tàng có nhiều hình ảnh chân thực, có thể gây sốc.",
+                            "Giờ mở cửa: 07:30 - 17:30 hàng ngày.",
+                            "Vị trí: Ngay trung tâm thành phố, dễ dàng di chuyển."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.7796,
+            "lon": 106.6923,
+            "rating": 4.6,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511353/V_C3_A9_20B_E1_BA_A3o_20T_C3_A0ng_20Ch_E1_BB_A9ng_20T_C3_ADch_20Chi_E1_BA_BFn_20Tranh_20TP._20H_E1_BB_93_20Ch_C3_AD_20Minh_ylhcra.jpg",
+            "tags": ["Lịch sử", "Chiến tranh", "Hòa bình", "Giáo dục"],
+            "spotType": "Bảo tàng",
+            "ticketPrice": 40000.0,
+            "openHours": "07:30 AM - 05:30 PM"
+        },
+        {
+            "name": "Thánh địa Mỹ Sơn",
+            "location": "Duy Xuyên, Quảng Nam",
+            "briefDescription": "Quần thể di tích đền tháp Chăm Pa bí ẩn nằm trong thung lũng kín đáo, được UNESCO công nhận là Di sản Văn hóa Thế giới.",
+            "detailDescription": {
+                "mainTitle": "Dấu ấn vàng son của Vương quốc Chăm Pa",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc gạch nung kỳ bí",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511438/th_C3_A1nh_20_C4_91_E1_BB_8Ba_20m_E1_BB_B9_20s_C6_A1n_jmrcmw.jpg",
+                        "content": "Các tháp Chăm tại Mỹ Sơn được xây bằng gạch nung với kỹ thuật kết dính đặc biệt chưa có lời giải đáp, chạm khắc trực tiếp lên gạch các hình tượng thần Shiva, vũ nữ Apsara mềm mại, sống động."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Thưởng thức múa Chăm",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511443/thanh-dia-my-son-0_mvodkq.jpg",
+                        "content": "Tại nhà biểu diễn dưới chân tháp, du khách được xem các điệu múa Chăm quyến rũ trong tiếng kèn Saranai và tiếng trống Ginăng huyền hoặc, tái hiện không gian tâm linh xưa."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Mẹo tham quan",
+                        "items": [
+                            "Thời điểm: Nên đi sáng sớm (7h-9h) để tránh nắng gắt miền Trung.",
+                            "Di chuyển: Có xe điện trung chuyển từ cổng vào khu tháp.",
+                            "Hướng dẫn viên: Nên thuê thuyết minh để hiểu ý nghĩa các nhóm tháp."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.7688,
+            "lon": 108.1192,
+            "rating": 4.7,
+            "visitDuration": 150,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511435/Gi_E1_BB_9Bi-thi_E1_BB_87u-v_E1_BB_81-Th_C3_A1nh-_C4_90_E1_BB_8Ba-M_E1_BB_B9-S_C6_A1n-1_cplvpt.jpg",
+            "tags": ["Khảo cổ", "Chăm Pa", "Di sản UNESCO", "Kiến trúc"],
+            "spotType": "Di tích lịch sử",
+            "ticketPrice": 150000.0,
+            "openHours": "06:30 AM - 05:30 PM"
+        },
+        {
+            "name": "Tòa Thánh Tây Ninh",
+            "location": "Hòa Thành, Tây Ninh",
+            "briefDescription": "Công trình tôn giáo lộng lẫy và độc đáo bậc nhất của Đạo Cao Đài, kết hợp tinh hoa kiến trúc Đông - Tây.",
+            "detailDescription": {
+                "mainTitle": "Thiên Nhãn và Kiến trúc Long Mã",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc rực rỡ",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511518/Toa-thanh-tay-ninh_qmbzjj.jpg",
+                        "content": "Tòa Thánh có màu vàng rực rỡ, hai lầu chuông trống cao vút. Bên trong là Cửu Trùng Đài với những hàng cột rồng quấn nhiều màu sắc. Biểu tượng Thiên Nhãn (Mắt Trời) được thờ trang trọng trên quả càn khôn."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Thời khắc hành lễ",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511622/19-le-hoi-toa-thanh-tay-ninh-vieng-tham_lnmdqt.jpg",
+                        "content": "Vào 12h trưa hàng ngày là thời cúng Ngọ. Hàng trăm chức sắc trong trang phục trắng, đỏ, xanh, vàng hành lễ trong tiếng nhạc dân tộc, tạo nên khung cảnh trang nghiêm và đẹp mắt."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Quy định",
+                        "items": [
+                            "Lối đi: Nam đi cửa phải, Nữ đi cửa trái, không đi cửa chính.",
+                            "Giày dép: Phải bỏ bên ngoài.",
+                            "Chụp ảnh: Không được dùng đèn flash và không chụp cận mặt người đang hành lễ."
+                        ]
+                    }
+                ]
+            },
+            "lat": 11.3097,
+            "lon": 106.1264,
+            "rating": 4.5,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511507/T_C3_B2a_Th_C3_A1nh_T_C3_A2y_Ninh_042013_qrjvez.jpg",
+            "tags": ["Tôn giáo", "Cao Đài", "Kiến trúc", "Văn hóa"],
+            "spotType": "Đền/Chùa",
+            "ticketPrice": 0.0,
+            "openHours": "06:00 AM - 06:00 PM"
+        },
+        {
+            "name": "Làng hương Thủy Xuân",
+            "location": "Thành phố Huế, Thừa Thiên Huế",
+            "briefDescription": "Làng nghề làm hương trầm truyền thống dưới chân đồi Vọng Cảnh, nổi tiếng với những bó chông hương xòe ra như những đóa hoa rực rỡ.",
+            "detailDescription": {
+                "mainTitle": "Sắc màu rực rỡ xứ Huế",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Check-in làng hương",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511699/vietgoing_zot2206127393_jr9aa5.webp",
+                        "content": "Các hộ dân ở đây trưng bày chân hương nhuộm đủ màu: xanh, đỏ, tím, vàng... xòe thành từng chùm lớn ven đường. Đây là điểm chụp ảnh 'sống ảo' cực kỳ nổi tiếng khi đến Huế."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Trải nghiệm làm hương",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511701/lang-huong-thuy-xuan-ivivu-11-1024x683_aoi37p.jpg",
+                        "content": "Du khách có thể ngồi vào bàn se hương, tự tay làm ra cây hương trầm thơm ngát dưới sự hướng dẫn của các mệ (cô/bà) chủ quán thân thiện và hiếu khách."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin thêm",
+                        "items": [
+                            "Chi phí: Chụp ảnh thường miễn phí, nên mua ủng hộ nụ trầm hoặc quạt.",
+                            "Vị trí: Nằm trên đường đi lăng Tự Đức, tiện kết hợp tham quan.",
+                            "Trang phục: Áo dài hoặc cổ phục rất hợp với bối cảnh này."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.4385,
+            "lon": 107.5672,
+            "rating": 4.6,
+            "visitDuration": 45,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511702/l_C3_A0ng_20h_C6_B0_C6_A1ng_20th_E1_BB_A7y_20xu_C3_A2n_kmjz9d.jpg",
+            "tags": ["Làng nghề", "Chụp ảnh", "Huế", "Truyền thống"],
+            "spotType": "Làng nghề",
+            "ticketPrice": 0.0,
+            "openHours": "07:00 AM - 06:00 PM"
+        },
+        {
+            "name": "Hoàng Thành Thăng Long",
+            "location": "Ba Đình, Hà Nội",
+            "briefDescription": "Di sản văn hóa thế giới, trung tâm quyền lực chính trị của Việt Nam liên tục trong hơn 13 thế kỷ.",
+            "detailDescription": {
+                "mainTitle": "Dấu ấn kinh kỳ ngàn năm",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Các di tích nổi bật",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511769/hoangthanh_rkmzps.jpg",
+                        "content": "Quần thể gồm Cột cờ Hà Nội, Đoan Môn, thềm rồng Điện Kính Thiên uy nghi và Hậu Lâu. Đặc biệt là khu khảo cổ 18 Hoàng Diệu với các lớp di tích chồng xếp lên nhau qua các triều đại."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Di tích cách mạng nhà D67",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511856/d67-01_pvhdgb.jpg",
+                        "content": "Nơi Đại tướng Võ Nguyên Giáp và Bộ Chính trị đã làm việc và đưa ra những quyết định lịch sử trong cuộc kháng chiến chống Mỹ, bao gồm chiến dịch Hồ Chí Minh 1975."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý",
+                        "items": [
+                            "Tour đêm: Có tour 'Giải mã Hoàng Thành' vào cuối tuần rất hấp dẫn.",
+                            "Check-in: Mùa thu lá vàng hoặc mùa hoa ban tại đây rất đẹp.",
+                            "Vé tham quan: 30.000 VNĐ."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.0361,
+            "lon": 105.8416,
+            "rating": 4.7,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511772/_i65b89a7f2299e_ejzdhb.jpg",
+            "tags": ["Lịch sử", "Di sản UNESCO", "Hà Nội", "Khảo cổ"],
+            "spotType": "Di tích lịch sử",
+            "ticketPrice": 30000.0,
+            "openHours": "08:00 AM - 05:00 PM"
         }
     ],
     
@@ -946,6 +1720,779 @@
             "visitDuration": 720,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764303898/image7-5-1024x632_wgynqv.jpg",
             "tags": ["Biển", "Đồi cát", "Thể thao nước", "Văn hóa Chăm", "Phan Thiết", "Bình Thuận"]
+        },
+        {
+            "name": "Vịnh Hạ Long",
+            "location": "Thành phố Hạ Long, Quảng Ninh",
+            "briefDescription": "Di sản Thiên nhiên Thế giới với hàng nghìn hòn đảo đá vôi lớn nhỏ nhô lên từ mặt nước xanh ngọc bích, tạo nên khung cảnh kỳ vĩ độc nhất vô nhị.",
+            "detailDescription": {
+                "mainTitle": "Kỳ quan thiên nhiên giữa biển khơi",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Du thuyền ngủ đêm trên vịnh",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764562178/best-countries-to-visit-in-December-from-Australia-banner_kjh9s7.jpg",
+                        "content": "Trải nghiệm sang trọng và đáng nhớ nhất là ngủ đêm trên du thuyền. Du khách được ngắm hoàng hôn, tập Thái Cực Quyền buổi sáng và thăm các hang động nổi tiếng như Hang Sửng Sốt, Động Thiên Cung."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "II. Chèo Kayak và Thăm làng chài",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764562262/Cheo-thuyen-nan-vinh-ha-lon_grhyvt.jpg",
+                        "content": "Tự tay chèo thuyền Kayak len lỏi qua các hang luồn và chân núi đá vôi là hoạt động được yêu thích. Du khách cũng có thể ghé thăm làng chài Cửa Vạn để tìm hiểu cuộc sống sông nước."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Gần: Lễ hội Carnival Hạ Long.",
+                            "Thời gian: Nên đi mùa hè (tháng 5-8) để tắm biển hoặc mùa thu (tháng 9-11) để nghỉ dưỡng.",
+                            "Lưu ý: Không mang rác thải nhựa lên vịnh."
+                        ]
+                    }
+                ]
+            },
+            "lat": 20.9101,
+            "lon": 107.1839,
+            "rating": 4.9,
+            "visitDuration": 1440,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764562258/Featured-image-Halong-Bay-Vietnam-1244x700_h1hhx6.jpg",
+            "tags": ["Thiên nhiên", "Di sản UNESCO", "Du thuyền", "Biển"]
+        },
+        {
+            "name": "Hồ Hoàn Kiếm (Hồ Gươm)",
+            "location": "Hoàn Kiếm, Hà Nội",
+            "briefDescription": "Trái tim của thủ đô Hà Nội, nổi tiếng với Tháp Rùa cổ kính, cầu Thê Húc đỏ son và không gian đi bộ sầm uất cuối tuần.",
+            "detailDescription": {
+                "mainTitle": "Viên ngọc xanh giữa lòng Hà Nội",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Phố đi bộ và Không gian văn hóa",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764593906/hoan-kiem-lake2_mitk3f.jpg",
+                        "content": "Vào cuối tuần, khu vực quanh hồ trở thành phố đi bộ với nhiều hoạt động biểu diễn nghệ thuật đường phố, trò chơi dân gian (nhảy dây, ô ăn quan) thu hút đông đảo giới trẻ và du khách."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Đền Ngọc Sơn và Cầu Thê Húc",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764593880/Hinh-anh-den-ngoc-son-ha-noi-02_vonhla.jpg",
+                        "content": "Cầu Thê Húc màu đỏ dẫn vào Đền Ngọc Sơn nằm trên đảo ngọc, nơi thờ thánh Văn Xương và Hưng Đạo Đại Vương. Đây là biểu tượng văn hóa tâm linh quan trọng của Hà Nội."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý",
+                        "items": [
+                            "Gần: Bảo tàng Dân tộc học, Hoàng Thành Thăng Long.",
+                            "Ẩm thực: Thử kem Tràng Tiền và cà phê trứng gần đó.",
+                            "Thời điểm: Sáng sớm để xem người dân tập thể dục hoặc tối cuối tuần."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.0285,
+            "lon": 105.8542,
+            "rating": 4.8,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764562393/ho_C3_A0n-ki_E1_BA_BFm-lake-turtle-tower-on-foggy-day-hanoi-vietnam_s1udpn.jpg",
+            "tags": ["Thành phố", "Đi bộ", "Lịch sử", "Hà Nội"]
+        },
+        {
+            "name": "Quần thể Danh thắng Tràng An",
+            "location": "Hoa Lư, Ninh Bình",
+            "briefDescription": "Được ví như 'Vịnh Hạ Long trên cạn', di sản kép UNESCO với hệ thống núi đá vôi, hang động và sông nước hòa quyện tuyệt đẹp.",
+            "detailDescription": {
+                "mainTitle": "Tuyệt tác non nước Ninh Bình",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Đi thuyền nan xuyên hang động",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594058/R_q7puff.jpg",
+                        "content": "Du khách sẽ ngồi thuyền nan do người dân địa phương chèo, đi xuyên qua các hang động nước dài và ngắm nhìn những thung lũng ngập nước trong vắt, nhìn thấy tận đáy rêu phong."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Phim trường Kong: Skull Island",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594122/4928_3_unfi27.jpg",
+                        "content": "Tràng An từng là bối cảnh phim Hollywood. Du khách có thể ghé thăm phim trường với phục dựng làng thổ dân (tùy thời điểm) và cảnh sắc thiên nhiên hùng vĩ như thời nguyên thủy."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Gần: Chùa Bái Đính (kết hợp du lịch tâm linh).",
+                            "Thời gian: 3 tiếng cho một tour thuyền.",
+                            "Mùa đẹp: Mùa lúa chín tháng 5-6 hoặc mùa xuân."
+                        ]
+                    }
+                ]
+            },
+            "lat": 20.2544,
+            "lon": 105.9168,
+            "rating": 4.9,
+            "visitDuration": 240,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764593985/danh_thang_trang_an_tren_thuyen_g8bicx.jpg",
+            "tags": ["Thiên nhiên", "Di sản UNESCO", "Thuyền", "Hang động"]
+        },
+        {
+            "name": "Sun World Ba Na Hills",
+            "location": "Hòa Vang, Đà Nẵng",
+            "briefDescription": "Quần thể du lịch nghỉ dưỡng và giải trí đẳng cấp trên đỉnh núi Chúa, nổi tiếng với Cầu Vàng và Làng Pháp.",
+            "detailDescription": {
+                "mainTitle": "Đường lên tiên cảnh",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Cầu Vàng (Golden Bridge)",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594238/Sun-World-Golden-Bridge_rjumsa.jpg",
+                        "content": "Cây cầu có thiết kế độc đáo như dải lụa vàng được nâng đỡ bởi đôi bàn tay khổng lồ rêu phong, lơ lửng giữa mây trời. Đây là điểm check-in nổi tiếng toàn cầu."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Làng Pháp và Fantasy Park",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594239/04eafbdfab99c046a7a18e9e31211a40-30777-da-nang-sun-world-ba-na-hills-tickets---buffet-lunch---ba-na-brew-house-visit-01.jpg_vnfm5k.jpg",
+                        "content": "Tái hiện không gian kiến trúc Pháp cổ kính lãng mạn. Bên cạnh đó là khu vui chơi trong nhà Fantasy Park với hàng trăm trò chơi hấp dẫn và máng trượt tốc độ cao."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Gần: Lễ hội Pháo hoa Đà Nẵng (DIFF).",
+                            "Khí hậu: Se lạnh quanh năm, có 4 mùa trong 1 ngày.",
+                            "Di chuyển: Cáp treo đạt nhiều kỷ lục thế giới."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.9963,
+            "lon": 107.9965,
+            "rating": 4.8,
+            "visitDuration": 480,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594239/hq720_fn7ncj.jpg",
+            "tags": ["Giải trí", "Cáp treo", "Kiến trúc", "Đà Nẵng"]
+        },
+        {
+            "name": "Rừng Dừa Bảy Mẫu",
+            "location": "Cẩm Thanh, Hội An, Quảng Nam",
+            "briefDescription": "Khu du lịch sinh thái sông nước được ví như 'Miền Tây trong lòng Hội An', nổi tiếng với trải nghiệm đi thuyền thúng chai.",
+            "detailDescription": {
+                "mainTitle": "Vũ điệu thuyền thúng",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Múa thúng chai cảm giác mạnh",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594330/rung-dua-bay-mau-8_uwernj.jpg",
+                        "content": "Các tay chèo địa phương sẽ biểu diễn kỹ năng xoay thúng chai điệu nghệ, tạo cảm giác mạnh và phấn khích cho du khách. Bạn có thể thử thách bản thân ngồi trên thúng xoay nếu không bị chóng mặt."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Trải nghiệm làm ngư dân",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594329/Rung-dua-bay-mau-hoi-an-hanh-trinh-ky-thu-tai-hoi-an-2_y1ltn7.webp",
+                        "content": "Du khách được hướng dẫn cách quăng chài bắt cá, câu cua đá và làm các đồ vật kỷ niệm (nhẫn, mũ, cào cào) từ lá dừa nước."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Mẹo nhỏ",
+                        "items": [
+                            "Gần: Phố cổ Hội An (cách 3km).",
+                            "Thời gian: Nên đi sáng sớm hoặc chiều mát.",
+                            "Trang phục: Gọn nhẹ, nên mang nón lá."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.8694,
+            "lon": 108.3846,
+            "rating": 4.6,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594319/tour-rung-dua-bay-mau-1-ngay-6-700x530_zxlejq.jpg",
+            "tags": ["Sinh thái", "Sông nước", "Vui chơi", "Hội An"]
+        },
+        {
+            "name": "Ngũ Hành Sơn",
+            "location": "Ngũ Hành Sơn, Đà Nẵng",
+            "briefDescription": "Quần thể 5 ngọn núi đá vôi (Kim, Mộc, Thủy, Hỏa, Thổ) chứa đựng nhiều hang động huyền bí và chùa chiền cổ kính.",
+            "detailDescription": {
+                "mainTitle": "Non bộ khổng lồ giữa lòng thành phố",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Động Huyền Không",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594404/danh-thang-ngu-hanh-son-da-nang_r1jxhn.jpg",
+                        "content": "Hang động đẹp nhất và linh thiêng nhất tại ngọn Thủy Sơn. Trần hang hở lộ thiên giúp ánh sáng chiếu rọi vào tượng Phật tạo nên khung cảnh mờ ảo, thần tiên."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Vọng Giang Đài",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594411/2.2-1_i330bj.jpg",
+                        "content": "Điểm cao nhất trên ngọn Thủy Sơn, nơi du khách có thể phóng tầm mắt ngắm nhìn toàn cảnh sông Cổ Cò và bãi biển Non Nước xanh thẳm."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Gần: Bãi biển Mỹ Khê.",
+                            "Di chuyển: Có thang máy lồng kính để lên núi.",
+                            "Mua sắm: Làng điêu khắc đá mỹ nghệ Non Nước dưới chân núi."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.0298,
+            "lon": 108.2619,
+            "rating": 4.5,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594403/Thuy_20Son.jpg-image-liddgnlq_fzjdad.jpg",
+            "tags": ["Thiên nhiên", "Hang động", "Leo núi", "Đà Nẵng"]
+        },
+        {
+            "name": "Chợ Đông Ba",
+            "location": "Phú Hòa, Thừa Thiên Huế",
+            "briefDescription": "Ngôi chợ truyền thống lâu đời và sầm uất nhất Cố đô, nơi hội tụ tinh hoa ẩm thực và đặc sản xứ Huế.",
+            "detailDescription": {
+                "mainTitle": "Thiên đường ẩm thực và quà tặng",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Ẩm thực gánh chuẩn vị",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594618/Cho_Dongba_Hue_nbenqs.jpg",
+                        "content": "Đừng bỏ qua khu ẩm thực với các món bún bò Huế, cơm hến, bún thịt nướng và các loại bánh (bèo, nậm, lọc) với giá bình dân nhưng hương vị cực kỳ đậm đà, chính gốc."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Mua sắm đặc sản",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594619/ben-trong-cho-dong-ba_tibqjp.jpg",
+                        "content": "Nơi lý tưởng để mua nón lá bài thơ, mè xửng, tôm chua, trà cung đình và vải may áo dài. Du khách nên dạo quanh một vòng để khảo giá trước khi mua."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Mẹo đi chợ",
+                        "items": [
+                            "Gần: Đại Nội Huế, Chùa Thiên Mụ.",
+                            "Kinh nghiệm: Nên mặc cả (trả giá) vui vẻ.",
+                            "Thời gian: Chợ mở từ sáng sớm đến chiều tối."
+                        ]
+                    }
+                ]
+            },
+            "lat": 16.4716,
+            "lon": 107.5912,
+            "rating": 4.4,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594616/depositphotos196442922xl-1732498320688_yg8pax.jpg",
+            "tags": ["Mua sắm", "Ẩm thực", "Chợ truyền thống", "Huế"]
+        },
+        {
+            "name": "VinWonders Nha Trang",
+            "location": "Đảo Hòn Tre, Nha Trang, Khánh Hòa",
+            "briefDescription": "Công viên giải trí của những kỷ lục, tọa lạc trên đảo Hòn Tre xinh đẹp, kết hợp vui chơi, nghỉ dưỡng và khám phá đại dương.",
+            "detailDescription": {
+                "mainTitle": "Đảo niềm vui bất tận",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Tata Show và Cáp treo vượt biển",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594791/Vinpearl-Land-Nha-Trang-5_20_1_escck6.jpg",
+                        "content": "Di chuyển bằng cáp treo vượt biển dài nhất thế giới là trải nghiệm mở đầu ấn tượng. Buổi tối, du khách sẽ được thưởng thức Tata Show - siêu phẩm thực cảnh đa phương tiện đẳng cấp thế giới."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Vịnh phao nổi và Thủy cung",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594858/thuy-cung-vinpearl-nha-trang-2_at3how.jpg",
+                        "content": "Thỏa sức vui chơi tại vịnh phao nổi trên biển lớn nhất thế giới hoặc khám phá thế giới sinh vật biển kỳ thú tại Thủy cung hình rùa khổng lồ."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Gần: Tháp Bà Ponagar.",
+                            "Thời gian: Cần trọn vẹn 1 ngày để chơi hết các khu.",
+                            "Trang phục: Mang theo đồ bơi, mũ nón và kem chống nắng."
+                        ]
+                    }
+                ]
+            },
+            "lat": 12.2154,
+            "lon": 109.2458,
+            "rating": 4.8,
+            "visitDuration": 480,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594787/gukj_ybofmj.jpg",
+            "tags": ["Giải trí", "Gia đình", "Biển", "Nha Trang"]
+        },
+        {
+            "name": "Núi Langbiang",
+            "location": "Lạc Dương, Lâm Đồng",
+            "briefDescription": "Nóc nhà của Đà Lạt, nơi gắn liền với huyền thoại tình yêu chàng K'lang và nàng H'biang, điểm đến lý tưởng cho người yêu thiên nhiên.",
+            "detailDescription": {
+                "mainTitle": "Chinh phục nóc nhà cao nguyên",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Đi xe Jeep lên đỉnh Radar",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595000/OIP_xywo99.webp",
+                        "content": "Trải nghiệm đi xe Jeep chuyên dụng leo dốc khúc khuỷu xuyên qua rừng thông già để lên đỉnh đồi Radar. Từ đây, bạn có thể ngắm toàn cảnh Suối Vàng, Suối Bạc và thành phố Đà Lạt mộng mơ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Giao lưu văn hóa Cồng chiêng",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595046/1564628571824_23872731_fbvyly.jpg",
+                        "content": "Dưới chân núi là khu vực sinh sống của người Lạch. Vào buổi tối thường tổ chức các buổi giao lưu văn hóa cồng chiêng, uống rượu cần và đốt lửa trại ấm cúng."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Gần: Festival Hoa Đà Lạt.",
+                            "Khí hậu: Trên đỉnh núi gió rất mạnh và lạnh.",
+                            "Hoạt động: Có thể trekking (đi bộ) nếu có sức khỏe tốt."
+                        ]
+                    }
+                ]
+            },
+            "lat": 12.0437,
+            "lon": 108.4419,
+            "rating": 4.6,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594993/C4_90_E1_BB_89nh_Langbiang_vyss1w.jpg",
+            "tags": ["Thiên nhiên", "Leo núi", "Ngắm cảnh", "Đà Lạt"]
+        },
+        {
+            "name": "Hồ Tuyền Lâm",
+            "location": "Thành phố Đà Lạt, Lâm Đồng",
+            "briefDescription": "Hồ nước ngọt lớn nhất Đà Lạt, được bao bọc bởi những cánh rừng thông ngút ngàn, mang vẻ đẹp bình yên và lãng mạn.",
+            "detailDescription": {
+                "mainTitle": "Nam thiên đệ nhất hồ",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Chèo SUP và Cắm trại",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595164/TuyenLamLakeKayakingTourinDaLat-KlookUnitedStates_unjk8z.jpg",
+                        "content": "Mặt hồ phẳng lặng và trong xanh rất thích hợp cho hoạt động chèo thuyền SUP hoặc Kayak vào sáng sớm để săn sương mù. Các bãi cỏ ven hồ là địa điểm cắm trại (camping) nổi tiếng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Thiền viện Trúc Lâm",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595170/OIP_jbhzbk.webp",
+                        "content": "Nằm trên núi Phượng Hoàng nhìn xuống hồ là Thiền viện Trúc Lâm uy nghiêm. Du khách có thể đi cáp treo hoặc bộ hành để vãn cảnh chùa và tận hưởng không khí thanh tịnh."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý",
+                        "items": [
+                            "Gần: Thác Datanla, Đường hầm điêu khắc.",
+                            "Check-in: Bến thuyền và cầu gỗ Lavender.",
+                            "Thời điểm: Hoàng hôn buông xuống hồ rất đẹp."
+                        ]
+                    }
+                ]
+            },
+            "lat": 11.8906,
+            "lon": 108.4357,
+            "rating": 4.7,
+            "visitDuration": 240,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595142/ho-tuyen-lam-1_1689671200_twjtmn.jpg",
+            "tags": ["Thiên nhiên", "Thư giãn", "Cắm trại", "Đà Lạt"]
+        },
+        {
+            "name": "Núi Bà Đen",
+            "location": "Thạnh Tân, Tây Ninh",
+            "briefDescription": "Ngọn núi cao nhất Nam Bộ, được mệnh danh là 'Đệ nhất thiên sơn', điểm đến tâm linh và săn mây nổi tiếng.",
+            "detailDescription": {
+                "mainTitle": "Nóc nhà Nam Bộ",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Chùa Bà Đen và Hệ thống cáp treo",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595271/hanh-huong-nui-ba-den-2_eptanb.png",
+                        "content": "Hệ thống cáp treo hiện đại đưa du khách lên Chùa Bà (thờ Linh Sơn Thánh Mẫu) ở lưng chừng núi và lên đỉnh núi. Nhà ga cáp treo được thiết kế độc đáo, đạt kỷ lục Guinness."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Đỉnh núi và Tượng Phật Bà Tây Bổ Đà Sơn",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595278/xejr9ogvfedqsmmlv28s_hm7snf.jpg",
+                        "content": "Trên đỉnh núi là tượng Phật Bà bằng đồng cao nhất Châu Á tọa lạc trên đỉnh núi, xung quanh là vườn hoa bốn mùa rực rỡ. Đây là điểm săn mây và ngắm bình minh tuyệt đẹp."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Gần: Tòa Thánh Tây Ninh.",
+                            "Ẩm thực: Thử món Bánh canh Trảng Bàng, Bò tơ Tây Ninh.",
+                            "Hoạt động: Có thể leo núi đường bộ (đường cột điện) nếu thích thử thách."
+                        ]
+                    }
+                ]
+            },
+            "lat": 11.3789,
+            "lon": 106.1683,
+            "rating": 4.7,
+            "visitDuration": 300,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595277/Nui-Ba-Den_s5rgff.jpg",
+            "tags": ["Tâm linh", "Leo núi", "Săn mây", "Tây Ninh"]
+        },
+        {
+            "name": "Chợ nổi Cái Răng",
+            "location": "Cái Răng, Cần Thơ",
+            "briefDescription": "Di sản văn hóa phi vật thể quốc gia, chợ nổi sầm uất và tiêu biểu nhất cho văn hóa sông nước miền Tây Nam Bộ.",
+            "detailDescription": {
+                "mainTitle": "Văn hóa thương hồ độc đáo",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Cây bẹo và Giao thương trên sông",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595372/mekong-delta-floating-market-01_1687416572_sxhbmb.jpg",
+                        "content": "Người dân treo sản phẩm mình bán lên một cây sào tre gọi là 'cây bẹo' để khách hàng nhận biết từ xa. Khung cảnh hàng trăm ghe thuyền chở đầy trái cây, nông sản tấp nập vào sáng sớm rất ấn tượng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Ăn sáng trên ghe",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595373/66ab60113ac7f_ljp8go.webp",
+                        "content": "Trải nghiệm thú vị nhất là thưởng thức tô hủ tiếu, bún riêu nóng hổi hay ly cà phê kho ngay trên ghe chòng chành giữa sông. Hương vị dân dã nhưng khó quên."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Mẹo tham quan",
+                        "items": [
+                            "Gần: Kết nối đi Sóc Trăng (Lễ hội Ok Om Bok).",
+                            "Thời gian: Phải đi thật sớm (5:00 - 7:00 sáng) khi chợ đông nhất.",
+                            "Di chuyển: Thuê tàu từ bến Ninh Kiều (khoảng 30 phút đi tàu)."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.0058,
+            "lon": 105.7469,
+            "rating": 4.6,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595361/Cai-rang-floating-market-1_1692714478_za9kf2.jpg",
+            "tags": ["Văn hóa", "Chợ nổi", "Ẩm thực", "Miền Tây"]
+        },
+        {
+            "name": "Rừng tràm Trà Sư",
+            "location": "Tịnh Biên, An Giang",
+            "briefDescription": "Khu rừng ngập nước tiêu biểu cho vùng Tây sông Hậu, nổi tiếng với thảm bèo xanh mướt phủ kín mặt nước và hệ chim phong phú.",
+            "detailDescription": {
+                "mainTitle": "Thiên đường xanh ngập nước",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Đi tắc ráng lướt trên bèo",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595615/mceu_42110108811736092718173_yoohsn.jpg",
+                        "content": "Du khách ngồi trên tắc ráng (xuồng máy) hoặc xuồng ba lá lướt nhẹ trên thảm bèo tấm xanh ngắt. Hai bên là rừng tràm cao vút, không gian yên tĩnh chỉ có tiếng chim hót và tiếng mái chèo khua nước."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Cầu tre vạn bước và Vọng gác",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595489/rungtramtrasu1-1-768x500_jfkzy0.jpg",
+                        "content": "Cây cầu tre xuyên rừng dài nhất Việt Nam là điểm check-in tuyệt đẹp. Từ đài quan sát (vọng gác), bạn có thể dùng ống nhòm ngắm toàn cảnh rừng tràm và các loài cò, vạc làm tổ."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Gần: Miếu Bà Chúa Xứ (Châu Đốc).",
+                            "Mùa đẹp: Mùa nước nổi (tháng 9-11) là lúc rừng đẹp và xanh nhất.",
+                            "Ẩm thực: Thử món lẩu cá linh bông điên điển."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.5914,
+            "lon": 105.0687,
+            "rating": 4.7,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595484/rung-tra-su-an-giang_ilx9um.jpg",
+            "tags": ["Thiên nhiên", "Sinh thái", "Miền Tây", "An Giang"]
+        },
+        {
+            "name": "Chợ Bến Thành",
+            "location": "Quận 1, TP. Hồ Chí Minh",
+            "briefDescription": "Biểu tượng lịch sử và thương mại của Sài Gòn, nơi bạn có thể tìm thấy mọi thứ từ đồ thủ công mỹ nghệ, vải vóc đến ẩm thực đường phố.",
+            "detailDescription": {
+                "mainTitle": "Nhịp đập Sài Gòn",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc và Cửa Nam",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595720/Ben_Thanh_market_2_mlcnlk.jpg",
+                        "content": "Hình ảnh tháp đồng hồ ở cửa Nam chợ Bến Thành là biểu tượng không thể nhầm lẫn của TP.HCM. Bên trong chợ có kiến trúc lồng chợ thoáng đãng, được chia thành nhiều khu vực hàng hóa quy củ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Ẩm thực Chợ Bến Thành",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595728/cho-ben-thanh-am-thuc-cho-ben-thanh_n4l4fm.jpg",
+                        "content": "Khu ẩm thực là nơi hội tụ các món ngon 3 miền: Cơm tấm, bún mắm, chè Sài Gòn... Đây là điểm dừng chân yêu thích của du khách quốc tế muốn khám phá vị giác Việt Nam."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Mẹo mua sắm",
+                        "items": [
+                            "Gần: Dinh Độc Lập, Bảo tàng Chứng tích Chiến tranh.",
+                            "Lưu ý: Chợ đêm bên hông chợ mở từ 18:00 rất nhộn nhịp.",
+                            "Giá cả: Nên hỏi giá và thương lượng trước khi mua quà lưu niệm."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.7725,
+            "lon": 106.6980,
+            "rating": 4.4,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595768/R_dtaeud.jpg",
+            "tags": ["Mua sắm", "Thành phố", "Ẩm thực", "Biểu tượng"]
+        },
+        {
+            "name": "Phố đi bộ Nguyễn Huệ",
+            "location": "Quận 1, TP. Hồ Chí Minh",
+            "briefDescription": "Quảng trường đi bộ hiện đại và sầm uất nhất Việt Nam, nơi diễn ra các sự kiện văn hóa, lễ hội lớn của thành phố.",
+            "detailDescription": {
+                "mainTitle": "Không gian hiện đại và năng động",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc bao quanh",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595900/Tphcm4_yscqum.jpg",
+                        "content": "Dọc hai bên phố là sự kết hợp thú vị giữa kiến trúc cổ điển (Trụ sở UBND Thành phố, Khách sạn Rex) và hiện đại (Bitexco, Times Square). Chung cư 42 Nguyễn Huệ với hàng loạt quán cafe, shop nhỏ xinh là điểm check-in hot."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Hoạt động về đêm",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595898/YKC1V6FBjBCZjQ78Datf4WulHHrZhw6a7iFYkpw11sBhrRC9l99BiaH1N4RRNEgvP3iK3UA_vJnmrzu83gnOD_LmitidWkHsRY4jkYAKTeS-1zEErF-QnyqFj1DjrQMvZ2bLhs2JQBG1wE-dfRIIC2I_vbvehw.png",
+                        "content": "Buổi tối, phố đi bộ lung linh với đài phun nước nhạc nước và ánh đèn rực rỡ. Người dân và du khách đổ về đây hóng mát, xem biểu diễn âm nhạc đường phố, tạo nên không khí vô cùng náo nhiệt."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Gần: Bến Bạch Đằng, Nhà hát Thành phố.",
+                            "Lưu ý: Cấm xe vào tối thứ 7 và Chủ Nhật.",
+                            "Trải nghiệm: Ngồi cafe chung cư ngắm phố từ trên cao."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.7744,
+            "lon": 106.7035,
+            "rating": 4.6,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595954/pho-di-bo-nguyen-hue-2_vrn4ng.jpg",
+            "tags": ["Thành phố", "Đi bộ", "Giải trí", "Sài Gòn"]
+        },
+        {
+            "name": "Đỉnh Fansipan",
+            "location": "Sa Pa, Lào Cai",
+            "briefDescription": "Nóc nhà Đông Dương ở độ cao 3.143m, nơi mây trời hòa quyện, sở hữu quần thể tâm linh kỳ vĩ giữa lưng chừng trời.",
+            "detailDescription": {
+                "mainTitle": "Chinh phục đỉnh cao huyền thoại",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Cáp treo 3 dây và Tàu hỏa leo núi",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596040/anh-7-1-1024x683-4152_dxfbtf.jpg",
+                        "content": "Hành trình lên đỉnh trở nên dễ dàng nhờ hệ thống cáp treo hiện đại và tàu hỏa leo núi Mường Hoa. Từ cabin, du khách được chiêm ngưỡng thung lũng Mường Hoa và dãy Hoàng Liên Sơn hùng vĩ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Quần thể tâm linh trên đỉnh",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596039/vubaongoc-dji_0757-hdr_DQWZ_dxkchb.jpg",
+                        "content": "Trên đỉnh núi là quần thể chùa chiền, tượng Phật A Di Đà bằng đồng lớn nhất Việt Nam và con đường La Hán trong mây. Chạm tay vào chóp tháp 3.143m là khoảnh khắc tự hào của mọi du khách."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Kết nối: Gần Hà Giang (Đông Tây Bắc).",
+                            "Trang phục: Rất lạnh, cần mặc ấm, mang găng tay, mũ len.",
+                            "Sức khỏe: Không khí loãng, nên đi chậm, hít thở sâu."
+                        ]
+                    }
+                ]
+            },
+            "lat": 22.3034,
+            "lon": 103.7752,
+            "rating": 4.8,
+            "visitDuration": 300,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596036/journey-to-fansipan-mountain-the-iconic-peak-of-indochina-2_osikxu.jpg",
+            "tags": ["Leo núi", "Thiên nhiên", "Tâm linh", "Sa Pa"]
+        },
+        {
+            "name": "Thác Bản Giốc",
+            "location": "Trùng Khánh, Cao Bằng",
+            "briefDescription": "Một trong những thác nước xuyên quốc gia đẹp nhất thế giới, nằm trên biên giới Việt - Trung với vẻ đẹp hùng vĩ như tranh vẽ.",
+            "detailDescription": {
+                "mainTitle": "Tuyệt tác biên cương",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Vẻ đẹp hùng vĩ",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596169/thac-ban-gioc-cao-bang-du-lich-viet_mujjfk.jpg",
+                        "content": "Thác chia làm hai phần: thác chính và thác phụ. Dòng nước đổ từ độ cao trên 30m xuống qua nhiều tầng đá vôi, tung bọt trắng xóa, tạo nên cầu vồng lung linh dưới ánh nắng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Đi bè mảng ngắm thác",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596125/z5465495086799_5395646abebb49ace9b77c6a58188e7f_187922856_l4hhav.jpg",
+                        "content": "Du khách có thể thuê bè mảng để tiến lại gần chân thác, cảm nhận sức mạnh của dòng nước và hơi nước mát lạnh. Đây là trải nghiệm thú vị ngay tại đường biên giới."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Kết nối: Cung đường Đông Bắc (Hà Giang - Cao Bằng).",
+                            "Mùa đẹp: Tháng 9-10 (mùa lúa chín vàng bên thác) hoặc mùa hè (nước nhiều).",
+                            "Gần: Động Ngườm Ngao."
+                        ]
+                    }
+                ]
+            },
+            "lat": 22.8549,
+            "lon": 106.7226,
+            "rating": 4.7,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596122/w2-1715749984262_pdangz.jpg",
+            "tags": ["Thiên nhiên", "Biên giới", "Thác nước", "Cao Bằng"]
+        },
+        {
+            "name": "Vườn Quốc gia Ba Vì",
+            "location": "Ba Vì, Hà Nội",
+            "briefDescription": "Lá phổi xanh của thủ đô, nơi có khí hậu mát mẻ, rừng thông bạt ngàn và các di tích cổ thời Pháp.",
+            "detailDescription": {
+                "mainTitle": "Chốn nghỉ dưỡng núi Tản",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Nhà kính xương rồng và Rừng thông",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596232/Ba-Vi-National-Park-9_1691505422_jdsijb.jpg",
+                        "content": "Nhà kính xương rồng độc đáo và những con đường xuyên rừng thông ma mị là địa điểm chụp ảnh, cắm trại dã ngoại yêu thích của giới trẻ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Đền Thượng và Nhà thờ đổ",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596236/vuon-quoc-gia-ba-vi-11_r9kldh.jpg",
+                        "content": "Du khách có thể leo núi để viếng Đền thờ Bác Hồ và Đền Thượng (thờ Thánh Tản Viên) trên đỉnh núi. Phế tích Nhà thờ đổ cổ kính giữa rừng già mang vẻ đẹp bí ẩn, hoài cổ."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Gần: Làng văn hóa các dân tộc Việt Nam.",
+                            "Mùa đẹp: Tháng 10-11 (mùa hoa dã quỳ nở rộ).",
+                            "Di chuyển: Đường dốc và nhiều cua tay áo, cần tay lái vững."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.0772,
+            "lon": 105.3622,
+            "rating": 4.5,
+            "visitDuration": 240,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596232/Ba-Vi-National-Park-9_1691505422_jdsijb.jpg",
+            "tags": ["Thiên nhiên", "Cắm trại", "Leo núi", "Hà Nội"]
+        },
+        {
+            "name": "Biển An Bàng",
+            "location": "Cẩm An, Hội An, Quảng Nam",
+            "briefDescription": "Top 50 bãi biển đẹp nhất hành tinh, mang vẻ đẹp tĩnh lặng, hoang sơ khác hẳn sự nhộn nhịp của các bãi biển du lịch khác.",
+            "detailDescription": {
+                "mainTitle": "Bình yên sóng vỗ",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Thư giãn bên bờ biển",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596279/bai-bien-an-bang-1_sa81km.jpg",
+                        "content": "An Bàng thu hút bởi bãi cát trắng mịn, nước trong và không khí yên bình. Các quán bar, nhà hàng ven biển được thiết kế mộc mạc, thân thiện môi trường, là nơi lý tưởng để nằm dài đọc sách và tắm nắng."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Gần: Phố cổ Hội An (chỉ cách 4km, dễ dàng đạp xe).",
+                            "Ẩm thực: Hải sản tươi ngon và các món Tây.",
+                            "Hoạt động: Lướt sóng, Yoga trên bãi biển."
+                        ]
+                    }
+                ]
+            },
+            "lat": 15.9087,
+            "lon": 108.3582,
+            "rating": 4.7,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596277/an-bang-doi-net-2-1_firzkf.jpg",
+            "tags": ["Biển", "Thư giãn", "Hội An", "Bình yên"]
+        },
+        {
+            "name": "Thung lũng Tình Yêu",
+            "location": "Thành phố Đà Lạt, Lâm Đồng",
+            "briefDescription": "Điểm đến lãng mạn kinh điển của Đà Lạt với hồ Đa Thiện, đồi Vọng Cảnh và những vườn hoa rực rỡ quanh năm.",
+            "detailDescription": {
+                "mainTitle": "Khúc tình ca lãng mạn",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Cảnh quan thơ mộng",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596397/566342882_tksrto.jpg",
+                        "content": "Thung lũng là sự kết hợp hài hòa giữa hồ nước, rừng thông và các tiểu cảnh hoa được chăm chút tỉ mỉ. Du khách có thể đi xe điện, đạp vịt trên hồ hoặc đi bộ men theo các con đường mòn rợp bóng cây."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Mê cung tình yêu và Cầu kính",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596401/thung-lung-tinh-yeu-so-2_1689062160_v1rizd.jpg",
+                        "content": "Khu vực Mê cung tình yêu hình trái tim khổng lồ và Cầu kính Ngàn Thông (cầu kính trên cao đầu tiên ở miền Trung - Tây Nguyên) là những điểm nhấn mới thu hút du khách."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Gần: XQ Sử quán, Vườn hoa thành phố.",
+                            "Phù hợp: Các cặp đôi, gia đình.",
+                            "Vé tham quan: Đã bao gồm trọn gói buffet trưa (tùy loại vé)."
+                        ]
+                    }
+                ]
+            },
+            "lat": 11.9868,
+            "lon": 108.4526,
+            "rating": 4.5,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596397/thumb-thung-lung-tinh-yeu_vn0ofy.jpg",
+            "tags": ["Lãng mạn", "Hoa", "Đà Lạt", "Gia đình"]
         }
     ],
     
@@ -954,25 +2501,229 @@
             "userEmail": "chitai@gmail.com",
             "attractionName": "Phố cổ Hội An",
             "rating": 5,
-            "content": "Tuyệt vời! Nơi này thực sự cổ kính và đẹp. Đồ ăn cũng rất ngon."
+            "content": "Tuyệt vời! Nơi này thực sự cổ kính và đẹp. Đồ ăn cũng rất ngon, đặc biệt là Cao Lầu."
         },
         {
             "userEmail": "test@example.com",
             "attractionName": "Phố cổ Hội An",
             "rating": 4,
-            "content": "Hội An rất đẹp, tuy nhiên hơi đông đúc vào cuối tuần."
+            "content": "Hội An rất đẹp, tuy nhiên hơi đông đúc vào cuối tuần. Nên đi vào buổi sáng sớm để chụp ảnh."
+        },
+        {
+            "userEmail": "nguyenvanan@example.com",
+            "attractionName": "Phố cổ Hội An",
+            "rating": 5,
+            "content": "Thả đèn hoa đăng trên sông Hoài là trải nghiệm đáng nhớ nhất của tôi."
         },
         {
             "userEmail": "chitai@gmail.com",
             "attractionName": "Bảo tàng Dân tộc học Việt Nam",
             "rating": 5,
-            "content": "Rất nhiều thông tin bổ ích. Khu trưng bày ngoài trời rất thú vị, nên dành ít nhất 2 tiếng ở đây."
+            "content": "Rất nhiều thông tin bổ ích. Khu trưng bày ngoài trời rất thú vị, các nhà sàn dựng lại rất công phu."
+        },
+        {
+            "userEmail": "kevin.n@us-travel.com",
+            "attractionName": "Bảo tàng Dân tộc học Việt Nam",
+            "rating": 5,
+            "content": "A must-visit in Hanoi. The explanations are in English too, which is very helpful."
         },
         {
             "userEmail": "test@example.com",
-            "attractionName": "Lễ hội Chùa Hương",
+            "attractionName": "Lễ hội Chùa Hương (Hương Sơn)",
             "rating": 4,
-            "content": "Lễ hội rất đông vui và trang nghiêm. Đi thuyền trên suối Yến cảnh cũng đẹp."
+            "content": "Lễ hội rất đông vui và trang nghiêm. Đi thuyền trên suối Yến cảnh cũng đẹp, nhưng chờ cáp treo hơi lâu."
+        },
+        {
+            "userEmail": "bichtran@test.vn",
+            "attractionName": "Lễ hội Chùa Hương (Hương Sơn)",
+            "rating": 3,
+            "content": "Cảnh đẹp nhưng tình trạng chèo kéo khách đi đò cần được quản lý tốt hơn."
+        },
+        {
+            "userEmail": "khoiminh@design.vn",
+            "attractionName": "Vịnh Hạ Long",
+            "rating": 5,
+            "content": "Không hổ danh là di sản thế giới. Ngủ đêm trên du thuyền là trải nghiệm tuyệt vời."
+        },
+        {
+            "userEmail": "sarah.j@travelblog.net",
+            "attractionName": "Vịnh Hạ Long",
+            "rating": 5,
+            "content": "Breathtaking views. The kayaking trip into the caves was the highlight."
+        },
+        {
+            "userEmail": "thuha.pham@outlook.com",
+            "attractionName": "Festival Hoa Đà Lạt",
+            "rating": 5,
+            "content": "Thành phố ngập tràn sắc hoa. Thời tiết se lạnh rất thích hợp để đi dạo hồ Xuân Hương."
+        },
+        {
+            "userEmail": "namlh@tech.com",
+            "attractionName": "Festival Hoa Đà Lạt",
+            "rating": 4,
+            "content": "Đẹp nhưng kẹt xe kinh khủng vào dịp lễ hội. Mọi người nên đặt phòng sớm."
+        },
+        {
+            "userEmail": "dungbui@sport.vn",
+            "attractionName": "Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF)",
+            "rating": 5,
+            "content": "Màn trình diễn quá mãn nhãn! Âm thanh và ánh sáng kết hợp hoàn hảo."
+        },
+        {
+            "userEmail": "lanyan@books.com",
+            "attractionName": "Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF)",
+            "rating": 4,
+            "content": "Vé khán đài hơi đắt nhưng xứng đáng. Nên đi sớm để tránh tắc đường."
+        },
+        {
+            "userEmail": "nguyenvanan@example.com",
+            "attractionName": "Ruộng bậc thang Mù Cang Chải",
+            "rating": 5,
+            "content": "Mùa lúa chín vàng rực cả một góc trời. Đẹp hơn trong tranh!"
+        },
+        {
+            "userEmail": "khoiminh@design.vn",
+            "attractionName": "Ruộng bậc thang Mù Cang Chải",
+            "rating": 4,
+            "content": "Cảnh đẹp xuất sắc nhưng đường đi từ Hà Nội lên khá vất vả, say xe."
+        },
+        {
+            "userEmail": "kevin.n@us-travel.com",
+            "attractionName": "Bảo tàng Chứng tích Chiến tranh",
+            "rating": 5,
+            "content": "Very emotional and educational. It shows the harsh reality of war."
+        },
+        {
+            "userEmail": "sausau@history.vn",
+            "attractionName": "Bảo tàng Chứng tích Chiến tranh",
+            "rating": 5,
+            "content": "Một nơi cần đến để hiểu giá trị của hòa bình. Hiện vật được bảo quản rất tốt."
+        },
+        {
+            "userEmail": "thuha.pham@outlook.com",
+            "attractionName": "Chợ nổi Cái Răng",
+            "rating": 4,
+            "content": "Trải nghiệm ăn bún riêu trên ghe rất lạ. Tuy nhiên chợ tan hơi sớm, phải dậy từ 5h sáng."
+        },
+        {
+            "userEmail": "sarah.j@travelblog.net",
+            "attractionName": "Chợ nổi Cái Răng",
+            "rating": 3,
+            "content": "Interesting culture but the river water is quite polluted."
+        },
+        {
+            "userEmail": "bichtran@test.vn",
+            "attractionName": "Sun World Ba Na Hills",
+            "rating": 5,
+            "content": "Cầu Vàng đẹp như lời đồn. Làng Pháp lên hình rất sang chảnh."
+        },
+        {
+            "userEmail": "namlh@tech.com",
+            "attractionName": "Sun World Ba Na Hills",
+            "rating": 4,
+            "content": "Khu vui chơi trong nhà Fantasy Park rất nhiều trò hay. Buffet trưa cũng ổn."
+        },
+        {
+            "userEmail": "dungbui@sport.vn",
+            "attractionName": "Đỉnh Fansipan",
+            "rating": 5,
+            "content": "Chinh phục nóc nhà Đông Dương là cảm giác rất tự hào. Cáp treo hiện đại, đi rất êm."
+        },
+        {
+            "userEmail": "chitai@gmail.com",
+            "attractionName": "Lễ hội Đền Hùng",
+            "rating": 5,
+            "content": "Không khí trang nghiêm, hào hùng. Dù đông nhưng trật tự khá tốt."
+        },
+        {
+            "userEmail": "lanyan@books.com",
+            "attractionName": "Cao nguyên Mộc Châu",
+            "rating": 4,
+            "content": "Đồi chè trái tim rất xanh và đẹp. Mùa hoa cải trắng chụp ảnh siêu xinh."
+        },
+        {
+            "userEmail": "nguyenvanan@example.com",
+            "attractionName": "Vườn Quốc gia Phong Nha – Kẻ Bàng",
+            "rating": 5,
+            "content": "Động Thiên Đường đẹp choáng ngợp. Thạch nhũ lấp lánh như cung điện."
+        },
+        {
+            "userEmail": "kevin.n@us-travel.com",
+            "attractionName": "Vườn Quốc gia Phong Nha – Kẻ Bàng",
+            "rating": 5,
+            "content": "Nature at its best. The boat trip into Phong Nha cave was relaxing."
+        },
+        {
+            "userEmail": "sausau@history.vn",
+            "attractionName": "Hoàng Thành Thăng Long",
+            "rating": 4,
+            "content": "Không gian rộng lớn, nhiều lớp lịch sử chồng lên nhau. Tour đêm Giải mã Hoàng Thành rất hay."
+        },
+        {
+            "userEmail": "khoiminh@design.vn",
+            "attractionName": "Lễ hội Carnival Hạ Long",
+            "rating": 4,
+            "content": "Sôi động, hoành tráng. Pháo hoa đẹp nhưng âm nhạc hơi lớn quá mức."
+        },
+        {
+            "userEmail": "thuha.pham@outlook.com",
+            "attractionName": "Tòa Thánh Tây Ninh",
+            "rating": 5,
+            "content": "Kiến trúc độc nhất vô nhị. Giờ hành lễ nhìn các chức sắc mặc áo màu rất đẹp mắt."
+        },
+        {
+            "userEmail": "bichtran@test.vn",
+            "attractionName": "Bãi biển Mỹ Khê",
+            "rating": 5,
+            "content": "Biển sạch, cát trắng mịn, giá hải sản quanh đó cũng hợp lý."
+        },
+        {
+            "userEmail": "namlh@tech.com",
+            "attractionName": "Lễ hội Cà phê Buôn Ma Thuột",
+            "rating": 4,
+            "content": "Được uống cà phê miễn phí khắp nơi. Không khí lễ hội đường phố rất vui."
+        },
+        {
+            "userEmail": "dungbui@sport.vn",
+            "attractionName": "Mũi Né",
+            "rating": 4,
+            "content": "Trượt cát ở Đồi Hồng rất vui nhưng mệt. Nên đi Bàu Trắng để chụp ảnh xe Jeep."
+        },
+        {
+            "userEmail": "lanyan@books.com",
+            "attractionName": "Làng hương Thủy Xuân",
+            "rating": 5,
+            "content": "Màu sắc rực rỡ, các cô chủ quán rất nhiệt tình cho mượn quạt chụp ảnh."
+        },
+        {
+            "userEmail": "test@example.com",
+            "attractionName": "Quần thể Di tích Cố đô Huế",
+            "rating": 5,
+            "content": "Đại Nội rộng lớn đi mỏi chân. Kiến trúc cung đình tuyệt đẹp."
+        },
+        {
+            "userEmail": "sarah.j@travelblog.net",
+            "attractionName": "Thánh địa Mỹ Sơn",
+            "rating": 4,
+            "content": "Incredible history. It gets very hot, so go early in the morning."
+        },
+        {
+            "userEmail": "chitai@gmail.com",
+            "attractionName": "Lễ hội Ok Om Bok",
+            "rating": 5,
+            "content": "Đua ghe ngo kịch tính đến nghẹt thở. Không khí cổ vũ rất nhiệt tình."
+        },
+        {
+            "userEmail": "nguyenvanan@example.com",
+            "attractionName": "Làng gốm Bát Tràng",
+            "rating": 4,
+            "content": "Tự tay vuốt gốm là trải nghiệm thú vị cho trẻ con. Đồ gốm bán cũng rẻ."
+        },
+        {
+            "userEmail": "khoiminh@design.vn",
+            "attractionName": "Chợ Bến Thành",
+            "rating": 3,
+            "content": "Đồ lưu niệm đa dạng nhưng nói thách cao quá, phải trả giá mệt mỏi."
         }
     ]
 }

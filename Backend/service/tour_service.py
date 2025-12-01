@@ -147,6 +147,13 @@ def is_attraction_available(attraction, current_time):
     if attraction.type == 'festival':
         fes = Festival.query.get(attraction.id)
         if fes and fes.time_start and fes.time_end:
+            # Với festival diễn ra hàng năm, cần kiểm tra trong năm hiện tại
+            current_year = current_time.year
+            
+            # Tạo khoảng thời gian diễn ra cho năm hiện tại
+            festival_start = fes.time_start.replace(year=current_year)
+            festival_end = fes.time_end.replace(year=current_year)
+            
             if not (fes.time_start <= current_time <= fes.time_end):
                 return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
 

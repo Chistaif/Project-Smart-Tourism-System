@@ -755,6 +755,7 @@ def get_blog(blog_id):
         return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/blogs', methods=['POST'])
+@jwt_required()
 def create_blog():
     """Tạo blog mới với hình ảnh"""
     try:
@@ -764,7 +765,7 @@ def create_blog():
         
         title = request.form.get('title', '').strip()
         content = request.form.get('content', '').strip()
-        user_id = request.form.get('user_id', type=int)
+        user_id = get_jwt_identity()
         
         if not title or not content or not user_id:
             return jsonify({"success": False, "error": "Thiếu thông tin bắt buộc"}), 400

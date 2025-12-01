@@ -1,21 +1,67 @@
 import json
 from datetime import datetime
+from lunardate import LunarDate
 
 from models import db, User, Festival, CulturalSpot, Attraction, Tag, Review
 from service.attraction_service import update_attraction_rating_service
 
 def parse_datetime(date_str):
     """
-    Chuyển đổi chuỗi ngày tháng từ demo_data.json (ví dụ: "12:4:2025")
+    Chuyển đổi chuỗi ngày tháng từ demo_data.json (format mới: "dd/mm" hoặc "dd/mm âm lịch")
     sang đối tượng datetime của Python.
+    
+    Logic: Festival diễn ra hàng năm vào cùng ngày tháng đó
     """
     if not date_str:
         return None
+        
     try:
-        # Định dạng trong demo_data.json là Ngày:Tháng:Năm
-        return datetime.strptime(date_str, "%d:%m:%Y")
-    except ValueError:
-        print(f"Warning: Không thể phân tích ngày '{date_str}'. Bỏ qua.")
+        current_year = datetime.now().year
+        current_date = datetime.now().date()  # Chỉ lấy date để so sánh
+        
+        # Xử lý ngày âm lịch
+        if "âm lịch" in date_str:
+            lunar_date = date_str.replace(" âm lịch", "")
+            day, month = map(int, lunar_date.split("/"))
+            
+            # Chuyển đổi âm lịch sang dương lịch cho năm hiện tại
+            try:
+                lunar = LunarDate(current_year, month, day)
+                solar_date = lunar.toSolarDate()  # Trả về datetime.date
+                
+                # Nếu ngày âm lịch này đã qua trong năm nay, chuyển sang năm sau
+                if solar_date < current_date:  # So sánh date với date
+                    lunar = LunarDate(current_year + 1, month, day)
+                    solar_date = lunar.toSolarDate()
+                    
+                # Chuyển date thành datetime (thêm thời gian mặc định)
+                return datetime.combine(solar_date, datetime.min.time())
+                
+            except ImportError:
+                print("Warning: Cần cài đặt thư viện 'lunardate' để xử lý âm lịch")
+                # Fallback: giả sử ngày âm lịch ≈ ngày dương lịch cùng tháng
+                gregorian_date = datetime(current_year, month, day)
+                if gregorian_date.date() < current_date:
+                    gregorian_date = gregorian_date.replace(year=current_year + 1)
+                return gregorian_date
+        else:
+            # Xử lý ngày dương lịch
+            day, month = map(int, date_str.split("/"))
+            
+            # Tạo datetime cho năm hiện tại
+            gregorian_date = datetime(current_year, month, day)
+            
+            # Nếu ngày này đã qua trong năm nay, chuyển sang năm sau
+            if gregorian_date.date() < current_date:
+                gregorian_date = gregorian_date.replace(year=current_year + 1)
+                
+            return gregorian_date
+            
+    except ValueError as e:
+        print(f"Warning: Không thể phân tích ngày '{date_str}': {e}")
+        return None
+    except Exception as e:
+        print(f"Warning: Lỗi xử lý ngày '{date_str}': {e}")
         return None
     
 
@@ -61,7 +107,8 @@ def import_demo_data(json_path="demo_data.json"):
                 username=u["name"], # Dùng "name" làm "username"
                 email=u["email"],
                 avatar_url=u.get("avatarUrl"),
-                is_admin=u.get("isAdmin", False)
+                is_admin=u.get("isAdmin", False),
+                email_verified=u.get("isVerify", True)
             )
             # Dùng hàm set_password để băm mật khẩu
             new_user.set_password(u["password"])
@@ -72,12 +119,18 @@ def import_demo_data(json_path="demo_data.json"):
             # Bỏ qua nếu tên đã tồn tại
             if Attraction.query.filter_by(name=fes["name"]).count() > 0:
                 continue
+
+            start_str = fes.get("datetimeStart")
+            end_str = fes.get("datetimeEnd")
             
             new_festival = Festival(
                 name=fes["name"],
                 location=fes.get("location"),
-                time_start=parse_datetime(fes.get("datetimeStart")),
-                time_end=parse_datetime(fes.get("datetimeEnd")),
+                time_start=parse_datetime(start_str),  # Ngày đã chuyển đổi
+                time_end=parse_datetime(end_str),      # Ngày đã chuyển đổi
+                is_lunar="âm lịch" in (start_str or ""),  # Đánh dấu âm lịch
+                original_start=start_str,              # Lưu chuỗi gốc
+                original_end=end_str,                  # Lưu chuỗi gốc
                 brief_description=fes.get("briefDescription"),
                 detail_description=fes.get("detailDescription"),
                 lat=fes.get("lat"),

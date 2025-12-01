@@ -27,7 +27,7 @@ def get_user_interest_tags(user_id):
 def calculate_score(attraction, interest_tags, search_keywords):
     """
     Bước 2: Hàm tính điểm cho 1 địa điểm dựa trên các tiêu chí
-    1. Khớp search keyword 5-10đ
+    1. Khớp search keyword 50-100đ
     2: Khớp tag sở thích   3đ/tag
     3. Rating              1.5đ/sao
     4. Số review 1đ        0.1đ/bài
@@ -41,14 +41,14 @@ def calculate_score(attraction, interest_tags, search_keywords):
         # Kiểm tra xem tên/mô tả 
         query_lower = search_keywords.lower()
         if query_lower in attraction.name.lower():
-            score += 10  # Khớp tên -> ưu tiên cực cao
+            score += 100  # Khớp tên -> ưu tiên cực cao
         elif query_lower in attraction.brief_description.lower():
-            score += 5
+            score += 50
             
         # Kiểm tra tag
         for tag in attr_tags:
             if tag.lower() in query_lower:
-                score += 5 
+                score += 50 
 
     # --- Tiêu chí 2 ---
     matched_interests = attr_tags.intersection(interest_tags)
