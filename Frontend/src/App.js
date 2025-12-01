@@ -11,7 +11,7 @@ import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
 
 import AttractionDetail from './pages/AttractionDetail';
-import UserPage from './pages/UserPage';
+import UserPage from './pages/User';
 import { authAPI } from './utils/api';
 
 import test1 from './asset/box1.jpg';
@@ -29,6 +29,13 @@ function App() {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    window.addEventListener("openLoginPopup", () => {
+      openPopup("login");
+    });
+  }, []);
+
 
   const [verifyEmail, setVerifyEmail] = useState("");
   
@@ -441,16 +448,64 @@ function App() {
 
         {/* ROUTES */}
         <Routes>
-          <Route path="/" element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} />
-          <Route path="/service" element={<Service currentUser={user} />} />
-          <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
-          <Route path="/blogs" element={<Blogs currentUser={user} />} />
-          <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />
-          <Route path="/blogs/:id" element={<BlogDetail />} />
+          <Route 
+            path="/" 
+            element={
+              <div className="page-transition">
+                <HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />
+              </div>
+            } 
+          />
+
+          <Route 
+            path="/service" 
+            element={
+              <div className="page-transition">
+                <Service currentUser={user} />
+              </div>
+            }  
+          />
+
+          <Route 
+            path="/blogs" 
+            element={
+              <div className="page-transition">
+                <Blogs currentUser={user} />
+              </div>
+            } 
+          />
+
+          <Route 
+            path="/blogs/:id" 
+            element={
+              <div className="page-transition">
+                <BlogDetail />
+              </div>
+            } 
+          />
+
+          <Route 
+            path="/attractions/:id" 
+            element={
+              <div className="page-transition">
+                <AttractionDetail currentUser={user} />
+              </div>
+            } 
+          />
+
+          <Route
+            path="/user"
+            element={
+              <div className="page-transition">
+                <UserPage currentUser={user} onLogout={handleLogout} />
+              </div>
+            }
+          />
         </Routes>
 
+
         <footer>
-          <small>© 2025 Culture Compass</small>
+          <small>© 2025 SmartTour - Hệ thống gợi ý hành trình du lịch</small>
         </footer>
 
         <ChatAssistant 
