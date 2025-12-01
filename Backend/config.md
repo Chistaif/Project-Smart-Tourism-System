@@ -91,3 +91,32 @@ EMAIL_PASS=your_app_password
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 ```
+
+
+
+# Hướng dẫn cấu hình chạy GraphHopper api bằng Docker desktop
+
+## 1. Mở PowerShell, tạo thư mục
+```
+mkdir C:\graphhopper-data
+cd C:\graphhopper-data
+```
+
+## 2. Tải bản đồ Vietnam (hoặc khu vực bạn cần)
+ Dùng trình duyệt tải về, hoặc dùng PowerShell:
+```
+Invoke-WebRequest -Uri "https://download.geofabrik.de/asia/vietnam-latest.osm.pbf" -OutFile "vietnam-latest.osm.pbf"
+```
+
+## 3. Tạo container bằng image có sẵn
+```
+docker run -d `
+  --name graphhopper `
+  -p 8989:8989 `
+  -e JAVA_OPTS="-Xmx4g -Xms1g" `
+  -v C:\graphhopper-data:/data `
+  israelhikingmap/graphhopper:latest `
+  --input /data/vietnam-latest.osm.pbf
+```
+Sau khi làm tất cả thì GraphHopper sẽ chạy ở localhost:8989
+có thể gọi api bằng 127.0.0.1:8989\route

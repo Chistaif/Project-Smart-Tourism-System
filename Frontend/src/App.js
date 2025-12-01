@@ -12,7 +12,7 @@ import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
 
 import AttractionDetail from './pages/AttractionDetail';
-import UserPage from './pages/UserPage';
+import UserPage from './pages/User';
 import { authAPI } from './utils/api';
 
 import test1 from './asset/box1.jpg';
@@ -30,6 +30,13 @@ function App() {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    window.addEventListener("openLoginPopup", () => {
+      openPopup("login");
+    });
+  }, []);
+
 
   const [verifyEmail, setVerifyEmail] = useState("");
   const [resetCode, setResetCode] = useState(""); 
@@ -442,15 +449,15 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} />
           <Route path="/service" element={<Service currentUser={user} />} />
-          <Route path="/itinerary" element={<ItineraryPage />} />
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />
         </Routes>
 
+
         <footer>
-          <small>© 2025 Culture Compass</small>
+          <small>© 2025 SmartTour - Hệ thống gợi ý hành trình du lịch</small>
         </footer>
 
         <ChatAssistant 
