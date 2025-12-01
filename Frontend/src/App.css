@@ -291,8 +291,8 @@ footer {
   position: relative;
   z-index: 2;
   padding: 18px 40px;
-  color: #cbd5e1;
-  background: transparent;
+  color: #000000;
+  background: #d4c50b;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -686,8 +686,37 @@ footer {
     text-align: center;
   }
 
-  .forgot-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(196, 179, 10, 0.4);
-    background: #d4c50b;
+.forgot-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(196, 179, 10, 0.4);
+  background: #d4c50b;
+}
+
+.page-transition {
+  animation: pageFadeIn 0.5s ease forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.homepage-link {
+  margin-top: 14px;
+  font-size: 15px;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.homepage-link:hover {
+  color: #e6d10b;
+  text-decoration: underline;
+}

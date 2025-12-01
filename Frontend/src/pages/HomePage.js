@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { destinationsAPI } from '../utils/api';
+
 import test1 from '../asset/test1.png';
 import test2 from '../asset/test2.png';
 import test3 from '../asset/test3.png';
@@ -8,6 +11,8 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch destinations from Flask API
@@ -41,8 +46,15 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
         <p className="lead">
           Trải nghiệm những truyền thống ẩn giấu, lễ hội chân thực và hành trình khó quên.
         </p>
-        <a className="cta">Bắt đầu ngay!</a>
-        
+        <a className="cta" onClick={() => navigate('/service')}>Bắt đầu ngay!</a>
+
+        <p 
+          className="homepage-link"
+          onClick={() => window.location.href = '/blogs'}
+        >
+          Xem các bài viết mới nhất hoặc Tạo bài viết của bạn →
+        </p>
+
         {/* Display API data
         {loading && <p style={{ color: 'white', marginTop: '20px' }}>Loading destinations...</p>}
         {error && <p style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
