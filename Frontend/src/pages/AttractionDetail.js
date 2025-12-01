@@ -59,6 +59,41 @@ export default function AttractionDetail({currentUser, openLogin }) {
     });
   };
 
+  const formatAttractionTime = (info) => {
+    // 1. Cultural Spot: hiển thị opening hours
+    if (info.type === 'cultural_spot') {
+        return info.openingHours || "Mở cửa cả ngày";
+    }
+    
+    // 2. Festival
+    if (info.type === 'festival') {
+        // Festival âm lịch: hiển thị chuỗi gốc
+        if (info.isLunar) {
+            return `${info.originalStart} - ${info.originalEnd}`;
+        }
+        
+        // Festival dương lịch: format dd/mm - dd/mm
+        if (info.timeStart && info.timeEnd) {
+            const startDate = new Date(info.timeStart);
+            const endDate = new Date(info.timeEnd);
+            
+            const formatDate = (date) => {
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                return `${day}/${month}`;
+            };
+            
+            return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+        }
+        
+        // Fallback
+        return "Thời gian chưa cập nhật";
+    }
+    
+    // 3. Default
+    return "Mở cửa cả ngày";
+};
+
 const loadDetail = async (isBackground = false) => {
     if (!isBackground) {
         setLoading(true);
@@ -196,7 +231,7 @@ const handleDeleteReview = async (reviewId) => {
             </div>
 
             <div className="summary-info-list">
-                <p>🗓 <strong>Thời gian:</strong> {info?.openingHours || info?.timeStart || "Mở cửa cả ngày"}</p>
+            <p>🗓 <strong>Thời gian:</strong> {formatAttractionTime(info)}</p>
                 <p>📍 <strong>Địa điểm:</strong> {info?.location}</p>
                 <p>🎟 <strong>Vé vào cửa:</strong> {info?.ticketPrice ? `${info.ticketPrice.toLocaleString()}đ` : "Miễn phí"}</p>
             </div>
