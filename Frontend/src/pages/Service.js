@@ -38,11 +38,16 @@ const TourResultView = ({ tourData, onReset }) => {
 
 const TYPE_OPTIONS = [
   { label: 'Lễ hội', value: 'Lễ hội' },
-  { label: 'Di tích lịch sử', value: 'Di tích Lịch sử' }, 
+
+  // CulturalSpot types (khớp đúng với demo_data.json)
+  { label: 'Di tích', value: 'Di tích' },
   { label: 'Bảo tàng', value: 'Bảo tàng' },
-  { label: 'Đền/Chùa', value: 'Đền/Chùa' },
   { label: 'Làng nghề', value: 'Làng nghề' },
+  { label: 'Văn hóa', value: 'Văn hóa' },
+  { label: 'Kiến trúc', value: 'Kiến trúc' },
+  { label: 'Di sản', value: 'Di sản' },
 ];
+
 
 const initialSelectedTypes = [];
 
@@ -73,18 +78,35 @@ export default function Service({ currentUser }) {
   // --- LOGIC FETCH DATA ---
   const fetchAttractions = async (params = {}) => {
     try {
-      setLoading(true);
-      const response = await attractionsAPI.search({
-        userId: currentUser?.user_id,
-        typeList: params.typeList && params.typeList.length > 0 ? params.typeList : undefined,
-        ...params,
-      });
-      if(response.success) setData(response.data || []);
-    } catch (err) { console.error(err); } 
-    finally { 
-        setLoading(false); // Dòng này là nguyên nhân gây ra loop khi loading nằm trong dependencies
+        setLoading(true);
+
+        const response = await attractionsAPI.search({
+            ...params,
+            userId: currentUser?.user_id,
+            typeList: params.typeList ?? []
+        });
+
+        if (response.success) {
+            let results = response.data || [];
+
+            // FRONTEND FILTER (không đụng backend)
+            if (params.typeList && params.typeList.length > 0) {
+                results = results.filter(item =>
+                    params.typeList.includes(item.spotType) ||
+                    params.typeList.includes(item.type)     // cho Lễ hội
+                );
+            }
+
+            setData(results);
+        }
+
+    } catch (err) { 
+        console.error(err); 
+    } finally { 
+        setLoading(false);
     }
   };
+
 
   // 1. Initial Load Effect (Chạy 1 lần khi mount)
   useEffect(() => {
@@ -93,16 +115,12 @@ export default function Service({ currentUser }) {
   
   // 2. Filter Change Effect (SỬA LỖI: XÓA 'loading' khỏi dependencies)
   useEffect(() => {
-    // Chỉ chạy fetch khi selectedTypes hoặc searchTerm thay đổi
-    // Nếu cả 2 đều trống, nó sẽ chạy fetch để trả về trạng thái mặc định.
-    if (!loading) { 
-        fetchAttractions({ 
-            typeList: selectedTypes,
-            searchTerm: searchTerm
-        });
-    }
-    // LƯU Ý: Nếu loading được thêm vào đây, loop sẽ tái diễn.
-  }, [selectedTypes, searchTerm]); // ĐÃ XÓA 'loading'
+    fetchAttractions({
+        typeList: selectedTypes,
+        searchTerm
+    });
+}, [selectedTypes, searchTerm]);
+
 
   const handleSearch = () => {
     const params = { searchTerm: searchTerm.trim() };
