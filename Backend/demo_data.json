@@ -110,7 +110,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764220317/vov_san_khau_dem_khai_man_festival_hue_2022_ukfc2j.webp",
             "tags": ["Lễ hội", "Văn hóa", "Di sản", "Cung đình", "Huế", "Nghệ thuật quốc tế", "Ẩm thực"],
             "datetimeStart": "01/06", 
-            "datetimeEnd": "09/06" 
+            "datetimeEnd": "09/06",
+            "idealTime": "1"
         },
         {
             "name": "Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF)",
@@ -159,7 +160,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764220507/le-hoi-phao-hoa-quoc-te-da-nang-diff-2025-tat-tan-tat-nhung-dieu-ban-can-biet-01_enq9zk.jpg",
             "tags": ["Lễ hội", "Pháo hoa", "Sự kiện", "Đà Nẵng", "Quốc tế", "Nghệ thuật"],
             "datetimeStart": "08/06", 
-            "datetimeEnd": "13/07" 
+            "datetimeEnd": "13/07",
+            "idealTime": "2" 
         },
         {
             "name": "Hội Lim Bắc Ninh",
@@ -209,7 +211,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909920/hoi-lim-e1453543168215_zpjwhc.jpg",
             "tags": ["Lễ hội", "Văn hóa", "Quan họ", "Bắc Ninh", "Di sản", "Tâm linh"],
             "datetimeStart": "13/01 âm lịch", 
-            "datetimeEnd": "15/01 âm lịch"
+            "datetimeEnd": "15/01 âm lịch",
+            "idealTime": "0"
         },
         {
             "name": "Lễ hội Chùa Hương (Hương Sơn)",
@@ -259,7 +262,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764221392/9bb90dc9-le-hoi-chua-huong-1_jzr5da.jpg", 
             "tags": ["Lễ hội", "Tâm linh", "Hà Nội", "Hành hương", "Phật giáo", "Núi non"],
             "datetimeStart": "06/01 âm lịch",
-            "datetimeEnd": "30/03 âm lịch" 
+            "datetimeEnd": "30/03 âm lịch",
+            "idealTime": "0"
         },
        {
             "name": "Lễ hội Tháp Bà Ponagar",
@@ -309,7 +313,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764222873/le-hoi-thap-ba-ponagar-3_1636860786_kjes0q.jpg",
             "tags": ["Lễ hội", "Văn hóa Chăm", "Tâm linh", "Nha Trang", "Di tích", "Di sản quốc gia"],
             "datetimeStart": "20/03 âm lịch",
-            "datetimeEnd": "23/03 âm lịch"
+            "datetimeEnd": "23/03 âm lịch",
+            "idealTime": "1"
         },
         {
             "name": "Lễ hội Chôl Chnăm Thmây",
@@ -359,7 +364,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764223292/kho-me-1-1585842188628566903511-640x425_ezcf0p.jpg",
             "tags": ["Lễ hội", "Văn hóa Khmer", "Tết cổ truyền", "Miền Tây", "Sóc Trăng", "Tâm linh"],
             "datetimeStart": "13/04", 
-            "datetimeEnd": "15/04"
+            "datetimeEnd": "15/04",
+            "idealTime": "0"
         },
         {
             "name": "Lễ hội Đền Hùng",
@@ -414,7 +420,8 @@
                 "Di sản UNESCO"
             ],
             "datetimeStart": "10/03 âm lịch",
-            "datetimeEnd": "11/03 âm lịch"
+            "datetimeEnd": "11/03 âm lịch",
+            "idealTime": "0"
         },
         {
             "name": "Lễ hội Carnival Hạ Long",
@@ -454,7 +461,8 @@
               "Giải trí"
             ],
             "datetimeStart": "30/04",
-            "datetimeEnd": "02/05"
+            "datetimeEnd": "02/05",
+            "idealTime": "2"
         },
         {
             "name": "Festival Hoa Đà Lạt",
@@ -496,7 +504,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510127/tour_festival_hoa_da_lat_l6269i.jpg",
             "tags": ["Lễ hội", "Thiên nhiên", "Hoa", "Lãng mạn"],
             "datetimeStart": "20/12",
-            "datetimeEnd": "24/12"
+            "datetimeEnd": "24/12",
+            "idealTime": "1"
         },
         {
             "name": "Lễ hội Hoa Tam Giác Mạch",
@@ -538,7 +547,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510251/le-hoi-hoa-tam-giac-mach-Ha-Giang-4176_qxn0xe.png",
             "tags": ["Thiên nhiên", "Núi rừng", "Phượt", "Văn hóa tộc người"],
             "datetimeStart": "01/10",
-            "datetimeEnd": "31/12"
+            "datetimeEnd": "31/12",
+            "idealTime": "1"
         },
         {
             "name": "Lễ hội Cà phê Buôn Ma Thuột",
@@ -580,7 +590,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510350/6usib-17416543741831978340653_rg4otg.jpg",
             "tags": ["Lễ hội", "Cà phê", "Tây Nguyên", "Ẩm thực"],
             "datetimeStart": "10/03",
-            "datetimeEnd": "14/03"
+            "datetimeEnd": "14/03",
+            "idealTime": "0"
         },
         {
             "name": "Lễ hội Ok Om Bok",
@@ -622,7 +633,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510617/0611travinh2-1730943723149-1730943723313616078724_qnayg4.jpg",
             "tags": ["Văn hóa", "Khmer", "Thể thao", "Sông nước"],
             "datetimeStart": "14/10 âm lịch",
-            "datetimeEnd": "15/10 âm lịch"
+            "datetimeEnd": "15/10 âm lịch",
+            "idealTime": "2"
         },
         {
             "name": "Lễ hội Vía Bà Chúa Xứ",
@@ -664,7 +676,8 @@
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510703/le_hoi_via_ba_chua_xu_nui_sam_duoc_unesco_cong_nhan_la_di_san_the_gioi_be17695de0_nornnu.jpg",
             "tags": ["Tâm linh", "Tín ngưỡng", "Miền Tây", "Hành hương"],
             "datetimeStart": "22/04 âm lịch",
-            "datetimeEnd": "27/04 âm lịch"
+            "datetimeEnd": "27/04 âm lịch",
+            "idealTime": "1"
         }
     ],
     "culturalSpots": [
@@ -717,7 +730,8 @@
             "tags": ["Văn hóa", "Bảo tàng", "Hà Nội", "Dân tộc học", "Kiến trúc", "Lịch sử"],
             "spotType": "Bảo tàng",
             "ticketPrice": 40000.0,
-            "openHours": "08:30 AM - 05:30 PM (Trừ thứ Hai)"
+            "openHours": "08:30 AM - 05:30 PM (Trừ thứ Hai)",
+            "idealTime": "1"
         },
         {
             "name": "Lăng Khải Định (Ứng Lăng)",
@@ -730,7 +744,7 @@
                         "type": "heading",
                         "level": 1,
                         "title": "I. Kiến trúc giao thoa Đông - Tây",
-                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764224436/M_20220805_KHAIDINH_nz1nrw.jpg",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510914/lang_khai_dinh_hue_06_satanb.jpg",
                         "content": "Lăng Khải Định là công trình kiến trúc cuối cùng của triều Nguyễn, được xây dựng từ năm 1920 đến 1931. Nét độc đáo của lăng là sự kết hợp táo bạo giữa kiến trúc truyền thống Việt Nam với các chi tiết kiến trúc **Châu Âu (Gothic)** và **Ấn Độ giáo (Stupa)**, thể hiện rõ qua các trụ cột và cổng lăng."
                     },
                     {
@@ -763,11 +777,12 @@
             "lon": 107.5902311226692,
             "rating": 4.6,
             "visitDuration": 90, 
-            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764224394/lang-khai-dinh_yubnmg.jpg",
-            "tags": ["Di tích lịch sử", "Cung đình", "Kiến trúc", "Huế", "Lăng tẩm", "Lịch sử"],
-            "spotType": "Di tích lịch sử",
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510972/AL18g_TDCajw64CZuBZIWg1Ed4y4pY2Bgh3P-mdFAHO9lfwBBv80zgw4qjTXKroHP_Yo5uyyj38m2UA_s1200_cesy05.jpg",
+            "tags": ["Di tích", "Cung đình", "Kiến trúc", "Huế", "Lăng tẩm", "Lịch sử"],
+            "spotType": "Di tích",
             "ticketPrice": 150000.0, 
-            "openHours": "07:00 AM - 05:30 PM"
+            "openHours": "07:00 AM - 05:30 PM",
+            "idealTime": "0"
         },
         {
             "name": "Quần thể Di tích Cố đô Huế",
@@ -815,10 +830,11 @@
             "rating": 4.8,
             "visitDuration": 480,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764296986/codohue_kddi0y.jpg",
-            "tags": ["Di tích lịch sử", "Văn hóa", "Di sản UNESCO", "Lịch sử", "Kiến trúc Cung đình", "Huế", "Triều Nguyễn"],
-            "spotType": "Di tích Lịch sử",
+            "tags": ["Di tích", "Văn hóa", "Di sản UNESCO", "Lịch sử", "Kiến trúc Cung đình", "Huế", "Triều Nguyễn"],
+            "spotType": "Di tích",
             "ticketPrice": 200000.0,
-            "openHours": "Mùa hè: 6:30 AM - 6:00 PM; Mùa đông: 7:00 AM - 5:30 PM"
+            "openHours": "Mùa hè: 6:30 AM - 6:00 PM; Mùa đông: 7:00 AM - 5:30 PM",
+            "idealTime": "1"
         },
         {
             "name": "Khu Di tích Mỹ Sơn",
@@ -866,10 +882,11 @@
             "rating": 4.7,
             "visitDuration": 150, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909680/thanh_dia_my_son_01-2_yqcymq.jpg",
-            "tags": ["Di tích lịch sử", "Văn hóa Chăm", "Ấn Độ giáo", "Di sản UNESCO", "Quảng Nam", "Kiến trúc"],
-            "spotType": "Di tích lịch sử",
+            "tags": ["Di tích", "Văn hóa Chăm", "Ấn Độ giáo", "Di sản UNESCO", "Quảng Nam", "Kiến trúc"],
+            "spotType": "Di tích",
             "ticketPrice": 150000.0, 
-            "openHours": "06:30 AM - 05:30 PM"
+            "openHours": "06:30 AM - 05:30 PM",
+            "idealTime": "0"
         },
         {
             "name": "Không gian Văn hóa Cồng chiêng Tây Nguyên",
@@ -917,9 +934,10 @@
             "visitDuration": 480, 
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764297924/231-gia_lai-huytinhphoto_40gmail_ekv2os.jpg",
             "tags": ["Văn hóa", "Di sản UNESCO", "Tâm linh", "Âm nhạc", "Tây Nguyên", "Dân tộc thiểu số"],
-            "spotType": "Di tích lịch sử",
+            "spotType": "Văn hóa",
             "ticketPrice": 0.0, 
-            "openHours": "00:00 AM - 12:00 PM"
+            "openHours": "00:00 AM - 12:00 PM",
+            "idealTime": "2"
         },
         {
             "name": "Bảo tàng Dân tộc học Việt Nam",
@@ -958,52 +976,11 @@
             "rating": 4.7,
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510771/bao-tang-dan-toc-hoc-viet-nam-1-1108_cpqr1z.jpg",
-            "tags": ["Văn hóa", "Giáo dục", "Dân tộc", "Kiến trúc"],
+            "tags": ["Bảo tàng", "Văn hóa", "Giáo dục", "Dân tộc", "Kiến trúc"],
             "spotType": "Bảo tàng",
             "ticketPrice": 40000.0,
-            "openHours": "08:30 AM - 05:30 PM"
-        },
-        {
-            "name": "Lăng Khải Định",
-            "location": "Hương Thủy, Thừa Thiên Huế",
-            "briefDescription": "Lăng mộ độc đáo nhất triều Nguyễn với sự giao thoa táo bạo giữa kiến trúc cung đình Á Đông và phong cách Gothic phương Tây.",
-            "detailDescription": {
-                "mainTitle": "Đỉnh cao nghệ thuật sành sứ",
-                "sections": [
-                    {
-                        "type": "heading",
-                        "level": 1,
-                        "title": "I. Kiến trúc Đông - Tây kết hợp",
-                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510914/lang_khai_dinh_hue_06_satanb.jpg",
-                        "content": "Khác với vẻ trầm mặc của các lăng khác, Lăng Khải Định nổi bật với vật liệu xi măng, sắt thép và các trụ cổng hình tháp ảnh hưởng từ Ấn Độ giáo."
-                    },
-                    {
-                        "type": "heading",
-                        "level": 2,
-                        "title": "II. Cung Thiên Định lộng lẫy",
-                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510914/Le_tombeau_de_khaidinh_1280x800_wwmc0n.jpg",
-                        "content": "Nội thất bên trong khiến du khách choáng ngợp bởi nghệ thuật khảm sành sứ và thủy tinh ghép thành các bức tranh tứ quý, bát bửu vô cùng tinh xảo và bền màu theo thời gian."
-                    },
-                    {
-                        "type": "list",
-                        "title": "Lưu ý",
-                        "items": [
-                            "Địa hình: Nhiều bậc thang dốc, cần sức khỏe tốt.",
-                            "Trang phục: Cần mặc lịch sự, kín đáo.",
-                            "Chụp ảnh: Nội thất bên trong rất đẹp nhưng ánh sáng hơi tối."
-                        ]
-                    }
-                ]
-            },
-            "lat": 16.3990,
-            "lon": 107.5902,
-            "rating": 4.6,
-            "visitDuration": 90,
-            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510972/AL18g_TDCajw64CZuBZIWg1Ed4y4pY2Bgh3P-mdFAHO9lfwBBv80zgw4qjTXKroHP_Yo5uyyj38m2UA_s1200_cesy05.jpg",
-            "tags": ["Lịch sử", "Kiến trúc", "Huế", "Nghệ thuật"],
-            "spotType": "Di tích lịch sử",
-            "ticketPrice": 150000.0,
-            "openHours": "07:00 AM - 05:30 PM"
+            "openHours": "08:30 AM - 05:30 PM",
+            "idealTime": "1"
         },
         {
             "name": "Làng gốm Bát Tràng",
@@ -1042,10 +1019,11 @@
             "rating": 4.5,
             "visitDuration": 240,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511038/lang-gom-bat-trang-3_y0uxc5.jpg",
-            "tags": ["Thủ công", "Sáng tạo", "Mua sắm", "Gia đình"],
+            "tags": ["Làng nghề", "Thủ công", "Sáng tạo", "Mua sắm", "Gia đình"],
             "spotType": "Làng nghề",
             "ticketPrice": 0.0,
-            "openHours": "08:00 AM - 06:00 PM"
+            "openHours": "08:00 AM - 06:00 PM",
+            "idealTime": "0"
         },
         {
             "name": "Chùa Thiên Mụ",
@@ -1084,10 +1062,11 @@
             "rating": 4.8,
             "visitDuration": 60,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511123/ThienMuPagoda_ksvw72.jpg",
-            "tags": ["Tâm linh", "Phật giáo", "Huế", "Sông Hương"],
+            "tags": ["Đền/Chùa", "Tâm linh", "Phật giáo", "Huế", "Sông Hương"],
             "spotType": "Đền/Chùa",
             "ticketPrice": 0.0,
-            "openHours": "07:00 AM - 06:00 PM"
+            "openHours": "07:00 AM - 06:00 PM",
+            "idealTime": "1"
         },
         {
             "name": "Phố cổ Hội An",
@@ -1126,10 +1105,11 @@
             "rating": 4.9,
             "visitDuration": 240,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511221/hoi-an-quang-nam-vntrip-1_r7ibf3.jpg",
-            "tags": ["Di sản UNESCO", "Lãng mạn", "Kiến trúc", "Văn hóa"],
-            "spotType": "Di tích lịch sử",
+            "tags": ["Di sản UNESCO", "Lãng mạn", "Kiến trúc", "Di sản Văn hóa", "Cổ kính"],
+            "spotType": "Di tích",
             "ticketPrice": 80000.0,
-            "openHours": "07:00 AM - 09:30 PM"
+            "openHours": "07:00 AM - 09:30 PM",
+            "idealTime": "1"
         },
         {
             "name": "Bảo tàng Chứng tích Chiến tranh",
@@ -1171,7 +1151,8 @@
             "tags": ["Lịch sử", "Chiến tranh", "Hòa bình", "Giáo dục"],
             "spotType": "Bảo tàng",
             "ticketPrice": 40000.0,
-            "openHours": "07:30 AM - 05:30 PM"
+            "openHours": "07:30 AM - 05:30 PM",
+            "idealTime": "1"
         },
         {
             "name": "Thánh địa Mỹ Sơn",
@@ -1211,9 +1192,10 @@
             "visitDuration": 150,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511435/Gi_E1_BB_9Bi-thi_E1_BB_87u-v_E1_BB_81-Th_C3_A1nh-_C4_90_E1_BB_8Ba-M_E1_BB_B9-S_C6_A1n-1_cplvpt.jpg",
             "tags": ["Khảo cổ", "Chăm Pa", "Di sản UNESCO", "Kiến trúc"],
-            "spotType": "Di tích lịch sử",
+            "spotType": "Di tích",
             "ticketPrice": 150000.0,
-            "openHours": "06:30 AM - 05:30 PM"
+            "openHours": "06:30 AM - 05:30 PM",
+            "idealTime": "0"
         },
         {
             "name": "Tòa Thánh Tây Ninh",
@@ -1255,7 +1237,8 @@
             "tags": ["Tôn giáo", "Cao Đài", "Kiến trúc", "Văn hóa"],
             "spotType": "Đền/Chùa",
             "ticketPrice": 0.0,
-            "openHours": "06:00 AM - 06:00 PM"
+            "openHours": "06:00 AM - 06:00 PM",
+            "idealTime": "1"
         },
         {
             "name": "Làng hương Thủy Xuân",
@@ -1297,7 +1280,8 @@
             "tags": ["Làng nghề", "Chụp ảnh", "Huế", "Truyền thống"],
             "spotType": "Làng nghề",
             "ticketPrice": 0.0,
-            "openHours": "07:00 AM - 06:00 PM"
+            "openHours": "07:00 AM - 06:00 PM",
+            "idealTime": "1"
         },
         {
             "name": "Hoàng Thành Thăng Long",
@@ -1337,10 +1321,431 @@
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511772/_i65b89a7f2299e_ejzdhb.jpg",
             "tags": ["Lịch sử", "Di sản UNESCO", "Hà Nội", "Khảo cổ"],
-            "spotType": "Di tích lịch sử",
+            "spotType": "Di tích",
+            "ticketPrice": 30000.0,
+            "openHours": "08:00 AM - 05:00 PM",
+            "idealTime": "1"
+        },
+        {
+            "name": "Chùa Bái Đính",
+            "location": "Gia Viễn, Ninh Bình",
+            "briefDescription": "Quần thể chùa lớn nhất Đông Nam Á với nhiều kỷ lục châu Á và Việt Nam, sở hữu kiến trúc hoành tráng giữa vùng núi non hùng vĩ.",
+            "detailDescription": {
+                "mainTitle": "Đại tự hoành tráng giữa núi non",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Các kỷ lục ấn tượng",
+                    "imageUrl": "",
+                    "content": "Chùa Bái Đính nổi tiếng với các kỷ lục như: Tượng Phật bằng đồng dát vàng lớn nhất châu Á, Hành lang La Hán dài nhất châu Á, và Tháp xá lợi Phật cao nhất châu Á."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Kiến trúc và Cảnh quan",
+                    "imageUrl": "",
+                    "content": "Quần thể gồm khu chùa cổ linh thiêng và khu chùa mới uy nghi. Điểm nhấn là Bảo tháp 13 tầng, nơi du khách có thể phóng tầm mắt ngắm toàn cảnh non nước Ninh Bình."
+                },
+                {
+                    "type": "list",
+                    "title": "Thông tin tham quan",
+                    "items": [
+                    "Di chuyển: Nên sử dụng xe điện vì khuôn viên rất rộng.",
+                    "Trang phục: Cần kín đáo, lịch sự.",
+                    "Thời điểm: Đẹp nhất vào mùa xuân (tháng 1-3 âm lịch) có lễ hội."
+                    ]
+                }
+                ]
+            },
+            "lat": 20.2766,
+            "lon": 105.8524,
+            "rating": 4.8,
+            "visitDuration": 240,
+            "imageUrl": "",
+            "tags": ["Tâm linh", "Phật giáo", "Kỷ lục", "Ninh Bình"],
+            "spotType": "Đền/Chùa",
+            "ticketPrice": 0.0,
+            "openHours": "06:00 AM - 10:00 PM"
+            },
+            {
+            "name": "Chùa Trấn Quốc",
+            "location": "Tây Hồ, Hà Nội",
+            "briefDescription": "Ngôi chùa cổ nhất Hà Nội với lịch sử hơn 1500 năm, nằm trên một hòn đảo nhỏ xinh đẹp phía Đông Hồ Tây.",
+            "detailDescription": {
+                "mainTitle": "Đóa sen nở giữa Hồ Tây",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Lịch sử và Kiến trúc",
+                    "imageUrl": "",
+                    "content": "Được xây dựng từ thời Lý Nam Đế (thế kỷ thứ 6), chùa mang đậm dấu ấn kiến trúc Phật giáo Bắc Tông. Nổi bật nhất là Bảo tháp Lục độ đài sen màu đỏ sẫm uy nghiêm."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Cây Bồ Đề linh thiêng",
+                    "imageUrl": "",
+                    "content": "Trong sân chùa có cây Bồ Đề lớn được chiết từ cây Đạo Thụ ở Ấn Độ (nơi Phật Thích Ca thành đạo), là quà tặng của Tổng thống Ấn Độ năm 1959."
+                },
+                {
+                    "type": "list",
+                    "title": "Lưu ý",
+                    "items": [
+                    "Không gian: Chùa khá nhỏ, nên đi nhẹ nói khẽ.",
+                    "Hoàng hôn: Là địa điểm ngắm hoàng hôn đẹp bậc nhất Hà Nội."
+                    ]
+                }
+                ]
+            },
+            "lat": 21.0478,
+            "lon": 105.8368,
+            "rating": 4.6,
+            "visitDuration": 60,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520002/tran-quoc-pagoda_abc456.jpg",
+            "tags": ["Tâm linh", "Hà Nội", "Hồ Tây", "Cổ kính"],
+            "spotType": "Đền/Chùa",
+            "ticketPrice": 0.0,
+            "openHours": "08:00 AM - 04:00 PM"
+            },
+            {
+            "name": "Bảo tàng Mỹ thuật Việt Nam",
+            "location": "Ba Đình, Hà Nội",
+            "briefDescription": "Kho tàng nghệ thuật tạo hình của Việt Nam từ thời tiền sử đến hiện đại, đặt trong tòa nhà kiến trúc Pháp cổ điển tuyệt đẹp.",
+            "detailDescription": {
+                "mainTitle": "Dòng chảy mỹ thuật Việt",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Bảo vật Quốc gia",
+                    "imageUrl": "https://vnfam.vn/wp-content/uploads/2020/09/toa-nha-bao-tang.jpg",
+                    "content": "Nơi đây lưu giữ các bảo vật như tượng Phật bà Quan Âm nghìn mắt nghìn tay (chùa Bút Tháp), các tác phẩm sơn mài kinh điển của danh họa Nguyễn Gia Trí, Tô Ngọc Vân."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Kiến trúc giao thoa",
+                    "imageUrl": "https://i.pinimg.com/originals/e8/3c/65/e83c65c276365737d6e6761014138676.jpg",
+                    "content": "Bản thân tòa nhà bảo tàng là một tác phẩm nghệ thuật, kết hợp giữa kiến trúc biệt thự Pháp và các chi tiết trang trí mái đình làng Việt Nam."
+                },
+                {
+                    "type": "list",
+                    "title": "Thông tin",
+                    "items": [
+                    "Giá vé: 40.000 VNĐ/người lớn.",
+                    "Trải nghiệm: Có không gian trải nghiệm in tranh Đông Hồ cho trẻ em.",
+                    "Vị trí: Đối diện Văn Miếu Quốc Tử Giám."
+                    ]
+                }
+                ]
+            },
+            "lat": 21.0305,
+            "lon": 105.8386,
+            "rating": 4.7,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520003/bao-tang-my-thuat_def789.jpg",
+            "tags": ["Nghệ thuật", "Hội họa", "Kiến trúc", "Hà Nội"],
+            "spotType": "Bảo tàng",
+            "ticketPrice": 40000.0,
+            "openHours": "08:30 AM - 05:00 PM"
+            },
+            {
+            "name": "Bảo tàng Thế giới Cà phê",
+            "location": "Buôn Ma Thuột, Đắk Lắk",
+            "briefDescription": "Bảo tàng chuyên đề về cà phê với kiến trúc cách điệu nhà dài Tây Nguyên, là biểu tượng mới của thủ phủ cà phê.",
+            "detailDescription": {
+                "mainTitle": "Hành trình của hạt cà phê",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Kiến trúc độc bản",
+                    "imageUrl": "https://images2.thanhnien.vn/Uploaded/minhnguyet/2022_03_12/bao-tang-the-gioi-ca-phe-1-4775.jpg",
+                    "content": "Công trình gồm 5 khối nhà uốn lượn, lấy cảm hứng từ hình ảnh nhà dài của người Ê Đê và mái nhà rông, sử dụng vật liệu đá bazan địa phương tạo cảm giác gần gũi."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Trưng bày và Tương tác",
+                    "imageUrl": "https://vcdn-dulich.vnecdn.net/2018/11/26/bao-tang-ca-phe-buon-ma-thuot-1-2917-1543204996.jpg",
+                    "content": "Trưng bày hơn 10.000 hiện vật về lịch sử cà phê thế giới. Không gian mở cho phép du khách sờ, ngửi và nếm thử các loại cà phê đặc biệt."
+                },
+                {
+                    "type": "list",
+                    "title": "Gợi ý",
+                    "items": [
+                    "Check-in: Rất nhiều góc chụp ảnh hiện đại và ấn tượng.",
+                    "Mua sắm: Có khu vực bán quà lưu niệm và cà phê chất lượng cao.",
+                    "Giá vé: 75.000 - 150.000 VNĐ tùy triển lãm."
+                    ]
+                }
+                ]
+            },
+            "lat": 12.6936,
+            "lon": 108.0535,
+            "rating": 4.5,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520004/coffee-museum_ghi012.jpg",
+            "tags": ["Hiện đại", "Cà phê", "Check-in", "Tây Nguyên"],
+            "spotType": "Bảo tàng",
+            "ticketPrice": 75000.0,
+            "openHours": "08:00 AM - 06:00 PM"
+            },
+            {
+            "name": "Làng lụa Vạn Phúc",
+            "location": "Hà Đông, Hà Nội",
+            "briefDescription": "Làng nghề dệt lụa tơ tằm nổi tiếng nhất Việt Nam với lịch sử hơn 1000 năm, nơi lưu giữ tinh hoa 'Lụa Hà Đông'.",
+            "detailDescription": {
+                "mainTitle": "Sắc lụa nghìn năm",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Quy trình dệt lụa",
+                    "imageUrl": "https://statics.vinpearl.com/lang-lua-van-phuc-2_1629532598.jpg",
+                    "content": "Du khách có thể tham quan các xưởng dệt, tận mắt chứng kiến quy trình từ ươm tơ, kéo kén đến khi tiếng thoi đưa dệt nên những tấm lụa mềm mại, mát lạnh."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Phố lụa và Con đường ô",
+                    "imageUrl": "https://image.bnews.vn/MediaUpload/Org/2021/04/23/van-phuc.jpg",
+                    "content": "Cổng làng cổ kính dẫn vào con phố chính trưng bày hàng nghìn sản phẩm lụa rực rỡ. Điểm nhấn là con đường được trang trí bởi hàng trăm chiếc ô (dù) nhiều màu sắc trên cao."
+                },
+                {
+                    "type": "list",
+                    "title": "Kinh nghiệm",
+                    "items": [
+                    "Mua sắm: Sản phẩm đa dạng từ áo dài, khăn quàng đến túi xách.",
+                    "Phân biệt: Nên hỏi kỹ người bán để phân biệt lụa tơ tằm 100% và lụa pha.",
+                    "Ăn uống: Thưởng thức kem hoặc chè ven sông Nhuệ."
+                    ]
+                }
+                ]
+            },
+            "lat": 20.9786,
+            "lon": 105.7722,
+            "rating": 4.4,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520005/lang-lua-van-phuc_jkl345.jpg",
+            "tags": ["Làng nghề", "Mua sắm", "Truyền thống", "Hà Nội"],
+            "spotType": "Làng nghề",
+            "ticketPrice": 0.0,
+            "openHours": "08:00 AM - 09:00 PM"
+            },
+            {
+            "name": "Làng gốm Thanh Hà",
+            "location": "Hội An, Quảng Nam",
+            "briefDescription": "Làng gốm đỏ nằm bên dòng sông Thu Bồn, nơi lưu giữ kỹ thuật chuốt gốm bằng tay và nung bằng lò củi truyền thống.",
+            "detailDescription": {
+                "mainTitle": "Hồn đất nung xứ Quảng",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Công viên đất nung",
+                    "imageUrl": "https://cdn.vntrip.vn/cam-nang/wp-content/uploads/2017/09/cong-vien-dat-nung-thanh-ha-1.jpg",
+                    "content": "Điểm nhấn là Công viên đất nung (Thanh Ha Terracotta Park) - bảo tàng gốm độc đáo trưng bày các mô hình kỳ quan thế giới thu nhỏ làm hoàn toàn bằng gốm."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Trải nghiệm làm gốm",
+                    "imageUrl": "https://hoian.mydestination.vn/assets/uploads/2020/07/lang-gom-thanh-ha-3.jpg",
+                    "content": "Khác với Bát Tràng, gốm Thanh Hà chủ yếu là gốm đỏ không men. Du khách được nghệ nhân hướng dẫn chuốt gốm trên bàn xoay và được tặng một con tò he gốm làm kỷ niệm."
+                },
+                {
+                    "type": "list",
+                    "title": "Thông tin",
+                    "items": [
+                    "Vị trí: Cách phố cổ Hội An khoảng 3km về phía Tây.",
+                    "Vé tham quan: 35.000 VNĐ (đã bao gồm quà lưu niệm).",
+                    "Sản phẩm: Nổi tiếng với đèn gốm trang trí và nồi đất."
+                    ]
+                }
+                ]
+            },
+            "lat": 15.8778,
+            "lon": 108.3094,
+            "rating": 4.5,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520006/lang-gom-thanh-ha_mno678.jpg",
+            "tags": ["Làng nghề", "Hội An", "Sáng tạo", "Gia đình"],
+            "spotType": "Làng nghề",
+            "ticketPrice": 35000.0,
+            "openHours": "08:00 AM - 05:30 PM"
+            },
+            {
+            "name": "Văn Miếu - Quốc Tử Giám",
+            "location": "Đống Đa, Hà Nội",
+            "briefDescription": "Trường đại học đầu tiên của Việt Nam, biểu tượng của nền giáo dục Nho học và truyền thống hiếu học của dân tộc.",
+            "detailDescription": {
+                "mainTitle": "Biểu tượng trí tuệ Việt",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Khuê Văn Các và Bia Tiến Sĩ",
+                    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Khue_Van_Cac_2013.jpg",
+                    "content": "Khuê Văn Các là biểu tượng của Hà Nội. Khu vườn bia Tiến sĩ (Di sản tư liệu thế giới) với 82 tấm bia đá khắc tên những người đỗ đạt, đặt trên lưng rùa đá."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Đại Bái Đường và Nhà Thái Học",
+                    "imageUrl": "https://image.vietnamnews.vn/uploadvnnews/Article/2018/2/25/11266_vanmieu.jpg",
+                    "content": "Nơi thờ Khổng Tử và các bậc hiền triết. Khu nhà Thái Học phía sau là nơi tôn vinh Chu Văn An và trưng bày về lịch sử giáo dục thi cử xưa."
+                },
+                {
+                    "type": "list",
+                    "title": "Lưu ý",
+                    "items": [
+                    "Cầu may: Sĩ tử thường đến đây cầu may mắn trước các kỳ thi.",
+                    "Quy tắc: Không sờ đầu rùa để bảo vệ di tích.",
+                    "Vé tham quan: 30.000 VNĐ."
+                    ]
+                }
+                ]
+            },
+            "lat": 21.0293,
+            "lon": 105.8359,
+            "rating": 4.8,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520007/van-mieu-hanoi_pqr901.jpg",
+            "tags": ["Văn hóa", "Lịch sử", "Giáo dục", "Hà Nội"],
+            "spotType": "Văn Hóa",
             "ticketPrice": 30000.0,
             "openHours": "08:00 AM - 05:00 PM"
-        }
+            },
+            {
+            "name": "Dinh Độc Lập",
+            "location": "Quận 1, TP. Hồ Chí Minh",
+            "briefDescription": "Di tích lịch sử Quốc gia đặc biệt, nơi đánh dấu sự kiện thống nhất đất nước vào ngày 30/4/1975.",
+            "detailDescription": {
+                "mainTitle": "Chứng nhân lịch sử Sài Gòn",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Kiến trúc phong thủy",
+                    "imageUrl": "https://vcdn-dulich.vnecdn.net/2021/04/29/dinh-doc-lap-1619665673-9838-1619666012.jpg",
+                    "content": "Được thiết kế bởi KTS Ngô Viết Thụ, dinh có bố cục hình chữ 'Cát' (Tốt lành), kết hợp hài hòa giữa kiến trúc hiện đại và triết lý phương Đông (rèm hoa đá hình đốt tre)."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Nội thất và Hầm chỉ huy",
+                    "imageUrl": "https://statics.vinpearl.com/dinh-doc-lap-sai-gon-6_1624089921.jpg",
+                    "content": "Du khách được tham quan phòng khánh tiết, phòng làm việc của Tổng thống, và đặc biệt là hệ thống hầm ngầm kiên cố với các thiết bị thông tin liên lạc thời chiến."
+                },
+                {
+                    "type": "list",
+                    "title": "Thông tin",
+                    "items": [
+                    "Vị trí: Trung tâm Quận 1, gần Nhà thờ Đức Bà.",
+                    "Trang phục: Lịch sự, không mặc áo sát nách/quần ngắn.",
+                    "Giá vé: 40.000 - 65.000 VNĐ."
+                    ]
+                }
+                ]
+            },
+            "lat": 10.7769,
+            "lon": 106.6953,
+            "rating": 4.6,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520008/dinh-doc-lap-hcm_stu234.jpg",
+            "tags": ["Lịch sử", "Kiến trúc", "TP.HCM", "Chiến tranh"],
+            "spotType": "Văn Hóa",
+            "ticketPrice": 40000.0,
+            "openHours": "08:00 AM - 04:30 PM"
+            },
+            {
+            "name": "Cố đô Hoa Lư",
+            "location": "Hoa Lư, Ninh Bình",
+            "briefDescription": "Kinh đô đầu tiên của nhà nước phong kiến tập quyền Việt Nam, gắn liền với ba triều đại Đinh, Tiền Lê và Lý.",
+            "detailDescription": {
+                "mainTitle": "Hào khí kinh đô đá",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Đền Vua Đinh và Vua Lê",
+                    "imageUrl": "https://ik.imagekit.io/tvlk/blog/2022/08/co-do-hoa-lu-2.jpg",
+                    "content": "Hai ngôi đền cổ kính nằm cách nhau 500m, được xây dựng theo kiểu 'nội công ngoại quốc' mô phỏng kiến trúc kinh đô xưa. Nổi bật là Long Sàng bằng đá nguyên khối tạc rất tinh xảo."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Địa thế quân sự",
+                    "imageUrl": "https://vcdn-dulich.vnecdn.net/2020/05/22/Hoa-Lu-Ninh-Binh-3-1590138971.jpg",
+                    "content": "Hoa Lư được gọi là 'kinh đô đá' vì tận dụng triệt để địa hình núi non hiểm trở làm tường thành tự nhiên để phòng thủ chống giặc ngoại xâm."
+                },
+                {
+                    "type": "list",
+                    "title": "Hoạt động",
+                    "items": [
+                    "Lễ hội: Lễ hội Trường Yên (tháng 3 âm lịch) có diễn trò tập trận cờ lau.",
+                    "Leo núi: Leo núi Mã Yên viếng lăng vua Đinh để ngắm toàn cảnh cố đô.",
+                    "Giá vé: 20.000 VNĐ."
+                    ]
+                }
+                ]
+            },
+            "lat": 20.2847,
+            "lon": 105.9080,
+            "rating": 4.5,
+            "visitDuration": 120,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520009/co-do-hoa-lu_vwx567.jpg",
+            "tags": ["Lịch sử", "Văn hóa", "Ninh Bình", "Di tích"],
+            "spotType": "Văn Hóa",
+            "ticketPrice": 20000.0,
+            "openHours": "07:00 AM - 05:00 PM"
+            },
+            {
+            "name": "Quần thể danh thắng Tràng An",
+            "location": "Ninh Bình",
+            "briefDescription": "Di sản hỗn hợp Văn hóa và Thiên nhiên duy nhất tại Việt Nam được UNESCO công nhận, được ví như 'Vịnh Hạ Long trên cạn'.",
+            "detailDescription": {
+                "mainTitle": "Tuyệt tác non nước hữu tình",
+                "sections": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "title": "I. Hành trình xuyên thủy",
+                    "imageUrl": "https://static-images.vnncdn.net/files/publish/2022/6/2/trang-an-ninh-binh-2-466.jpg",
+                    "content": "Du khách ngồi thuyền nan chèo tay, len lỏi qua các hang động xuyên thủy kỳ bí và ngắm nhìn hệ thống núi đá vôi dựng đứng soi bóng xuống làn nước trong xanh nhìn thấy đáy."
+                },
+                {
+                    "type": "heading",
+                    "level": 2,
+                    "title": "II. Giá trị văn hóa tâm linh",
+                    "imageUrl": "https://cdn.vntrip.vn/cam-nang/wp-content/uploads/2017/08/hanh-cung-vu-lam-trang-an.jpg",
+                    "content": "Trong hành trình, thuyền sẽ ghé thăm các điểm tâm linh như Đền Trình, Đền Trần và Hành cung Vũ Lâm - nơi các vua Trần từng tu hành và lãnh đạo kháng chiến chống Nguyên Mông."
+                },
+                {
+                    "type": "list",
+                    "title": "Lưu ý quan trọng",
+                    "items": [
+                    "Thời gian: Chuyến đi kéo dài khoảng 3 tiếng, nên mang mũ nón.",
+                    "Tuyến tham quan: Có 3 tuyến thuyền khác nhau, tuyến 2 và 3 thường được yêu thích nhất.",
+                    "Giá vé: 250.000 VNĐ/người (đã bao gồm thuyền)."
+                    ]
+                }
+                ]
+            },
+            "lat": 20.2541,
+            "lon": 105.9181,
+            "rating": 4.9,
+            "visitDuration": 180,
+            "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764520010/trang-an-ninh-binh_yz1234.jpg",
+            "tags": ["Di sản UNESCO", "Thiên nhiên", "Văn hóa", "Thuyền"],
+            "spotType": "Văn Hóa",
+            "ticketPrice": 250000.0,
+            "openHours": "07:00 AM - 04:00 PM",
+            "idealTime": 1 
+            }
     ],
     
     "attraction": [
@@ -1386,7 +1791,8 @@
             "lat": 20.92225647105348, 
             "lon": 104.75186979386147, 
             "rating": 4.7,
-            "visitDuration": 2000, 
+            "visitDuration": 2000,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764298301/moc_chau_rp8zv0.jpg",
             "tags": ["Thiên nhiên", "Nông nghiệp", "Đồi chè", "Hoa mận", "Sơn La", "Cao nguyên"]
         },
@@ -1434,6 +1840,7 @@
             "lon": 104.1282751272433, 
             "rating": 4.9,
             "visitDuration": 1800, 
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764300559/r-1584505029528160339708-1584523601964-1584523601964888086152_zlsfbf.jpg",
             "tags": ["Thiên nhiên", "Ruộng bậc thang", "Văn hóa H'Mông", "Yên Bái", "Trekking", "Di sản"]
         },
@@ -1480,7 +1887,8 @@
             "lat": 17.47775061811175, 
             "lon": 106.13403949571243 , 
             "rating": 4.9,
-            "visitDuration": 900, 
+            "visitDuration": 900,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764301160/0--0VQGPhongNhaKeBang_fddnqm.jpg",
             "tags": ["Thiên nhiên", "Hang động", "Địa chất", "UNESCO", "Quảng Bình", "Du lịch mạo hiểm"]
         },
@@ -1529,6 +1937,7 @@
             "lon": 108.24663749075735,
             "rating": 4.5,
             "visitDuration": 180,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764301795/bai-bien-My-Khe-jpeg-1994-1677638252_lp2omy.webp",
             "tags": ["Biển", "Thiên nhiên", "Thư giãn", "Đà Nẵng", "Thể thao nước"]
         },
@@ -1577,6 +1986,7 @@
             "lon": 108.50439035149584 , 
             "rating": 4.8,
             "visitDuration": 360, 
+            "idealTime": "0",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764302187/khu-du-tru-sinh-quyen-the-gioi-cu-lao-cham-hoi-an-phuong-tien-di-chuyen-02-1024x576_ia2inz.jpg",
             "tags": ["Thiên nhiên", "Biển", "Hội An", "Lặn biển", "Du lịch sinh thái", "UNESCO"]
         },
@@ -1624,6 +2034,7 @@
             "lon": 109.12023394552948, 
             "rating": 4.7,
             "visitDuration": 720, 
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764302687/4ve_dep_dao_Ly_SonQuang_Ngaianh_Phuoc_Ngoc_1_qzymra.jpg",
             "tags": ["Thiên nhiên", "Núi lửa", "Hải đảo", "Quảng Ngãi", "Du lịch sinh thái"]
         },
@@ -1671,6 +2082,7 @@
             "lon": 109.2320635576687,  
             "rating": 4.5,
             "visitDuration": 600, 
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764303617/bi%CC%80nh_ba_vie%CC%82%CC%81t_1_bjxown.jpg",
             "tags": ["Thiên nhiên", "Hải đảo", "Ẩm thực", "Tôm hùm", "Nha Trang", "Khánh Hòa"]
         },
@@ -1718,6 +2130,7 @@
             "lon": 108.2836456008399, 
             "rating": 4.5,
             "visitDuration": 720,
+            "idealTime": "0",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764303898/image7-5-1024x632_wgynqv.jpg",
             "tags": ["Biển", "Đồi cát", "Thể thao nước", "Văn hóa Chăm", "Phan Thiết", "Bình Thuận"]
         },
@@ -1757,6 +2170,7 @@
             "lon": 107.1839,
             "rating": 4.9,
             "visitDuration": 1440,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764562258/Featured-image-Halong-Bay-Vietnam-1244x700_h1hhx6.jpg",
             "tags": ["Thiên nhiên", "Di sản UNESCO", "Du thuyền", "Biển"]
         },
@@ -1796,6 +2210,7 @@
             "lon": 105.8542,
             "rating": 4.8,
             "visitDuration": 120,
+            "idealTime": "2",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764562393/ho_C3_A0n-ki_E1_BA_BFm-lake-turtle-tower-on-foggy-day-hanoi-vietnam_s1udpn.jpg",
             "tags": ["Thành phố", "Đi bộ", "Lịch sử", "Hà Nội"]
         },
@@ -1834,6 +2249,7 @@
             "lat": 20.2544,
             "lon": 105.9168,
             "rating": 4.9,
+            "idealTime": "1",
             "visitDuration": 240,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764593985/danh_thang_trang_an_tren_thuyen_g8bicx.jpg",
             "tags": ["Thiên nhiên", "Di sản UNESCO", "Thuyền", "Hang động"]
@@ -1873,6 +2289,7 @@
             "lat": 15.9963,
             "lon": 107.9965,
             "rating": 4.8,
+            "idealTime": "0",
             "visitDuration": 480,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594239/hq720_fn7ncj.jpg",
             "tags": ["Giải trí", "Cáp treo", "Kiến trúc", "Đà Nẵng"]
@@ -1912,6 +2329,7 @@
             "lat": 15.8694,
             "lon": 108.3846,
             "rating": 4.6,
+            "idealTime": "2",
             "visitDuration": 120,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594319/tour-rung-dua-bay-mau-1-ngay-6-700x530_zxlejq.jpg",
             "tags": ["Sinh thái", "Sông nước", "Vui chơi", "Hội An"]
@@ -1952,6 +2370,7 @@
             "lon": 108.2619,
             "rating": 4.5,
             "visitDuration": 180,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594403/Thuy_20Son.jpg-image-liddgnlq_fzjdad.jpg",
             "tags": ["Thiên nhiên", "Hang động", "Leo núi", "Đà Nẵng"]
         },
@@ -1989,6 +2408,7 @@
             },
             "lat": 16.4716,
             "lon": 107.5912,
+            "idealTime": "0",
             "rating": 4.4,
             "visitDuration": 90,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594616/depositphotos196442922xl-1732498320688_yg8pax.jpg",
@@ -2030,6 +2450,7 @@
             "lon": 109.2458,
             "rating": 4.8,
             "visitDuration": 480,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594787/gukj_ybofmj.jpg",
             "tags": ["Giải trí", "Gia đình", "Biển", "Nha Trang"]
         },
@@ -2069,6 +2490,7 @@
             "lon": 108.4419,
             "rating": 4.6,
             "visitDuration": 180,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764594993/C4_90_E1_BB_89nh_Langbiang_vyss1w.jpg",
             "tags": ["Thiên nhiên", "Leo núi", "Ngắm cảnh", "Đà Lạt"]
         },
@@ -2108,6 +2530,7 @@
             "lon": 108.4357,
             "rating": 4.7,
             "visitDuration": 240,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595142/ho-tuyen-lam-1_1689671200_twjtmn.jpg",
             "tags": ["Thiên nhiên", "Thư giãn", "Cắm trại", "Đà Lạt"]
         },
@@ -2146,6 +2569,7 @@
             "lat": 11.3789,
             "lon": 106.1683,
             "rating": 4.7,
+            "idealTime": "0",
             "visitDuration": 300,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595277/Nui-Ba-Den_s5rgff.jpg",
             "tags": ["Tâm linh", "Leo núi", "Săn mây", "Tây Ninh"]
@@ -2185,6 +2609,7 @@
             "lat": 10.0058,
             "lon": 105.7469,
             "rating": 4.6,
+            "idealTime": "0",
             "visitDuration": 120,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595361/Cai-rang-floating-market-1_1692714478_za9kf2.jpg",
             "tags": ["Văn hóa", "Chợ nổi", "Ẩm thực", "Miền Tây"]
@@ -2225,6 +2650,7 @@
             "lon": 105.0687,
             "rating": 4.7,
             "visitDuration": 180,
+            "idealTime": "1",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595484/rung-tra-su-an-giang_ilx9um.jpg",
             "tags": ["Thiên nhiên", "Sinh thái", "Miền Tây", "An Giang"]
         },
@@ -2263,6 +2689,7 @@
             "lat": 10.7725,
             "lon": 106.6980,
             "rating": 4.4,
+            "idealTime": "1",
             "visitDuration": 90,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595768/R_dtaeud.jpg",
             "tags": ["Mua sắm", "Thành phố", "Ẩm thực", "Biểu tượng"]
@@ -2303,6 +2730,7 @@
             "lon": 106.7035,
             "rating": 4.6,
             "visitDuration": 120,
+            "idealTime": "2",
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764595954/pho-di-bo-nguyen-hue-2_vrn4ng.jpg",
             "tags": ["Thành phố", "Đi bộ", "Giải trí", "Sài Gòn"]
         },
@@ -2341,6 +2769,7 @@
             "lat": 22.3034,
             "lon": 103.7752,
             "rating": 4.8,
+            "idealTime": "0",
             "visitDuration": 300,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596036/journey-to-fansipan-mountain-the-iconic-peak-of-indochina-2_osikxu.jpg",
             "tags": ["Leo núi", "Thiên nhiên", "Tâm linh", "Sa Pa"]
@@ -2380,6 +2809,7 @@
             "lat": 22.8549,
             "lon": 106.7226,
             "rating": 4.7,
+            "idealTime": "1",
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596122/w2-1715749984262_pdangz.jpg",
             "tags": ["Thiên nhiên", "Biên giới", "Thác nước", "Cao Bằng"]
@@ -2419,6 +2849,7 @@
             "lat": 21.0772,
             "lon": 105.3622,
             "rating": 4.5,
+            "idealTime": "1",
             "visitDuration": 240,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596232/Ba-Vi-National-Park-9_1691505422_jdsijb.jpg",
             "tags": ["Thiên nhiên", "Cắm trại", "Leo núi", "Hà Nội"]
@@ -2451,6 +2882,7 @@
             "lat": 15.9087,
             "lon": 108.3582,
             "rating": 4.7,
+            "idealTime": "1",
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596277/an-bang-doi-net-2-1_firzkf.jpg",
             "tags": ["Biển", "Thư giãn", "Hội An", "Bình yên"]
@@ -2490,6 +2922,7 @@
             "lat": 11.9868,
             "lon": 108.4526,
             "rating": 4.5,
+            "idealTime": "1",
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764596397/thumb-thung-lung-tinh-yeu_vn0ofy.jpg",
             "tags": ["Lãng mạn", "Hoa", "Đà Lạt", "Gia đình"]

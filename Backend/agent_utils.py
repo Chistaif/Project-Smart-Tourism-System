@@ -94,7 +94,7 @@ def generate_caption(attraction_name, features=None):
         return f"Lỗi AI: {str(e)}"
 
 
-def generate_tour_description(tour):
+def generate_tour_description(tour_attracions):
     """
     Hàm chuyên dùng nội bộ để sinh ra tour name hấp dẫn
     """
@@ -105,9 +105,11 @@ def generate_tour_description(tour):
         'gemini-2.5-flash',
         system_instruction=MARKETING_SYSTEM_INSTRUCTION
     )
+
+    attraction_names = [attraction.name for attraction in tour_attracions]
     
     prompt = f"""
-    Hãy tạo cho tôi một cái tên thật hấp dẫn và cuốn hút người dùng về {tour}
+    Hãy tạo cho tôi một cái tên thật hấp dẫn và cuốn hút người dùng về tour đi đến các điểm {attraction_names}
     """
 
     try:

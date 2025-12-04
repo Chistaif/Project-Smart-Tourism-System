@@ -98,6 +98,7 @@ class Attraction(db.Model):
     lon = db.Column(db.Float)
     image_url = db.Column(db.String(500))
     nearby_attractions = db.Column(db.JSON, default=list)
+    ideal_time = db.Column(db.Interger, default=1)
 
     type = db.Column(db.String(50))
 

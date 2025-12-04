@@ -144,9 +144,6 @@ Frontend cần nhớ:
 - Nếu muốn backend ưu tiên các điểm đã Favorite của user nào đó,
   truyền thêm `userId=<int>` trong query string. Nếu bỏ trống, backend
   sẽ không tính tới danh sách Favorite.
-
-Ví dụ:
-/api/search?searchTerm=Hội%20An&typeList=Lễ%20hội&userId=1
 """
 @app.route('/api/search', methods=["GET"])
 def search():
@@ -162,7 +159,11 @@ def search():
         print(f"DEBUG: Token không hợp lệ hoặc không có: {str(e)}")
         pass
 
-    types_list = request.args.getlist("typeList", [])
+    type_list_str = request.args.get("typeList", "")
+    if type_list_str:
+        types_list = [t.strip() for t in type_list_str.split(',') if t.strip()]
+    else:
+        types_list = []
     search_term = request.args.get("searchTerm", "").strip()
     if not user_id:
         user_id_param = request.args.get("userId")

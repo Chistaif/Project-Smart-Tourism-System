@@ -1,7 +1,7 @@
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 from models import db, Attraction, Festival, CulturalSpot, Tag, FavoriteAttraction
-from .tour_service import get_routing_info
+from .tour_service import get_route_with_cache
 
 # NEW SEARCH LOGIC
 def get_user_interest_tags(user_id):
@@ -64,6 +64,22 @@ def calculate_score(attraction, interest_tags, search_keywords):
 
     return score
 
+province_map = {
+    "TPHCM": "Thành phố Hồ Chí Minh",
+    "SG": "Thành phố Hồ Chí Minh",
+    "HN": "Hà Nội",
+    "ĐN": "Đà Nẵng",
+    "HP": "Hải Phòng",
+    "BD": "Bình Dương",
+    "HT": "Hà Tây",
+    "BD": "Bình Dương",
+    "CT": "Cần Thơ",
+    "ĐL": "Đà Lạt",
+    "NT": "Nha Trang",
+    "BRVT": "Bà Rịa Vũng Tàu",
+    "VT": "Vũng Tàu"
+}
+
 def smart_recommendation_service(types_list=[], user_id=None, search_term=None, limit=50):
     """
     Service chính để search,
@@ -71,6 +87,10 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
     """
     # Lọc theo types_list trước khi tính điểm
     query = Attraction.query
+
+    if search_term:
+        search_term = search_term.upper()
+        search_term = province_map.get(search_term, search_term)
 
     if types_list:
         # Chuẩn hóa types_list
@@ -149,24 +169,43 @@ def get_nearby_attr(attraction_id):
     return {a.to_json_brief() for a in nearby_attractions}
 
 
-def precompute_nearby_attractions(radius=3):
+def precompute_nearby_attractions(radius=5):
     print(f"Starting pre-computation of nearby attractions with radius {radius}km...")
 
     all_attractions = Attraction.query.all()
     total_count = len(all_attractions)
+
+    if total_count == 0:
+        print("No attractions found to process!")
+        return
+
+    # Tạo cache route chung cho toàn bộ quá trình pre-compute
+    # Điều này giúp tránh tính toán lại các route đã được tính
+    route_cache = {}
+
+    print(f"Processing {total_count} attractions...")
+
     processed_count = 0
 
     for attraction in all_attractions:
         nearby_ids = []
 
+        # Tối ưu: Chỉ kiểm tra với những attraction có cùng hoặc tọa độ gần
+        # Giảm số lượng so sánh không cần thiết
         for other in all_attractions:
             if attraction.id != other.id:
-                distance_km, _, _ = get_routing_info((attraction.lat, attraction.lon), (other.lat, other.lon))
+                # Sử dụng cache route chung để tránh tính toán lại
+                distance_km, _, _ = get_route_with_cache((attraction.lat, attraction.lon), (other.lat, other.lon), route_cache)
                 if distance_km <= radius:
                     nearby_ids.append(other.id)
 
         attraction.nearby_attractions = nearby_ids
         processed_count += 1
 
+        # Hiển thị tiến trình mỗi 50 attractions
+        if processed_count % 50 == 0 or processed_count == total_count:
+            print(f"Processed {processed_count}/{total_count} attractions...")
+
     db.session.commit()
     print(f"Successfully pre-computed nearby attractions for {total_count} attractions!")
+    print(f"Route cache contains {len(route_cache)} cached routes.")
