@@ -136,7 +136,8 @@ class Attraction(db.Model):
             "name": self.name,
             "averageRating": self.average_rating,
             "imageUrl": self.image_url,
-            "type": self.type
+            "type": self.type,
+            "spotType": self.spot_type if hasattr(self, "spot_type") else None
         }
 
 class Festival(Attraction):

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ItineraryPage from './pages/ItineraryPage';
 
 import Navigation from './layout/Navigation';
 import ChatAssistant from './layout/ChatBox';
@@ -38,8 +39,6 @@ function App() {
 
 
   const [verifyEmail, setVerifyEmail] = useState("");
-  
-  // --- STATE MỚI: Lưu mã OTP cho luồng quên mật khẩu ---
   const [resetCode, setResetCode] = useState(""); 
 
   const [images, setImages] = useState(initialImages);
@@ -448,59 +447,12 @@ function App() {
 
         {/* ROUTES */}
         <Routes>
-          <Route 
-            path="/" 
-            element={
-              <div className="page-transition">
-                <HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />
-              </div>
-            } 
-          />
-
-          <Route 
-            path="/service" 
-            element={
-              <div className="page-transition">
-                <Service currentUser={user} />
-              </div>
-            }  
-          />
-
-          <Route 
-            path="/blogs" 
-            element={
-              <div className="page-transition">
-                <Blogs currentUser={user} />
-              </div>
-            } 
-          />
-
-          <Route 
-            path="/blogs/:id" 
-            element={
-              <div className="page-transition">
-                <BlogDetail />
-              </div>
-            } 
-          />
-
-          <Route 
-            path="/attractions/:id" 
-            element={
-              <div className="page-transition">
-                <AttractionDetail currentUser={user} />
-              </div>
-            } 
-          />
-
-          <Route
-            path="/user"
-            element={
-              <div className="page-transition">
-                <UserPage currentUser={user} onLogout={handleLogout} />
-              </div>
-            }
-          />
+          <Route path="/" element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} />
+          <Route path="/service" element={<Service currentUser={user} />} />
+          <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
+          <Route path="/blogs" element={<Blogs currentUser={user} />} />
+          <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
         </Routes>
 
 

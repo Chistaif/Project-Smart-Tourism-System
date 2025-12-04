@@ -1,0 +1,113 @@
+.itinerary-page {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0f172a;
+  color: #fff;
+}
+
+/* CỘT TRÁI: TIMELINE */
+.itinerary-sidebar {
+  width: 450px;
+  background: rgba(30, 41, 59, 0.95);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.sidebar-header {
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.9);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.sidebar-header h2 {
+  margin: 10px 0 5px;
+  color: #c4b30a;
+}
+
+.back-btn {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #475569;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.timeline-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.timeline-item::before { /* Đường kẻ dọc */
+  content: '';
+  position: absolute;
+  left: 65px;
+  top: 25px;
+  bottom: -35px;
+  width: 2px;
+  background: rgba(255,255,255,0.1);
+}
+.timeline-item:last-child::before { display: none; }
+
+.time-col {
+  width: 50px;
+  font-weight: bold;
+  color: #60a5fa;
+  font-size: 0.9rem;
+  text-align: right;
+  padding-top: 2px;
+}
+
+.content-col {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.content-col h4 { margin: 0 0 5px; color: #f1f5f9; }
+.content-col p { margin: 0; font-size: 0.85rem; color: #cbd5e1; }
+.timeline-thumb {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+/* Highlight các loại event khác nhau */
+.type-START .content-col { border-left: 3px solid #10b981; }
+.type-VISIT .content-col { border-left: 3px solid #c4b30a; }
+.type-LUNCH .content-col, .type-DINNER .content-col { border-left: 3px solid #f97316; }
+
+/* CỘT PHẢI: BẢN ĐỒ */
+.itinerary-map {
+  flex: 1;
+  position: relative;
+}
+
+/* Loading screen */
+.itinerary-loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0f172a;
+  color: #c4b30a;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
