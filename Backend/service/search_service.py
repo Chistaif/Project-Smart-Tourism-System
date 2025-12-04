@@ -1,7 +1,9 @@
 from sqlalchemy import or_
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, joinedload
 from models import db, Attraction, Festival, CulturalSpot, Tag, FavoriteAttraction
 from .tour_service import get_route_with_cache
+from functools import lru_cache
+import unicodedata
 
 # NEW SEARCH LOGIC
 def get_user_interest_tags(user_id):
@@ -23,6 +25,8 @@ def get_user_interest_tags(user_id):
     # Trả về set các tag (VD: {'Biển', 'Ẩm thực', 'Di tích'})
     return {t[0] for t in favorite_tags}
 
+def to_unaccent(text):
+    return ''.join(c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')
 
 def calculate_score(attraction, interest_tags, search_keywords):
     """
@@ -39,15 +43,15 @@ def calculate_score(attraction, interest_tags, search_keywords):
     # --- Tiêu chí 1 ---
     if search_keywords:
         # Kiểm tra xem tên/mô tả 
-        query_lower = search_keywords.lower()
-        if query_lower in attraction.name.lower():
+        query_lower = to_unaccent(search_keywords.lower())
+        if query_lower in to_unaccent(attraction.name.lower()):
             score += 100  # Khớp tên -> ưu tiên cực cao
-        elif query_lower in attraction.brief_description.lower():
+        elif query_lower in to_unaccent(attraction.brief_description.lower()):
             score += 50
             
         # Kiểm tra tag
         for tag in attr_tags:
-            if tag.lower() in query_lower:
+            if to_unaccent(tag.lower()) in query_lower:
                 score += 50 
 
     # --- Tiêu chí 2 ---
@@ -72,7 +76,6 @@ province_map = {
     "HP": "Hải Phòng",
     "BD": "Bình Dương",
     "HT": "Hà Tây",
-    "BD": "Bình Dương",
     "CT": "Cần Thơ",
     "ĐL": "Đà Lạt",
     "NT": "Nha Trang",
@@ -86,10 +89,10 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
     giới hạn top 50 để tránh việc hiển thị tràn lan 
     """
     # Lọc theo types_list trước khi tính điểm
-    query = Attraction.query
+    query = Attraction.query.options(joinedload(Attraction.tags))
 
     if search_term:
-        search_term = search_term.upper()
+        search_term = to_unaccent(search_term.upper())
         search_term = province_map.get(search_term, search_term)
 
     if types_list:
@@ -129,11 +132,15 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
 
     # lấy sở thích
     interest_tags = get_user_interest_tags(user_id)
+
+    @lru_cache(maxsize=128)
+    def cached_calculate_score(attr):
+        return calculate_score(attr, interest_tags, search_term)
     
     # Tính điểm cho từng địa điểm
     scored_results = []
     for attr in all_attractions:
-        score = calculate_score(attr, interest_tags, search_term)
+        score = cached_calculate_score(attr)
         
         # Chỉ lấy những địa điểm có điểm > 0 (có liên quan)
         # Hoặc nếu không tìm kiếm gì thì lấy hết để gợi ý ngẫu nhiên

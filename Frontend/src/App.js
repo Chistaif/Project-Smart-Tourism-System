@@ -64,7 +64,18 @@ function App() {
     }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      // Gọi API logout server-side trước
+      await authAPI.logout();
+      console.log('Server-side logout successful');
+    } catch (error) {
+      console.error('Server-side logout failed:', error);
+      // Vẫn tiếp tục logout local nếu API thất bại
+      // để tránh user bị stuck
+    }
+
+    // Luôn thực hiện logout local
     setUser(null);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('access_token');
