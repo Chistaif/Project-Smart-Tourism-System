@@ -243,25 +243,24 @@ def is_attraction_available(attraction, current_time=None, start_datetime=None, 
     # 1. Check Festival (Ngày diễn ra)
     if attraction.type == 'festival':
         fes = Festival.query.get(attraction.id)
-        if fes and fes.time_start and fes.time_end:
-            # Với festival diễn ra hàng năm, cần kiểm tra trong năm hiện tại
-            current_year = current_time.year
+        if not fes or not fes.time_start or not fes.time_end:
+            return False, "Lễ hội thiếu thông tin thời gian cụ thể"
+        
+        # Với festival diễn ra hàng năm, cần kiểm tra trong năm hiện tại
+        current_year = current_time.year
             
-            # Tạo khoảng thời gian diễn ra cho năm hiện tại
-            festival_start = fes.time_start.replace(year=current_year)
-            festival_end = fes.time_end.replace(year=current_year)
+        # Tạo khoảng thời gian diễn ra cho năm hiện tại
+        festival_start = fes.time_start.replace(year=current_year)
+        festival_end = fes.time_end.replace(year=current_year)
 
-            if not fes or not fes.time_start or not fes.time_end:
-                return False, "Lễ hội thiếu thông tin thời gian cụ thể"
-
-            festival_start = fes.time_start.date()
-            festival_end = fes.time_end.date()
-            if current_time and festival_start <= current_time <= festival_end:
+        festival_start = fes.time_start.date()
+        festival_end = fes.time_end.date()
+        if current_time and festival_start <= current_time <= festival_end:
+            return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
+            
+        if start_datetime and end_datetime:
+            if festival_end < start_datetime.date() or festival_start > end_datetime.date():
                 return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
-            
-            if start_datetime and end_datetime:
-                if festival_end < start_datetime.date() or festival_start > end_datetime.date():
-                    return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
 
     # 2. Check CulturalSpot (Giờ mở cửa trong ngày)
     elif attraction.type == 'cultural_spot':
