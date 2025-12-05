@@ -79,7 +79,11 @@ function App() {
     setUser(null);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('access_token');
-    alert("Đã đăng xuất thành công!");
+    setSuccess("Đăng xuất thành công!");
+    setTimeout(() => {
+      setSuccess("");
+    }, 1500);
+
   };
 
   const openPopup = (mode = 'signup') => {
@@ -336,8 +340,11 @@ function App() {
                       try {
                         const response = await authAPI.verifyOTP({ email: verifyEmail, code: otp });
                         if(response.success) {
-                          alert("Xác thực thành công!");
-                          switchMode('login');
+                          setSuccess("Xác thực thành công! Đang chuyển hướng...");
+                          setTimeout(() => {
+                            switchMode('login');
+                            setSuccess("");
+                          }, 1500);
                         } else {
                           setError(response.message || "OTP Không đúng");
                         }

@@ -109,12 +109,10 @@ export default function Blogs({ currentUser }) {
     <div className="blogs-container">
       <div className="blogs-header">
         <h1>Blogs</h1>
-        <button className="btn-add-blog" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Đóng' : '+ Thêm Bài Viết'}
-        </button>
       </div>
 
       {showForm && (
+        <div className="blog-form-wrapper">
         <div className="blog-form-container">
           <h2>Tạo Bài Viết Mới</h2>
           <form onSubmit={handleSubmit} className="blog-form">
@@ -174,6 +172,7 @@ export default function Blogs({ currentUser }) {
             </button>
           </form>
         </div>
+        </div>
       )}
 
       {loading && <div className="loading">Đang tải blogs...</div>}
@@ -211,7 +210,23 @@ export default function Blogs({ currentUser }) {
             </div>
           ))
         ) : (
-          !loading && <div className="no-blogs">Chưa có bài viết nào. Hãy tạo bài viết đầu tiên!</div>
+          !loading && !showForm && (
+            <div className="blogs-empty">
+              <div className="empty-card">
+                <div className="empty-icon">📝</div>
+
+                <h2>Chưa có bài viết nào</h2>
+                <p>Hãy bắt đầu chia sẻ những hành trình văn hóa của bạn!</p>
+
+                <button 
+                  className="empty-add-btn"
+                  onClick={() => setShowForm(true)}
+                >
+                  + Tạo Bài Viết Đầu Tiên
+                </button>
+              </div>
+            </div>
+          )
         )}
       </div>
     </div>

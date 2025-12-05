@@ -294,3 +294,127 @@
   }
 }
 
+/* ===== EMPTY STATE (Không có bài viết) ===== */
+.blogs-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px;
+}
+
+.empty-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border-radius: 18px;
+  padding: 40px 60px;
+  text-align: center;
+  max-width: 480px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.empty-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.empty-card h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.empty-card p {
+  color: #d0d0d0;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.empty-add-btn {
+  padding: 14px 26px;
+  background: var(--accent);
+  color: #1a2e05;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 12px rgba(196, 179, 10, 0.3);
+}
+
+.empty-add-btn:hover {
+  transform: scale(1.05);
+  background: #d4c50b;
+}
+
+/* ===== FORM TẠO BLOG Ở GIỮA TRANG ===== */
+.blog-form-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.blog-form-container {
+  width: 100%;
+  max-width: 600px; /* nhỏ gọn hơn, chuyên nghiệp hơn */
+  background: rgba(31, 41, 55, 0.92);
+  backdrop-filter: blur(12px);
+  padding: 30px 40px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+}
+
+/* === Center the empty state box === */
+.no-blogs-wrapper {
+  width: 100%;
+  height: 70vh; /* đủ để đưa vào giữa màn hình */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-blogs-card {
+  width: 420px;
+  padding: 40px 32px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+}
+
+.no-blogs-card h2 {
+  color: #fff;
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.no-blogs-card p {
+  color: #e2e8f0;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+.btn-create-first {
+  background: var(--accent);
+  color: #1a2e05;
+  padding: 14px 22px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(196, 179, 10, 0.3);
+  transition: 0.25s ease;
+}
+
+.btn-create-first:hover {
+  transform: translateY(-2px);
+  background: #d4c50b;
+}

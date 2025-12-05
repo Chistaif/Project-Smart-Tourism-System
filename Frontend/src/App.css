@@ -45,7 +45,8 @@ html, body, #root {
 header {
   position: relative;
   z-index: 2;
-  padding: 14px 40px;
+  padding: 8px 40px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -79,12 +80,21 @@ nav a.active {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
+.user-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+/*LOGO USER*/
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--accent);
   color: #1a2e05;
@@ -92,13 +102,17 @@ nav a.active {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
+  margin-right: 4px;    
 }
 
+/*USERNAME + PASSWORD
+fixed*/
 .user-details {
   display: flex;
-  flex-direction: column;
-  line-height: 1.2;
+  flex-direction: column;   
+  justify-content: center;      
+  line-height: 1.1;            
 }
 
 .user-details span {
@@ -360,7 +374,7 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
   animation: fadeIn 0.3s ease;
 }
   
@@ -719,4 +733,57 @@ footer {
 .homepage-link:hover {
   color: #e6d10b;
   text-decoration: underline;
+}
+
+/*BUTTON
+LOGOUT
+NEW*/
+.nav-logout-btn {
+  padding: 8px 16px;
+  background: rgba(239, 68, 68, 0.2);     
+  border: 1px solid rgba(239, 68, 68, 0.4);    
+  color: #fca5a5;                           
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.nav-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+/*SIGN UP*/
+.nav-btn-register {
+  padding: 8px 16px;
+  background: white;  
+  border: 2px solid #ffffff;        
+  color: #000000;                 
+  font-weight: 700;               
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.nav-btn-register:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/*LOGIN */
+.nav-btn-login {
+  padding: 8px 16px;
+  background: var(--accent);     
+  border: 2px solid var(--accent);
+  color: #1a2e05;                
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.nav-btn-login:hover {
+  background: #d4c50b;
+  border-color: #d4c50b;
 }

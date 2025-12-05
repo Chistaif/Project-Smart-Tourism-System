@@ -182,9 +182,15 @@ export const blogsAPI = {
   
   // Tạo blog mới (với FormData để upload hình ảnh)
   create: (formData) => {
+    const token = localStorage.getItem("accessToken");
     const url = `${API_BASE_URL}/blogs`;
+
     return fetch(url, {
       method: 'POST',
+      headers: {
+        "Authorization": `Bearer ${token}`
+        //  KHÔNG thêm Content-Type vì FormData tự tạo boundary
+      },
       body: formData, // FormData không cần Content-Type header
     })
     .then(response => {

@@ -29,20 +29,37 @@ export default function Navigation({ openPopup, openLogin, openSignup, user, onL
 
       {user ? (
         <div className="user-info">
+
           <Link to="/user" className="user-link">
+
             <div className="user-avatar">{getInitials(user.username)}</div>
             <div className="user-details">
+
               <span>{user.username}</span>
               <small>{user.email}</small>
+              
             </div>
+
           </Link>
-          <button className="btn" onClick={onLogout}>Đăng Xuất</button>
+
+          <button className="nav-logout-btn" onClick={onLogout}>
+            Đăng Xuất
+          </button>
+
         </div>
       ) : (
         <div className="auth">
-          <button className="btn" onClick={openSignup || openPopup}>Đăng Ký</button>
-          <button className="btn" onClick={openLogin || openPopup}>Đăng Nhập</button>
+
+          <button className="nav-btn-register" onClick={openSignup || openPopup}>
+            Đăng Ký
+          </button>
+
+          <button className="nav-btn-login" onClick={openLogin || openPopup}>
+            Đăng Nhập
+          </button>
+
         </div>
+
       )}
     </header>
   );
