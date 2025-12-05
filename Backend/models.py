@@ -98,6 +98,7 @@ class Attraction(db.Model):
     lon = db.Column(db.Float)
     image_url = db.Column(db.String(500))
     nearby_attractions = db.Column(db.JSON, default=list)
+    ideal_time = db.Column(db.Integer, default=1)
 
     type = db.Column(db.String(50))
 
@@ -108,7 +109,7 @@ class Attraction(db.Model):
 
     # Relationships
     reviews = db.relationship('Review', back_populates='attraction', cascade="all, delete-orphan")
-    tags = db.relationship('Tag', secondary=attraction_tags, back_populates='attractions', lazy='dynamic')
+    tags = db.relationship('Tag', secondary=attraction_tags, back_populates='attractions')
     favorited_by = db.relationship('FavoriteAttraction', back_populates='attraction', cascade="all, delete-orphan")
     tours = db.relationship('SavedTour', secondary=tour_attractions, back_populates='attractions', lazy='dynamic')
 
@@ -249,6 +250,26 @@ class FavoriteAttraction(db.Model):
     
     user = db.relationship('User', back_populates='favorite_attractions')
     attraction = db.relationship('Attraction', back_populates='favorited_by')
+
+# ======================================================================
+# ===                                                                ===
+# ===                    Token Blocklist                              ===
+# ===                                                                ===
+# ======================================================================
+class TokenBlacklist(db.Model):
+    __tablename__ = 'token_blacklist'
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), nullable=False, unique=True)  # JWT ID
+    token_type = db.Column(db.String(10), nullable=False)  # 'access' or 'refresh'
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    blacklisted_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='blacklisted_tokens')
+
+    __table_args__ = (
+        db.Index('idx_token_blacklist_jti', 'jti'),
+        db.Index('idx_token_blacklist_user', 'user_id'),
+    )
 
 # ======================================================================
 # ===                                                                ===

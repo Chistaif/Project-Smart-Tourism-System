@@ -112,12 +112,23 @@ export const authAPI = {
     method: 'POST',
     body: JSON.stringify(userData),
   }),
-  
+
   // Đăng nhập
   login: (credentials) => apiRequest('/auth/login', {
     method: 'POST',
     body: JSON.stringify(credentials),
   }),
+
+  // Đăng xuất (server-side logout)
+  logout: () => {
+    const accessToken = localStorage.getItem('access_token');
+    return apiRequest('/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+  },
 
   //Xac thuc OTP cho login
   verifyOTP: (payload) => apiRequest('/auth/verify-email', {
@@ -147,7 +158,7 @@ export const authAPI = {
     method: 'POST',
     body: JSON.stringify(payload),
   }),
-  
+
   // Lấy thông tin người dùng theo ID
   getUser: (userId) => apiRequest(`/auth/user/${userId}`),
 };

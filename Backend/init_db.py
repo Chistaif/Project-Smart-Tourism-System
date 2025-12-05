@@ -137,6 +137,7 @@ def import_demo_data(json_path="demo_data.json"):
                 lon=fes.get("lon"),
                 visit_duration=fes.get("visitDuration"),
                 image_url=fes.get("imageUrl"),
+                ideal_time=fes.get("idealTime", 1)
             )
             db.session.add(new_festival)
 
@@ -164,7 +165,8 @@ def import_demo_data(json_path="demo_data.json"):
                 ticket_price=cul.get("ticketPrice"),
                 opening_hours=cul["openHours"],
                 visit_duration=cul.get("visitDuration"),
-                image_url=cul.get("imageUrl")
+                image_url=cul.get("imageUrl"),
+                ideal_time=cul.get("idealTime", 1)
             )
             db.session.add(new_spot)
 
@@ -188,7 +190,8 @@ def import_demo_data(json_path="demo_data.json"):
                 lat=a.get("lat"),
                 lon=a.get("lon"),
                 visit_duration=a.get("visitDuration"),
-                image_url=a.get("imageUrl")
+                image_url=a.get("imageUrl"),
+                ideal_time=a.get("idealTime", 1)
             )
             db.session.add(new_attr)
 

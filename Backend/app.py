@@ -26,6 +26,7 @@ from models import (
     Tag,
     Blog,
     User,
+    TokenBlacklist,
 )
 from init_db import import_demo_data
 from service.search_service import precompute_nearby_attractions, smart_recommendation_service, get_nearby_attr
@@ -73,7 +74,9 @@ def create_app():
     app.config['JSON_AS_ASCII'] = False
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'fixed-secret-key-for-testing')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 3600  # 1 hour
-    app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 2592000  # 30 days
+    app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 172800  # 2 days
+    app.config['JWT_BLOCKLIST_ENABLED'] = True
+    app.config['JWT_BLOCKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
     # app.config['UPLOAD_FOLDER'] = 'static/uploads/blogs'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     
@@ -125,6 +128,12 @@ def invalid_token_callback(error):
 def unauthorized_callback(error):
     return jsonify({"success": False, "error": "Thiếu authentication token"}), 401
 
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blocklist(decrypted_token):
+    """Check if token is in blocklist"""
+    jti = decrypted_token['jti']
+    return TokenBlacklist.query.filter_by(jti=jti).first() is not None
+
 # Cấu hình upload
 # UPLOAD_FOLDER = 'static/uploads/blogs'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -144,23 +153,47 @@ Frontend cần nhớ:
 - Nếu muốn backend ưu tiên các điểm đã Favorite của user nào đó,
   truyền thêm `userId=<int>` trong query string. Nếu bỏ trống, backend
   sẽ không tính tới danh sách Favorite.
-
-Ví dụ:
-/api/search?searchTerm=Hội%20An&typeList=Lễ%20hội&userId=1
 """
 @app.route('/api/search', methods=["GET"])
 def search():
     # Xử lý thông tin đầu vào với JWT optional (sử dụng nếu hợp lệ, bỏ qua nếu không hợp lệ)
     user_id = None
-    try:
-        # Thử lấy JWT identity nếu token hợp lệ
-        verify_jwt_in_request(optional=True)
-        user_id = get_jwt_identity()
-        print(f"DEBUG: Token hợp lệ, user_id từ JWT: {user_id}")
-    except Exception as e:
-        # Nếu token không hợp lệ hoặc không có, bỏ qua và tiếp tục
-        print(f"DEBUG: Token không hợp lệ hoặc không có: {str(e)}")
-        pass
+
+    # First try to get user_id from query parameter
+    user_id_param = request.args.get("userId")
+    if user_id_param:
+        try:
+            user_id = int(user_id_param)
+            if user_id <= 0:
+                raise ValueError
+        except ValueError:
+            return jsonify({"success": False, "error": "userId không hợp lệ"}), 400
+
+    # Then try JWT if available (but don't override query parameter)
+    if not user_id:
+        try:
+            verify_jwt_in_request(optional=True)
+            jwt_user_id = get_jwt_identity()
+
+            # If JWT identity is None, try manual extraction (workaround for JWT payload issue)
+            if jwt_user_id is None:
+                from flask_jwt_extended import get_jwt
+                jwt_payload = get_jwt()
+
+                # Try to extract from payload manually
+                if jwt_payload.get('identity'):
+                    jwt_user_id = jwt_payload['identity']
+                elif jwt_payload.get('sub'):
+                    jwt_user_id = jwt_payload['sub']
+
+                if isinstance(jwt_user_id, str) and jwt_user_id.isdigit():
+                    jwt_user_id = int(jwt_user_id)
+
+            if jwt_user_id:
+                user_id = jwt_user_id
+
+        except Exception as e:
+            pass
 
     type_list_str = request.args.get("typeList", "")
     if type_list_str:
@@ -717,15 +750,73 @@ def refresh_token():
     try:
         current_user_id = get_jwt_identity()
         new_access_token = create_access_token(identity=str(current_user_id))
-        
+
         return jsonify({
             "success": True,
             "access_token": new_access_token,
             "token_type": "Bearer"
         }), 200
-        
+
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/api/auth/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    """Logout user by blacklisting both access and refresh tokens"""
+    try:
+        current_user_id = get_jwt_identity()
+
+        # Get JTI (JWT ID) from current access token
+        from flask_jwt_extended import get_raw_jwt
+        raw_jwt = get_raw_jwt()
+        access_jti = raw_jwt.get('jti')
+
+        if not access_jti:
+            return jsonify({"success": False, "error": "Không thể xác định token"}), 400
+
+        # For refresh token, we need to check if it's provided in the request body
+        refresh_token = request.json.get('refresh_token') if request.json else None
+
+        # Blacklist access token
+        access_blacklist = TokenBlacklist(
+            jti=access_jti,
+            token_type='access',
+            user_id=current_user_id
+        )
+        db.session.add(access_blacklist)
+
+        # Blacklist refresh token if provided
+        if refresh_token:
+            try:
+                # Decode refresh token to get its JTI
+                from flask_jwt_extended import decode_token
+                refresh_decoded = decode_token(refresh_token, allow_expired=False)
+                refresh_jti = refresh_decoded.get('jti')
+
+                if refresh_jti:
+                    refresh_blacklist = TokenBlacklist(
+                        jti=refresh_jti,
+                        token_type='refresh',
+                        user_id=current_user_id
+                    )
+                    db.session.add(refresh_blacklist)
+            except Exception as e:
+                # If refresh token is invalid, just continue with access token
+                print(f"Warning: Could not decode refresh token: {e}")
+                pass
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Đăng xuất thành công"
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error in logout: {e}")
+        return jsonify({"success": False, "error": "Lỗi hệ thống khi đăng xuất"}), 500
 # ===========================================================================
 # ===                                                                     ===
 # ===                                 Blogs                               ===
