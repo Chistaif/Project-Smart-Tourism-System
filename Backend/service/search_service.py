@@ -66,57 +66,74 @@ def calculate_score(attraction, interest_tags, search_keywords):
 
 def smart_recommendation_service(types_list=[], user_id=None, search_term=None, limit=50):
     """
-    Service chính để search,
-    giới hạn top 50 để tránh việc hiển thị tràn lan 
+    Service search thông minh: 
+    Kết hợp tìm theo Type, SpotType và cả Tag để đảm bảo không bị sót dữ liệu.
     """
-    # Lọc theo types_list trước khi tính điểm
     query = Attraction.query
 
     if types_list:
-        # Chuẩn hóa types_list
-        normalized_types = [
-            t.strip() for t in types_list
-            if isinstance(t, str) and t.strip()
-        ]
+        normalized_types = [t.strip() for t in types_list if isinstance(t, str) and t.strip()]
         
         if normalized_types:
+            # Alias cho các bảng để tránh conflict
             festival_alias = aliased(Festival)
             cultural_spot_alias = aliased(CulturalSpot)
             
-            # Join với các bảng con
+            # Join các bảng liên quan
             query = query.outerjoin(festival_alias, festival_alias.id == Attraction.id)
             query = query.outerjoin(cultural_spot_alias, cultural_spot_alias.id == Attraction.id)
+            # Join với Tag để tìm kiếm linh hoạt hơn
+            query = query.outerjoin(Attraction.tags)
             
             type_conditions = []
             
-            # Tách festival và cultural spot types
-            spot_types_from_list = [t for t in normalized_types if t != 'Lễ hội']
-            
-            # Điều kiện cho festival
-            if 'Lễ hội' in normalized_types:
-                type_conditions.append(Attraction.type == 'festival')
-            
-            # Điều kiện cho cultural spots
-            if spot_types_from_list:
-                type_conditions.append(cultural_spot_alias.spot_type.in_(spot_types_from_list))
-            
-            # Áp dụng bộ lọc types
+            for t in normalized_types:
+                # 1. Xử lý Lễ hội
+                if t == 'Lễ hội':
+                    type_conditions.append(Attraction.type == 'festival')
+                
+                # 2. Xử lý Thiên nhiên (Tìm theo type nature HOẶC tag liên quan)
+                elif t == 'Thiên nhiên':
+                    type_conditions.append(or_(
+                        Attraction.type == 'nature',
+                        Tag.tag_name.in_(['Thiên nhiên', 'Sinh thái', 'Núi rừng', 'Biển', 'Hang động'])
+                    ))
+                
+                # 3. Xử lý Đền / Chùa (Tìm theo spot_type HOẶC tag tâm linh)
+                elif t == 'Đền/Chùa': 
+                    type_conditions.append(or_(
+                        cultural_spot_alias.spot_type.in_(['Đền', 'Chùa', 'Tôn giáo']),
+                        Tag.tag_name.in_(['Tâm linh', 'Phật giáo', 'Đền', 'Chùa', 'Hành hương'])
+                    ))
+                
+                # 4. Xử lý Làng nghề
+                elif t == 'Làng nghề':
+                    type_conditions.append(or_(
+                        cultural_spot_alias.spot_type == 'Làng nghề',
+                        Tag.tag_name.in_(['Làng nghề', 'Thủ công', 'Truyền thống'])
+                    ))
+                
+                # 5. Các loại hình khác (Di tích, Bảo tàng...)
+                else:
+                    type_conditions.append(or_(
+                        cultural_spot_alias.spot_type == t,
+                        Tag.tag_name == t
+                    ))
+
+            # Áp dụng bộ lọc (Dùng OR để lấy tập hợp các loại đã chọn)
             if type_conditions:
                 query = query.filter(or_(*type_conditions))
     
-    # Lấy danh sách attractions đã được lọc
+    # Lấy danh sách (dùng distinct để loại bỏ bản ghi trùng do join với tags)
     all_attractions = query.distinct().all()
 
-    # lấy sở thích
+    # --- Phần tính điểm và trả về giữ nguyên như cũ ---
     interest_tags = get_user_interest_tags(user_id)
     
-    # Tính điểm cho từng địa điểm
     scored_results = []
     for attr in all_attractions:
         score = calculate_score(attr, interest_tags, search_term)
         
-        # Chỉ lấy những địa điểm có điểm > 0 (có liên quan)
-        # Hoặc nếu không tìm kiếm gì thì lấy hết để gợi ý ngẫu nhiên
         if score > 0 or not search_term:
             scored_results.append({
                 "attraction": attr,
@@ -124,10 +141,7 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
                 "match_reason": "Phù hợp sở thích" if score > 5 else "Gợi ý phổ biến"
             })
     
-    # Sắp xếp theo điểm từ cao xuống thấp
     scored_results.sort(key=lambda x: x["score"], reverse=True)
-    
-    # Cắt lấy Top N
     final_results = scored_results[:limit]
     
     return [

@@ -4,10 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { attractionsAPI } from '../utils/api';
 import './Service.css';
 
-// --- COMPONENT HIỂN THỊ KẾT QUẢ TOUR ---
+// --- COMPONENT HIỂN THỊ KẾT QUẢ TOUR (Giữ nguyên) ---
 const TourResultView = ({ tourData, onReset }) => {
     if (!tourData) return null;
-    // ... (Giữ nguyên component này)
     return (
         <div className="tour-result-container" style={{backgroundColor: '#0f172a'}}> 
              <div className="tour-header">
@@ -38,16 +37,12 @@ const TourResultView = ({ tourData, onReset }) => {
 
 const TYPE_OPTIONS = [
   { label: 'Lễ hội', value: 'Lễ hội' },
-
-  // CulturalSpot types (khớp đúng với demo_data.json)
   { label: 'Di tích', value: 'Di tích' },
   { label: 'Bảo tàng', value: 'Bảo tàng' },
   { label: 'Làng nghề', value: 'Làng nghề' },
-  { label: 'Văn hóa', value: 'Văn hóa' },
-  { label: 'Kiến trúc', value: 'Kiến trúc' },
-  { label: 'Di sản', value: 'Di sản' },
+  { label: 'Đền / Chùa', value: 'Đền/Chùa' },
+  { label: 'Thiên nhiên', value: 'Thiên nhiên' },
 ];
-
 
 const initialSelectedTypes = [];
 
@@ -56,22 +51,16 @@ export default function Service({ currentUser }) {
   
   // --- STATES ---
   const [searchTerm, setSearchTerm] = useState('');
-  
   const [startPoint, setStartPoint] = useState({ name: '', lat: null, lon: null });
   const [customInput, setCustomInput] = useState(''); 
-  
   const [showStartMenu, setShowStartMenu] = useState(false); 
   const [isTypingLocation, setIsTypingLocation] = useState(false); 
   const [isLocating, setIsLocating] = useState(false); 
-
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  
   const [selectedTypes, setSelectedTypes] = useState(initialSelectedTypes); 
-  
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  
   const [selectedAttractions, setSelectedAttractions] = useState([]);
   const [tourResult, setTourResult] = useState(null);
 
@@ -79,27 +68,20 @@ export default function Service({ currentUser }) {
   const fetchAttractions = async (params = {}) => {
     try {
         setLoading(true);
+        const typeListParam = (params.typeList && params.typeList.length > 0) 
+            ? params.typeList.join(',') 
+            : '';
 
         const response = await attractionsAPI.search({
             ...params,
             userId: currentUser?.user_id,
-            typeList: params.typeList ?? []
+            typeList: typeListParam
         });
 
         if (response.success) {
             let results = response.data || [];
-
-            // FRONTEND FILTER (không đụng backend)
-            if (params.typeList && params.typeList.length > 0) {
-                results = results.filter(item =>
-                    params.typeList.includes(item.spotType) ||
-                    params.typeList.includes(item.type)     // cho Lễ hội
-                );
-            }
-
             setData(results);
         }
-
     } catch (err) { 
         console.error(err); 
     } finally { 
@@ -107,33 +89,29 @@ export default function Service({ currentUser }) {
     }
   };
 
-
-  // 1. Initial Load Effect (Chạy 1 lần khi mount)
+  // Effects
   useEffect(() => {
     fetchAttractions(); 
   }, [currentUser]); 
   
-  // 2. Filter Change Effect (SỬA LỖI: XÓA 'loading' khỏi dependencies)
   useEffect(() => {
     fetchAttractions({
         typeList: selectedTypes,
         searchTerm
     });
-}, [selectedTypes, searchTerm]);
-
+  }, [selectedTypes, searchTerm]);
 
   const handleSearch = () => {
     const params = { searchTerm: searchTerm.trim() };
     fetchAttractions(params); 
   };
 
-  // --- LOGIC 1: LẤY VỊ TRÍ HIỆN TẠI (GPS) ---
+  // --- LOCATION LOGIC ---
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
       alert("Trình duyệt của bạn không hỗ trợ định vị.");
       return;
     }
-
     setIsLocating(true);
     setShowStartMenu(false);
     setIsTypingLocation(false);
@@ -145,12 +123,7 @@ export default function Service({ currentUser }) {
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
           const data = await res.json();
           const displayName = data.address.city || data.address.town || data.address.road || "Vị trí của tôi";
-          
-          setStartPoint({
-            name: displayName,
-            lat: latitude,
-            lon: longitude
-          });
+          setStartPoint({ name: displayName, lat: latitude, lon: longitude });
         } catch (error) {
           console.error("Lỗi lấy tên vị trí:", error);
           setStartPoint({ name: "Vị trí hiện tại (GPS)", lat: latitude, lon: longitude });
@@ -166,7 +139,6 @@ export default function Service({ currentUser }) {
     );
   };
 
-  // --- LOGIC 2: XỬ LÝ NHẬP VỊ TRÍ TÙY Ý ---
   const handleSelectCustom = () => {
     setShowStartMenu(false);
     setIsTypingLocation(true);
@@ -178,41 +150,29 @@ export default function Service({ currentUser }) {
         setIsTypingLocation(false);
         return;
     }
-    
     try {
         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(customInput)}&limit=1`);
         const data = await res.json();
-        
         if (data && data.length > 0) {
-            setStartPoint({
-                name: customInput,
-                lat: parseFloat(data[0].lat),
-                lon: parseFloat(data[0].lon)
-            });
+            setStartPoint({ name: customInput, lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) });
         } else {
             setStartPoint({ name: customInput, lat: null, lon: null });
         }
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
     setIsTypingLocation(false);
   };
 
-  // --- HÀM XỬ LÝ KHI CHỌN NGÀY ĐI (Có ràng buộc) ---
   const handleStartDateChange = (e) => {
     const newStart = e.target.value;
     setStartDate(newStart);
-
     if (endDate && newStart > endDate) {
       setEndDate('');
     }
   };
 
-  // --- HÀM RENDER SAO ---
   const renderCardStars = (rating) => {
     const score = rating || 0; 
     const roundedScore = Math.round(score);
-
     return (
       <div className="dest-rating">
         <span style={{color: '#fff', marginRight: '2px'}}>{score > 0 ? score.toFixed(1) : "N/A"}</span>
@@ -222,7 +182,6 @@ export default function Service({ currentUser }) {
     );
   };
 
-  // --- HANDLERS ---
   const handleToggleSelect = (item) => {
     setSelectedAttractions(prev => {
       const exists = prev.find(i => i.id === item.id);
@@ -237,7 +196,6 @@ export default function Service({ currentUser }) {
   
   const handleCreateTour = async () => {
      if(selectedAttractions.length === 0) return alert("Vui lòng chọn ít nhất 1 địa điểm!");
-     
      if(!startPoint.lat || !startPoint.lon) return alert("Vui lòng chọn điểm xuất phát hợp lệ!");
 
      const queryParams = new URLSearchParams({
@@ -263,13 +221,46 @@ export default function Service({ currentUser }) {
     }
   };
 
-  // --- DATA FILTERING VÀ SLICING MỚI ---
-  
+  // --- DATA FILTERING VÀ LOGIC MỚI ---
+  const isSelected = (id) => selectedAttractions.find(i => i.id === id);
+
+  // Kiểm tra xem có đang filter hoặc search không
+  const isFiltering = useMemo(() => {
+      return selectedTypes.length > 0 || searchTerm.trim() !== '';
+  }, [selectedTypes, searchTerm]);
+
+  // Chia dữ liệu cho chế độ mặc định
   const mustVisitPlaces = useMemo(() => data.slice(0, 10), [data]); 
   const suitableSuggestions = useMemo(() => data.slice(10), [data]);
 
-  const isSelected = (id) => selectedAttractions.find(i => i.id === id);
-
+  // --- HÀM RENDER CARD (Tách ra để dùng chung) ---
+  const renderAttractionCard = (item) => (
+    <div key={item.id} className="dest-card">
+        <div 
+            className={`card-select-btn ${isSelected(item.id) ? 'active' : ''}`}
+            onClick={(e) => { e.stopPropagation(); handleToggleSelect(item); }}
+            title={isSelected(item.id) ? "Bỏ chọn" : "Thêm vào lịch trình"}
+        >
+            {isSelected(item.id) ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            )}
+        </div>
+        <div className="card-nav-action" onClick={() => navigate(`/attractions/${item.id}`)}>
+            <img src={item.imageUrl || item.image_url} alt={item.name} className="dest-img" />
+            <div className="dest-overlay">
+                <div className="dest-name">{item.name}</div>
+                {renderCardStars(item.averageRating || item.average_rating)} 
+            </div>
+        </div>
+    </div>
+  );
 
   if (tourResult) return <TourResultView tourData={tourResult} onReset={() => setTourResult(null)} />;
 
@@ -344,10 +335,9 @@ export default function Service({ currentUser }) {
                 />
                 <button className="search-action-btn" onClick={handleSearch}>Tìm kiếm</button>
             </div>
-          
           </div>
 
-          {/* ROUTE INFO LINE (Đã cập nhật giao diện Thẻ Đỏ + Thùng Rác) */}
+          {/* ROUTE INFO LINE */}
           <div className="route-info-line">
              <span>Từ:</span>
              {startPoint.name ? (
@@ -392,7 +382,6 @@ export default function Service({ currentUser }) {
              )}
           </div>
 
-          {/* DATE PICKER (Đã fix logic ngày tháng) */}
           <div className="date-picker-row">
             <span style={{fontWeight:600, color:'#94a3b8'}}>Ngày đi:</span>
             <div className="date-display">
@@ -415,7 +404,6 @@ export default function Service({ currentUser }) {
                 />
             </div>
           </div>
-
         </div>
       </div>
 
@@ -423,7 +411,6 @@ export default function Service({ currentUser }) {
         
         {/* SIDEBAR TRÁI */}
         <aside className="sidebar">
-
             <div className="filter-box">
                 <h3>Loại hình điểm đến</h3>
                 <div className="type-list">
@@ -439,80 +426,49 @@ export default function Service({ currentUser }) {
                     ))}
                 </div>
             </div>
-
             <button className="btn-view-tour" onClick={handleCreateTour}>
                 Xem lịch trình gợi ý
             </button>
         </aside>
 
-        {/* CONTENT PHẢI */}
+        {/* CONTENT PHẢI - LOGIC THAY ĐỔI TẠI ĐÂY */}
         <main className="main-content">
-            
-            {/* SECTION 1 */}
-            <h2 className="section-title">Các địa điểm không thể bỏ qua</h2>
-            <div className="slider-container">
-                {mustVisitPlaces.map(item => (
-                    <div key={item.id} className="dest-card">
-                        <div 
-                            className={`card-select-btn ${isSelected(item.id) ? 'active' : ''}`}
-                            onClick={(e) => { e.stopPropagation(); handleToggleSelect(item); }}
-                            title={isSelected(item.id) ? "Bỏ chọn" : "Thêm vào lịch trình"}
-                        >
-                            {isSelected(item.id) ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            )}
-                        </div>
-                        <div className="card-nav-action" onClick={() => navigate(`/attractions/${item.id}`)}>
-                            <img src={item.imageUrl || item.image_url} alt={item.name} className="dest-img" />
-                            <div className="dest-overlay">
-                                <div className="dest-name">{item.name}</div>
-                                {renderCardStars(item.averageRating || item.average_rating)} 
-                            </div>
-                        </div>
+            {isFiltering ? (
+                // --- TRƯỜNG HỢP CÓ FILTER/SEARCH: HIỂN THỊ 1 LIST DUY NHẤT ---
+                <>
+                    <h2 className="section-title">Các địa điểm phù hợp</h2>
+                    <div className="slider-container">
+                        {data.length > 0 ? (
+                            data.map(item => renderAttractionCard(item))
+                        ) : (
+                            <p style={{color: '#94a3b8', paddingLeft: '10px', fontStyle:'italic'}}>
+                                Không tìm thấy địa điểm nào phù hợp.
+                            </p>
+                        )}
                     </div>
-                ))}
-            </div>
-
-            {/* SECTION 2 */}
-            <h2 className="section-title" style={{marginTop: '40px'}}>Các gợi ý phù hợp</h2>
-            <div className="slider-container">
-                {suitableSuggestions.length > 0 ? suitableSuggestions.map(item => (
-                    <div key={item.id} className="dest-card">
-                        <div 
-                            className={`card-select-btn ${isSelected(item.id) ? 'active' : ''}`}
-                            onClick={(e) => { e.stopPropagation(); handleToggleSelect(item); }}
-                        >
-                            {isSelected(item.id) ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            )}
-                        </div>
-                        <div className="card-nav-action" onClick={() => navigate(`/attractions/${item.id}`)}>
-                            <img src={item.imageUrl || item.image_url} alt={item.name} className="dest-img" />
-                            <div className="dest-overlay">
-                                <div className="dest-name">{item.name}</div>
-                                {renderCardStars(item.averageRating || item.average_rating)}
-                            </div>
-                        </div>
+                </>
+            ) : (
+                // --- TRƯỜNG HỢP MẶC ĐỊNH: HIỂN THỊ 2 LIST ---
+                <>
+                    {/* SECTION 1 */}
+                    <h2 className="section-title">Các địa điểm không thể bỏ qua</h2>
+                    <div className="slider-container">
+                        {mustVisitPlaces.map(item => renderAttractionCard(item))}
                     </div>
-                )) : (
-                    <p style={{color: '#94a3b8', paddingLeft: '10px', fontStyle:'italic'}}>Không có gợi ý phù hợp nào khác.</p>
-                )}
-            </div>
 
+                    {/* SECTION 2 */}
+                    <h2 className="section-title" style={{marginTop: '40px'}}>Các gợi ý phù hợp</h2>
+                    <div className="slider-container">
+                        {suitableSuggestions.length > 0 ? (
+                            suitableSuggestions.map(item => renderAttractionCard(item))
+                        ) : (
+                            <p style={{color: '#94a3b8', paddingLeft: '10px', fontStyle:'italic'}}>
+                                Không có gợi ý phù hợp nào khác.
+                            </p>
+                        )}
+                    </div>
+                </>
+            )}
         </main>
       </div>
     </div>

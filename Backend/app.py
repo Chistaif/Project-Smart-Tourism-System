@@ -162,7 +162,11 @@ def search():
         print(f"DEBUG: Token không hợp lệ hoặc không có: {str(e)}")
         pass
 
-    types_list = request.args.getlist("typeList", [])
+    type_list_str = request.args.get("typeList", "")
+    if type_list_str:
+        types_list = [t.strip() for t in type_list_str.split(',') if t.strip()]
+    else:
+        types_list = []
     search_term = request.args.get("searchTerm", "").strip()
     if not user_id:
         user_id_param = request.args.get("userId")
