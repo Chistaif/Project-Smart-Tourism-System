@@ -11,9 +11,9 @@ import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
+import UserPage from './pages/User';
 
 import AttractionDetail from './pages/AttractionDetail';
-import UserPage from './pages/User';
 import { authAPI } from './utils/api';
 
 import test1 from './asset/box1.jpg';
