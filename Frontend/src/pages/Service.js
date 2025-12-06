@@ -339,16 +339,16 @@ export default function Service({ currentUser }) {
 
           {/* ROUTE INFO LINE */}
           <div className="route-info-line">
-             <span>Từ:</span>
+             <span style={{color: '#ffffff'}}>Từ:</span>
              {startPoint.name ? (
                 <span className="route-tag" style={{borderColor: '#22c55e', color: '#22c55e'}}>
                     📍 {startPoint.name}
                 </span>
              ) : (
-                <span style={{fontStyle:'italic', opacity:0.6, marginLeft:'5px'}}>[Chưa có]</span>
+                <span style={{fontStyle:'italic', opacity:0.7, marginLeft:'5px', color: '#ffffff'}}>[Chưa có]</span>
              )}
-             
-             <span style={{marginLeft: '10px'}}>Đến:</span>
+
+             <span style={{marginLeft: '10px', color: '#ffffff'}}>Đến:</span>
              {selectedAttractions.length > 0 ? (
                  selectedAttractions.map(attr => (
                      <span 
@@ -378,7 +378,7 @@ export default function Service({ currentUser }) {
                      </span>
                  ))
              ) : (
-                 <span style={{fontStyle:'italic', opacity:0.6, marginLeft:'5px'}}>[Chưa có]</span>
+                 <span style={{fontStyle:'italic', opacity:0.7, marginLeft:'5px', color: '#ffffff'}}>[Chưa có]</span>
              )}
           </div>
 

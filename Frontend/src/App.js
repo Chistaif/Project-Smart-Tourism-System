@@ -6,6 +6,7 @@ import ItineraryPage from './pages/ItineraryPage';
 
 import Navigation from './layout/Navigation';
 import ChatAssistant from './layout/ChatBox';
+import Footer from './layout/Footer';
 import HomePage from './pages/HomePage';
 import Service from './pages/Service';
 import Blogs from './pages/Blogs';
@@ -474,14 +475,13 @@ function App() {
         </Routes>
 
 
-        <footer>
-          <small>© 2025 SmartTour - Hệ thống gợi ý hành trình du lịch</small>
-        </footer>
 
-        <ChatAssistant 
-          user={user} 
-          openLogin={() => openPopup('login')} 
+        <ChatAssistant
+          user={user}
+          openLogin={() => openPopup('login')}
         />
+
+        <Footer />
 
       </div>
     </Router>

@@ -68,7 +68,17 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 ```
 
-## 4. Tổng hợp file .env mẫu
+## 4. Hướng dẫn lấy OpenWeather API key
+
+***B1: Vào <https://openweathermap.org/api> đăng kí 1 tài khoản***
+
+***B2: Ở mục My API lấy mã api key***
+
+```
+OPENWEATHERMAP_API_KEY=49b6...
+```
+
+## 5. Tổng hợp file .env mẫu
 ```
 # JWT Configuration
 JWT_SECRET_KEY=1234567890poiuytrewqasdfghjklmnbvcxz
@@ -90,6 +100,9 @@ EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_app_password
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
+
+# --- OpenWeatherMap api key ---
+OPENWEATHERMAP_API_KEY=49b6709ac655fbadca4acda242a57baf
 ```
 
 

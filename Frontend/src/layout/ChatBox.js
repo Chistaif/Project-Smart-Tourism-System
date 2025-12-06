@@ -1,13 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './ChatBox.css';
 
 import chatLogo from '../asset/chatbox.png'; 
 
 // 1. Thêm props user và openLogin vào đây
 export default function ChatAssistant({ user, openLogin }) {
+  const location = useLocation();
+  const isBlogRoute = location.pathname.startsWith('/blogs');
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'model', text: 'Xin chào! Mình là hướng dẫn viên ảo Culture Compass. Bạn cần gợi ý gì không?' }
+    {
+      role: 'model',
+      text: isBlogRoute
+        ? 'Xin chào! Tôi là trợ lý viết blog Culture Compass. Tôi có thể giúp bạn tạo nội dung blog về du lịch. Bạn muốn viết về địa điểm nào?'
+        : 'Xin chào! Mình là hướng dẫn viên ảo Culture Compass. Bạn cần gợi ý gì không?'
+    }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,6 +26,18 @@ export default function ChatAssistant({ user, openLogin }) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Reset messages when route changes between blog and non-blog pages
+  useEffect(() => {
+    setMessages([
+      {
+        role: 'model',
+        text: isBlogRoute
+          ? 'Xin chào! Tôi là trợ lý viết blog Culture Compass. Tôi có thể giúp bạn tạo nội dung blog về du lịch. Bạn muốn viết về địa điểm nào?'
+          : 'Xin chào! Mình là hướng dẫn viên ảo Culture Compass. Bạn cần gợi ý gì không?'
+      }
+    ]);
+  }, [isBlogRoute]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -45,8 +66,8 @@ export default function ChatAssistant({ user, openLogin }) {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          message: userMsg.text,
-          history: messages.map(m => ({ 
+          message: isBlogRoute ? `[BLOG_CONTENT] ${userMsg.text}` : userMsg.text,
+          history: messages.map(m => ({
             role: m.role,
             parts: [m.text]
           }))
@@ -86,7 +107,7 @@ export default function ChatAssistant({ user, openLogin }) {
       {isOpen && (
         <div className="chat-box">
           <div className="chat-header">
-            <h4>Trợ lý du lịch ảo</h4>
+            <h4>{isBlogRoute ? 'Trợ lý viết blog' : 'Trợ lý du lịch ảo'}</h4>
           </div>
           
           {/* 2. Kiểm tra USER ở đây */}
@@ -104,11 +125,11 @@ export default function ChatAssistant({ user, openLogin }) {
               </div>
 
               <div className="chat-input-area">
-                <input 
+                <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Hỏi về địa điểm, lịch trình..."
+                  placeholder={isBlogRoute ? "Mô tả chủ đề blog bạn muốn viết..." : "Hỏi về địa điểm, lịch trình..."}
                   disabled={loading}
                 />
                 <button onClick={handleSend} disabled={loading}>➤</button>
