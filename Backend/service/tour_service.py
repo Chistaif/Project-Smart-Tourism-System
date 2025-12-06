@@ -247,30 +247,44 @@ def is_attraction_available(attraction, current_time=None, start_datetime=None, 
             return False, "Lễ hội thiếu thông tin thời gian cụ thể"
         
         # Với festival diễn ra hàng năm, cần kiểm tra trong năm hiện tại
-        current_year = current_time.year
+        current_year = start_datetime.year if start_datetime else datetime.now().year
             
-        # Tạo khoảng thời gian diễn ra cho năm hiện tại
-        festival_start = fes.time_start.replace(year=current_year)
-        festival_end = fes.time_end.replace(year=current_year)
+        # Tạo khoảng thời gian diễn ra cho năm hiện tại (Chỉ lấy ngày - date)
+        try:
+            festival_start = fes.time_start.replace(year=current_year).date()
+            festival_end = fes.time_end.replace(year=current_year).date()
+        except ValueError:
+            # Xử lý trường hợp ngày nhuận 29/2 nếu năm hiện tại không nhuận
+            festival_start = fes.time_start.date()
+            festival_end = fes.time_end.date()
 
-        festival_start = fes.time_start.date()
-        festival_end = fes.time_end.date()
-        if current_time and festival_start <= current_time <= festival_end:
-            return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
+        # --- FIX LỖI TYPE ERROR TẠI ĐÂY ---
+        # Kiểm tra thời điểm cụ thể (current_time)
+        if current_time:
+            # Chuyển current_time (datetime) thành date để so sánh
+            check_date = current_time.date() 
             
+            # Logic: Nếu ngày đi KHÔNG nằm trong khoảng lễ hội -> Sai
+            if not (festival_start <= check_date <= festival_end):
+                 return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
+            
+        # Kiểm tra khoảng thời gian chuyến đi (start_datetime -> end_datetime)
         if start_datetime and end_datetime:
-            if festival_end < start_datetime.date() or festival_start > end_datetime.date():
+            trip_start = start_datetime.date()
+            trip_end = end_datetime.date()
+            
+            # Logic: Nếu khoảng thời gian lễ hội và chuyến đi KHÔNG giao nhau
+            if festival_end < trip_start or festival_start > trip_end:
                 return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
 
     # 2. Check CulturalSpot (Giờ mở cửa trong ngày)
     elif attraction.type == 'cultural_spot':
         spot = CulturalSpot.query.get(attraction.id)
-        if spot and spot.opening_hours:
+        if spot and spot.opening_hours and current_time:
             hours = parse_opening_hours(spot.opening_hours)
             if hours:
                 start_h, end_h = hours
                 curr_h = current_time.hour + current_time.minute/60
-                # Logic đơn giản: Nếu đến quá sớm hoặc quá muộn
                 if not (start_h <= curr_h <= end_h):
                     return False, f"Đóng cửa (Giờ mở: {spot.opening_hours})"
     
@@ -654,9 +668,10 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
 
     max_days_allowed = max(1, (end_datetime.date() - start_datetime.date()).days + 1)
 
-    # Festival không phù hợp -> invalid
+    # Lọc địa điểm hợp lệ
     for attr in raw_attractions:
         if attr.type == 'festival':
+            # Với Festival: Kiểm tra ngày diễn ra
             is_available, reason = is_attraction_available(attr, start_datetime, start_datetime, end_datetime)
             if is_available:
                 valid_attractions.append(attr)
@@ -666,6 +681,9 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                     "name": attr.name,
                     "reason": reason
                 })
+        else:
+            # Với địa điểm thường (Di tích, Thiên nhiên...): Luôn luôn thêm vào
+            valid_attractions.append(attr)
 
     if not valid_attractions:
         return {

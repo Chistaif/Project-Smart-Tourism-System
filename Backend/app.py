@@ -156,6 +156,12 @@ Frontend cần nhớ:
 """
 @app.route('/api/search', methods=["GET"])
 def search():
+    # === DEBUG LOG (Thêm đoạn này) ===
+    print("\n" + "="*50)
+    print("[APP.PY] SEARCH REQUEST RECEIVED")
+    print("URL Params:", request.args)
+    print("="*50 + "\n")
+
     # Xử lý thông tin đầu vào với JWT optional (sử dụng nếu hợp lệ, bỏ qua nếu không hợp lệ)
     user_id = None
 
@@ -194,6 +200,10 @@ def search():
 
         except Exception as e:
             pass
+    
+    # Lấy tham số ngày tháng từ URL
+    start_date = request.args.get("startDate") # format: dd/mm/yyyy
+    end_date = request.args.get("endDate")
 
     type_list_str = request.args.get("typeList", "")
     if type_list_str:
@@ -214,7 +224,7 @@ def search():
     # NOTE userId (nếu có) dùng để ưu tiên các địa điểm đã Favorite
     # Logic chính
     try:
-        data = smart_recommendation_service(types_list=types_list, search_term=search_term, user_id=user_id)
+        data = smart_recommendation_service(types_list=types_list, search_term=search_term, user_id=user_id, start_date_str=start_date, end_date_str=end_date)
         return jsonify({"success": True, "data": data}), 200
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 400
@@ -374,6 +384,12 @@ def creator():
     Frontend gửi request dạng Query Params:
     /api/quick-tour-creator?attractionIds=1&attractionIds=5&startLat=10.77&startLon=106.70&startTime=25/12/2025%2008:00
     """
+    # Test
+    print("\n=== DEBUG: NHẬN REQUEST TẠO TOUR ===")
+    print("Start Point:", request.args.get('startLat'), request.args.get('startLon'))
+    print("Attraction IDs:", request.args.getlist('attractionIds'))
+    print("Time:", request.args.get('startTime'), " - ", request.args.get('endTime'))
+
     try:
         # 1. Lấy danh sách ID (List)
         # Frontend cần gửi dạng: ?attractionIds=1&attractionIds=2...
@@ -407,8 +423,8 @@ def creator():
 
         # Parse endTime
         try:
-            start_time = datetime.strptime(start_time_str, "%d/%m/%Y %H:%M")
-            end_time = datetime.strptime(end_time_str, "%d/%m/%Y %H:%M")
+            start_time = datetime.strptime(start_time_str, "%d/%m/%Y")
+            end_time = datetime.strptime(end_time_str, "%d/%m/%Y")
         except ValueError:
             return jsonify({"success": False, "error": "Format time không hợp lệ"}), 400
 

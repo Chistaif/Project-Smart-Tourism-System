@@ -217,7 +217,9 @@ function App() {
                       if (response.success) {
                           setUser(response.user);
                           localStorage.setItem('currentUser', JSON.stringify(response.user));
-                          localStorage.setItem('access_token', response.access_token); 
+                          if (response.access_token) {
+                              localStorage.setItem('access_token', response.access_token);
+                          }
                           
                           setSuccess("Đăng nhập thành công!");
                           setTimeout(() => {
@@ -467,6 +469,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} />
           <Route path="/service" element={<Service currentUser={user} />} />
+          <Route path="/itinerary" element={<ItineraryPage />} />
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />

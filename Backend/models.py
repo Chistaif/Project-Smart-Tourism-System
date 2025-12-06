@@ -131,14 +131,29 @@ class Attraction(db.Model):
         }
 
     def to_json_brief(self):
-        return {
+        data = {
             "id": self.id,
             "name": self.name,
             "averageRating": self.average_rating,
             "imageUrl": self.image_url,
             "type": self.type,
-            "spotType": self.spot_type if hasattr(self, "spot_type") else None
+            "spotType": self.spot_type if hasattr(self, "spot_type") else None,
+            "location": self.location
         }
+
+        if self.type == 'festival':
+            # time_start/end là kiểu DateTime, cần chuyển sang ISO string
+            ts = getattr(self, 'time_start', None)
+            te = getattr(self, 'time_end', None)
+            
+            data['timeStart'] = ts.isoformat() if ts else None
+            data['timeEnd'] = te.isoformat() if te else None
+            
+            # Lấy thêm các trường string dự phòng
+            data['datetimeStart'] = getattr(self, 'datetime_start', None) or getattr(self, 'original_start', None)
+            data['datetimeEnd'] = getattr(self, 'datetime_end', None) or getattr(self, 'original_end', None)
+        
+        return data
 
 class Festival(Attraction):
     __tablename__ = 'festival'
