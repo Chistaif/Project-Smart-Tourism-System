@@ -162,7 +162,7 @@ export default function Blogs({ currentUser }) {
             {error && <div className="error-message">{error}</div>}
 
             {!isLoggedIn && (
-              <div className="info-message">
+              <div className="info-message" onClick={() => window.dispatchEvent(new Event("openLoginPopup"))}>
                 Bạn cần đăng nhập để tạo bài viết mới.
               </div>
             )}

@@ -39,8 +39,12 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
   }, [currentUser]);
 
   return (
+    /*FRAME 1*/
+    <>
+
     <main className="hero">
       <section className="left">
+
         <div className="eyebrow">Culture Compass</div>
         <h1>Khám phá chất Việt qua những hành trình đậm nét văn hóa</h1>
         <p className="lead">
@@ -48,12 +52,12 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
         </p>
         <a className="cta" onClick={() => navigate('/service')}>Bắt đầu ngay!</a>
 
-        <p 
+        {/* <p 
           className="homepage-link"
           onClick={() => window.location.href = '/blogs'}
         >
           Xem các bài viết mới nhất hoặc Tạo bài viết của bạn →
-        </p>
+        </p> */}
 
         {/* Display API data
         {loading && <p style={{ color: 'white', marginTop: '20px' }}>Loading destinations...</p>}
@@ -81,6 +85,95 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
       </aside>
 
     </main>
+
+    
+    {/*FRAME 2 */}
+    
+    <section className="blogs-preview">
+      <div className="blogs-box">
+
+        <div className="eyebrow">CUTURE COMPASS</div>
+
+        <h2 className="blogs-title">
+          Nơi những câu chuyện văn hoá được sẻ chia
+        </h2>
+
+        <p className="blogs-desc">
+          Khám phá khóc nhìn mới từ cộng đồng yêu văn hoá Việt.
+          Đọc những câu chuyện thực tế hoặc chia sẻ hành trình của riêng bạn.
+        </p>
+
+        <button
+          className="blogs-cta"
+          onClick={() => navigate('/blogs')}
+        >
+          Khám phá Blog →
+        </button>
+
+      </div>
+    </section>
+
+    {/*FRAME 3*/}
+
+    <section className="tour-section">
+  <div className="tour-box">
+    
+    <div className="eyebrow">CULTURE COMPASS</div>
+
+    <h2 className="tour-title">
+      Tạo hành trình của riêng bạn theo cách nhanh nhất
+    </h2>
+    <p className="tour-desc">
+      Không cần mất hàng giờ lên kế hoạch. Chỉ với vài lựa chọn đơn giản, hệ thống gợi ý hành trình
+      phù hợp với sở thích, thời gian và phong cách du lịch của bạn. Mỗi tour được tạo ra đều là một
+      hành trình độc nhất — mang dấu ấn của chính bạn.
+    </p>
+
+    <h2 className="tour-title">
+      Khám phá mọi miền đất nước theo lộ trình thông minh
+    </h2>
+    <p className="tour-desc">
+      Từ núi rừng Tây Bắc đến biển xanh miền Trung, từ những lễ hội rực rỡ đến những làng nghề trăm năm tuổi —
+      bạn có thể tạo tour đi bất cứ đâu chỉ trong vài giây. Culture Compass sẽ giúp bạn chọn điểm đến,
+      tối ưu quãng đường và gợi ý trải nghiệm văn hoá mang đậm chất Việt.
+    </p>
+
+  </div>
+</section>
+
+
+    {/*FRAME 4*/}
+
+    <section className="inspire-section">
+
+  <div className="inspire-box">
+    
+    <div className="eyebrow">CULTURE COMPASS</div>
+
+    <h2 className="inspire-title">
+      Nơi mỗi bước chân đều chạm vào một phần ký ức Việt
+    </h2>
+
+    <p className="inspire-desc">
+      Văn hoá không chỉ nằm trong những trang sử cũ — nó sống trong hơi thở của từng vùng đất,
+      trong giọng nói, trong lễ hội, trong nhịp sống thường ngày. Culture Compass đồng hành cùng bạn
+      trên hành trình khám phá những giá trị tưởng chừng quen thuộc nhưng chưa bao giờ ngừng mới lạ.
+    </p>
+
+    <h2 className="inspire-title">
+      Gắn kết con người qua những câu chuyện được sẻ chia
+    </h2>
+
+    <p className="inspire-desc">
+      Mỗi câu chuyện bạn kể, mỗi nơi bạn đi qua, mỗi khoảnh khắc bạn mang về —
+      đều góp phần tạo nên một bản đồ văn hoá đầy màu sắc. Hãy để những trải nghiệm của bạn
+      trở thành cảm hứng cho những người yêu văn hoá Việt trên khắp mọi miền.
+    </p>
+
+      </div>
+    </section>
+    
+  </>
   );
 }
     
