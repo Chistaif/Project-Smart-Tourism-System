@@ -1,17 +1,11 @@
-// src/utils/api.js
-
+// API configuration
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// --- HÀM BUILD QUERY (ĐÃ CẬP NHẬT) ---
-const buildSearchQuery = ({ searchTerm, typeList, userId, startDate, endDate } = {}) => {
+const buildSearchQuery = ({ searchTerm, typeList, userId } = {}) => {
   const params = new URLSearchParams();
-  
-  // 1. Từ khóa tìm kiếm
   if (searchTerm) {
     params.append('searchTerm', searchTerm.trim());
   }
-  
-  // 2. Loại hình (Xử lý cả mảng và chuỗi)
   if (Array.isArray(typeList)) {
     typeList.forEach((type) => {
       if (type) params.append('typeList', type);
@@ -19,20 +13,9 @@ const buildSearchQuery = ({ searchTerm, typeList, userId, startDate, endDate } =
   } else if (typeList) {
     params.append('typeList', typeList);
   }
-  
-  // 3. User ID
   if (userId) {
     params.append('userId', userId);
   }
-
-  // 4. Ngày tháng (MỚI THÊM)
-  if (startDate) {
-    params.append('startDate', startDate);
-  }
-  if (endDate) {
-    params.append('endDate', endDate);
-  }
-
   const queryString = params.toString();
   return queryString ? `?${queryString}` : '';
 };
@@ -67,6 +50,7 @@ async function apiRequest(endpoint, options = {}) {
     
     return data;
   } catch (error) {
+    // More detailed error logging
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       console.error('Lỗi kết nối - Máy chủ backend có đang chạy không?', error);
       throw new Error('Không thể kết nối đến máy chủ. Vui lòng đảm bảo backend đang chạy trên http://localhost:5000');
@@ -78,18 +62,44 @@ async function apiRequest(endpoint, options = {}) {
 
 // API functions for destinations
 export const destinationsAPI = {
+  // Get all destinations (optionally filtered)
   getAll: (params = {}) => apiRequest(`/search${buildSearchQuery(params)}`),
+  
+  // Get a single destination by ID
   getById: (id, userId) => apiRequest(`/attraction/${id}${userId ? `?userId=${userId}` : ''}`),
 };
 
 // API functions for attractions
 export const attractionsAPI = {
+  // Search attractions by filters
   search: (params = {}) => apiRequest(`/search${buildSearchQuery(params)}`),
+
+  // Get detailed info (with optional favorite state)
   getDetail: (id, userId) => apiRequest(`/attraction/${id}${userId ? `?userId=${userId}` : ''}`),
-  createReview: (id, payload) => apiRequest(`/attraction/${id}`, { method: 'POST', body: JSON.stringify(payload) }),
-  updateReview: (id, payload) => apiRequest(`/attraction/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
-  deleteReview: (id, payload) => apiRequest(`/attraction/${id}`, { method: 'DELETE', body: JSON.stringify(payload) }),
-  toggleFavorite: (id, payload) => apiRequest(`/attraction/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+
+  // Create review
+  createReview: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  // Update review
+  updateReview: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  }),
+
+  // Delete review
+  deleteReview: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'DELETE',
+    body: JSON.stringify(payload),
+  }),
+
+  // Toggle favorite
+  toggleFavorite: (id, payload) => apiRequest(`/attraction/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  }),
 };
 
 // Health check
@@ -97,40 +107,91 @@ export const healthCheck = () => apiRequest('/health');
 
 // API functions for authentication
 export const authAPI = {
-  signup: (userData) => apiRequest('/auth/signup', { method: 'POST', body: JSON.stringify(userData) }),
-  login: (credentials) => apiRequest('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
+  // Đăng ký tài khoản mới
+  signup: (userData) => apiRequest('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+  }),
+
+  // Đăng nhập
+  login: (credentials) => apiRequest('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(credentials),
+  }),
+
+  // Đăng xuất (server-side logout)
   logout: () => {
     const accessToken = localStorage.getItem('access_token');
     return apiRequest('/auth/logout', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${accessToken}` },
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
     });
   },
-  verifyOTP: (payload) => apiRequest('/auth/verify-email', { method: 'POST', body: JSON.stringify(payload) }),
-  resendOTP: (payload) => apiRequest('/auth/resend-code', { method: 'POST', body: JSON.stringify(payload) }),
-  forgotPassword: (payload) => apiRequest('/auth/forgot-password', { method: 'POST', body: JSON.stringify(payload) }),
-  verifyForgotOTP: (payload) => apiRequest('/auth/forgot-password', { method: 'POST', body: JSON.stringify(payload) }),
-  resetPassword: (payload) => apiRequest('/auth/reset-password', { method: 'POST', body: JSON.stringify(payload) }),
+
+  //Xac thuc OTP cho login
+  verifyOTP: (payload) => apiRequest('/auth/verify-email', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  //Gui lai OTP
+  resendOTP: (payload) => apiRequest('/auth/resend-code', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  //QUEN MAT KHAU
+  forgotPassword: (payload) => apiRequest('/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  //Xac thuc OTP cho QUEN MAT KHAU
+  verifyForgotOTP: (payload) => apiRequest('/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  resetPassword: (payload) => apiRequest('/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  // Lấy thông tin người dùng theo ID
   getUser: (userId) => apiRequest(`/auth/user/${userId}`),
 };
 
 // API functions for user profile
 export const userAPI = {
+  // Lấy danh sách địa điểm yêu thích
   getFavorites: (userId) => apiRequest(`/user/${userId}/favorites`),
+  
+  // Lấy lịch sử đánh giá
   getReviews: (userId) => apiRequest(`/user/${userId}/reviews`),
 };
 
 // API functions for blogs
 export const blogsAPI = {
+  // Lấy tất cả blogs
   getAll: () => apiRequest('/blogs'),
+  
+  // Lấy blog theo ID
   getById: (blogId) => apiRequest(`/blogs/${blogId}`),
+  
+  // Tạo blog mới (với FormData để upload hình ảnh)
   create: (formData) => {
     const token = localStorage.getItem("accessToken");
     const url = `${API_BASE_URL}/blogs`;
+
     return fetch(url, {
       method: 'POST',
-      headers: { "Authorization": `Bearer ${token}` },
-      body: formData,
+      headers: {
+        "Authorization": `Bearer ${token}`
+        //  KHÔNG thêm Content-Type vì FormData tự tạo boundary
+      },
+      body: formData, // FormData không cần Content-Type header
     })
     .then(response => {
       const contentType = response.headers.get("content-type");
@@ -144,11 +205,15 @@ export const blogsAPI = {
         throw new Error(data.error || 'Failed to create blog');
       }
       return data;
+    })
+    .catch(error => {
+      console.error('API request failed:', error);
+      throw error;
     });
   },
 };
 
-const api = {
+export default {
   destinationsAPI,
   attractionsAPI,
   authAPI,
@@ -156,5 +221,3 @@ const api = {
   userAPI,
   healthCheck,
 };
-
-export default api;

@@ -1,4 +1,3 @@
-/* src/layout/MapComponent.js */
 import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -12,76 +11,80 @@ let DefaultIcon = L.icon({
     shadowUrl: iconShadow,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
-    popupAnchor: [1, -34]
+    popupAnchor: [1, -34],
+    tooltipAnchor: [16, -28],
+    shadowSize: [41, 41]
 });
+
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Component phụ: Chỉ Recenter khi danh sách địa điểm thay đổi
-function RecenterMap({ locations }) {
-    const map = useMap();
-
-    useEffect(() => {
-        if (locations && locations.length > 0) {
-            const points = locations.map(l => [l.lat, l.lon]);
-            const bounds = L.latLngBounds(points);
-            map.fitBounds(bounds, { padding: [50, 50] });
-        }
-    }, [locations, map]);
-
-    return null;
+// --- Component phụ để tự động zoom bản đồ bao quát các điểm ---
+function ChangeView({ bounds }) {
+  const map = useMap();
+  useEffect(() => {
+    if (bounds && bounds.length > 0) {
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [bounds, map]);
+  return null;
 }
 
-// COLORS cho các đường đi khác nhau (để phân biệt ngày)
-const ROUTE_COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+export default function MapComponent({ locations = [], routePath = [] }) {
+  // locations: Danh sách điểm đến [{id, name, lat, lon, imageUrl, ...}]
+  // routePath: Mảng tọa độ vẽ đường đi [[lat, lon], [lat, lon], ...]
 
-export default function MapComponent({ locations = [], routePaths = [] }) {
-    // Mặc định: routePaths là mảng chứa các mảng tọa độ. 
-    // Ví dụ: [ [[lat,lon], [lat,lon]], [[lat,lon],...] ]
-    
-    const defaultCenter = [16.0544, 108.2022];
+  // Tính toán vùng hiển thị (bounds)
+  let bounds = [];
+  if (routePath && routePath.length > 0) {
+      bounds = routePath;
+  } else if (locations && locations.length > 0) {
+      bounds = locations.map(loc => [loc.lat, loc.lon]);
+  }
+  
+  const defaultCenter = [16.0544, 108.2022]; // Đà Nẵng
 
-    return (
-        <MapContainer 
-            center={defaultCenter} 
-            zoom={6} 
-            style={{ height: "100%", width: "100%", zIndex: 0 }}
-        >
-            <TileLayer
-                attribution='&copy; OpenStreetMap'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+  return (
+    <div style={{ height: "100%", width: "100%", borderRadius: "15px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", position: "relative", zIndex: 0 }}>
+      <MapContainer 
+        center={defaultCenter} 
+        zoom={13} 
+        style={{ height: "100%", width: "100%" }}
+        scrollWheelZoom={true}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
 
-            {/* Vẽ nhiều đường Polyline riêng biệt */}
-            {routePaths && routePaths.length > 0 && routePaths.map((path, idx) => (
-                 <Polyline 
-                    key={idx} 
-                    positions={path} 
-                    color={ROUTE_COLORS[idx % ROUTE_COLORS.length]} 
-                    weight={5} 
-                    opacity={0.8} 
-                    dashArray={idx % 2 !== 0 ? '10, 10' : null} // Nét đứt cho ngày lẻ để dễ phân biệt màu
-                 />
-            ))}
+        {bounds.length > 0 && <ChangeView bounds={bounds} />}
 
-            {locations.map((loc, idx) => (
-                <Marker key={idx} position={[loc.lat, loc.lon]}>
-                    <Popup>
-                        <div style={{textAlign: 'center', minWidth: '150px'}}>
-                            {loc.imageUrl && (
-                                <img 
-                                    src={loc.imageUrl} 
-                                    alt={loc.name} 
-                                    style={{width: '100%', height: '80px', objectFit: 'cover', borderRadius: '4px', marginBottom: '5px'}}
-                                />
-                            )}
-                            <strong>{loc.name}</strong><br/>
-                            <small>{loc.time}</small>
-                        </div>
-                    </Popup>
-                </Marker>
-            ))}
+        {routePath && routePath.length > 0 && (
+          <Polyline 
+            positions={routePath} 
+            color="#c4b30a" 
+            weight={5} 
+            opacity={0.8} 
+          />
+        )}
 
-            <RecenterMap locations={locations} />
-        </MapContainer>
-    );
+        {locations.map((loc, index) => (
+          <Marker key={index} position={[loc.lat, loc.lon]}>
+            <Popup>
+              <div style={{ textAlign: "center", minWidth: "150px" }}>
+                <strong style={{ color: "#1a2e05", display: "block", marginBottom: "5px" }}>{loc.name}</strong>
+                {loc.imageUrl && (
+                  <img 
+                    src={loc.imageUrl} 
+                    alt={loc.name} 
+                    style={{ width: "100%", height: "80px", objectFit: "cover", borderRadius: "4px" }} 
+                    onError={(e) => {e.target.onerror = null; e.target.src="https://via.placeholder.com/150?text=No+Image"}}
+                  />
+                )}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
+  );
 }
