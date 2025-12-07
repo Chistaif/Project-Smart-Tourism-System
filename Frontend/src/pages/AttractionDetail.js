@@ -28,6 +28,16 @@ export default function AttractionDetail({currentUser, openLogin }) {
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [favoriteSubmitting, setFavoriteSubmitting] = useState(false);
 
+  const [popupMessage, setPopupMessage] = useState({ type: "", text: "" });
+
+  const showPopup = (type, text) => {
+    setPopupMessage({ type, text });
+    setTimeout(() => {
+      setPopupMessage({ type: "", text: "" });
+    }, 3000);
+  };
+
+
   // Hàm logic xếp hạng
   const getRatingLabel = (score, count) => {
     if (!count || count === 0) return "Chưa có đánh giá";
@@ -150,8 +160,16 @@ const loadDetail = async (isBackground = false) => {
 
   const handleSubmitReview = async (event) => {
     event.preventDefault();
-    if (!userId) { setError('Bạn cần đăng nhập để gửi đánh giá.'); return; }
-    if (!reviewForm.content.trim()) { setError('Nội dung đánh giá không được để trống.'); return; }
+
+    if (!userId) { 
+      showPopup("error", "Bạn cần đăng nhập để gửi đánh giá."); 
+      return; 
+    }
+
+    if (!reviewForm.content.trim()) { 
+      showPopup("error", "Nội dung đánh giá không được để trống."); 
+      return;
+    }
     setReviewSubmitting(true);
     try {
       const payload = { userId, content: reviewForm.content.trim(), ratingScore: Number(reviewForm.ratingScore) || 5 };
@@ -162,7 +180,7 @@ const loadDetail = async (isBackground = false) => {
         await attractionsAPI.createReview(id, payload);
       }
       await loadDetail(true);
-    } catch (err) { setError(err.message); } finally { setReviewSubmitting(false); }
+    } catch (err) { showPopup("error", err.message); }  finally { setReviewSubmitting(false); }
   };
 
 const handleDeleteReview = async (reviewId) => {
@@ -175,27 +193,34 @@ const handleDeleteReview = async (reviewId) => {
       setReviewForm(createDefaultReviewForm());
       
       await loadDetail(true); // Tải lại dữ liệu để cập nhật danh sách
-      alert("Đã xóa đánh giá thành công!");
+      showPopup("success", "Đã xóa đánh giá thành công!");
       
     } catch (err) { 
         console.error(err);
-        alert("Lỗi khi xóa: " + err.message); 
+        showPopup("error", "Lỗi khi xóa đánh giá: " + err.message);
     } finally { 
         setReviewSubmitting(false); 
     }
   };
 
   const handleToggleFavorite = async () => {
-    if (!userId) { setError('Đăng nhập để lưu địa điểm yêu thích.'); return; }
+    if (!userId) { 
+      showPopup("error", "Bạn cần đăng nhập để lưu địa điểm yêu thích.");
+      return; 
+    }
     setFavoriteSubmitting(true);
     try {
       const nextState = !(favorite?.isFavorite);
       const response = await attractionsAPI.toggleFavorite(id, { userId, isFavorite: nextState });
       if (response.success) {
           setFavorite(response.favorite);
+          showPopup(
+            "success",
+            nextState ? "Đã thêm vào yêu thích!" : "Đã bỏ khỏi yêu thích!"
+          );
           if (response.data) syncStateFromDetail(response.data);
       }
-    } catch (err) { setError(err.message); } finally { setFavoriteSubmitting(false); }
+    } catch (err) { showPopup("error", err.message); } finally { setFavoriteSubmitting(false); }
   };
 
   const descriptionSections = useMemo(() => {
@@ -204,7 +229,6 @@ const handleDeleteReview = async (reviewId) => {
   }, [info]);
 
   if (loading) return <div className="attraction-loading">Đang tải thông tin...</div>;
-  if (error) return <div className="attraction-error">{error}</div>;
 
   // VIEW 1: GIAO DIỆN TÓM TẮT (Summary Card)
   if (!showFullDetail) {

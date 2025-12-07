@@ -16,6 +16,16 @@ export default function Blogs({ currentUser }) {
     user_id: currentUser?.user_id || ''
   });
   const [submitting, setSubmitting] = useState(false);
+
+  const [popupMessage, setPopupMessage] = useState({ type: "", text: "" });
+
+  const showPopup = (type, text) => {
+    setPopupMessage({ type, text });
+    setTimeout(() => {
+      setPopupMessage({ type: "", text: "" });
+    }, 3000);
+  };
+
   const isLoggedIn = Boolean(currentUser);
 
   useEffect(() => {
@@ -36,11 +46,11 @@ export default function Blogs({ currentUser }) {
       if (response.success) {
         setBlogs(response.data);
       } else {
-        setError('Không thể tải danh sách blog');
+        showPopup("error", "Không thể tải danh sách blog");
       }
     } catch (err) {
       console.error('Error fetching blogs:', err);
-      setError('Lỗi kết nối đến máy chủ');
+      showPopup("error", "Lỗi kết nối đến máy chủ");
     } finally {
       setLoading(false);
     }
@@ -70,7 +80,7 @@ export default function Blogs({ currentUser }) {
     setError(null);
 
     if (!formData.user_id) {
-      setError('Bạn cần đăng nhập để tạo bài viết.');
+      showPopup("error", "Bạn cần đăng nhập để tạo bài viết.");
       setSubmitting(false);
       return;
     }
@@ -96,10 +106,10 @@ export default function Blogs({ currentUser }) {
         setShowForm(false);
         // Reload blogs
         fetchBlogs();
-        alert('Tạo blog thành công!');
+        showPopup("success", "Tạo blog thành công!");
       }
     } catch (err) {
-      setError(err.message || 'Không thể tạo blog');
+      showPopup("error", err.message || "Không thể tạo blog");
     } finally {
       setSubmitting(false);
     }
@@ -107,6 +117,19 @@ export default function Blogs({ currentUser }) {
 
   return (
     <div className="blogs-container">
+
+      {popupMessage.text && (
+        <div
+          className={
+            popupMessage.type === "success"
+            ? "popup-message-success"
+            : "popup-message-error"
+          }
+        >
+          {popupMessage.text}
+        </div>
+      )}
+
       <div className="blogs-header">
         <h1>Blogs</h1>
       </div>
@@ -159,8 +182,6 @@ export default function Blogs({ currentUser }) {
               )}
             </div>
 
-            {error && <div className="error-message">{error}</div>}
-
             {!isLoggedIn && (
               <div className="info-message" onClick={() => window.dispatchEvent(new Event("openLoginPopup"))}>
                 Bạn cần đăng nhập để tạo bài viết mới.
@@ -176,7 +197,6 @@ export default function Blogs({ currentUser }) {
       )}
 
       {loading && <div className="loading">Đang tải blogs...</div>}
-      {error && !showForm && <div className="error-message">{error}</div>}
 
       <div className="blogs-list">
         {blogs.length > 0 ? (

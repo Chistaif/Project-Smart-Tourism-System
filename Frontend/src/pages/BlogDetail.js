@@ -10,6 +10,14 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [popupMessage, setPopupMessage] = useState({ type: "", text: "" });
+
+  const showPopup = (type, text) => {
+    setPopupMessage({ type, text });
+    setTimeout(() => setPopupMessage({ type: "", text: "" }), 3000);
+  };
+
+
   useEffect(() => {
     fetchBlog();
   }, [id]);
@@ -21,11 +29,11 @@ export default function BlogDetail() {
       if (response.success) {
         setBlog(response.data);
       } else {
-        setError('Không tìm thấy bài viết');
+        showPopup("error", "Không tìm thấy bài viết");
       }
     } catch (err) {
       console.error('Error fetching blog:', err);
-      setError('Lỗi kết nối đến máy chủ');
+      showPopup("error", "Lỗi kết nối đến máy chủ");
     } finally {
       setLoading(false);
     }
@@ -39,19 +47,15 @@ export default function BlogDetail() {
     );
   }
 
-  if (error || !blog) {
-    return (
-      <div className="blog-detail-container">
-        <div className="error-message">{error || 'Không tìm thấy bài viết'}</div>
-        <button className="btn-back" onClick={() => navigate('/blogs')}>
-          Quay lại danh sách
-        </button>
-      </div>
-    );
-  }
-
   return (
+    
     <div className="blog-detail-container">
+      {popupMessage.text && (
+        <div className={`popup-message-${popupMessage.type}`}>
+          {popupMessage.text}
+        </div>
+      )}
+
       <button className="btn-back" onClick={() => navigate('/blogs')}>
         ← Quay lại
       </button>
