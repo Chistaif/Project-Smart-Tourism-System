@@ -295,7 +295,6 @@
   }
 }
 
-/* ===== EMPTY STATE (Không có bài viết) ===== */
 .blogs-empty {
   display: flex;
   justify-content: center;
@@ -351,7 +350,6 @@
   background: #d4c50b;
 }
 
-/* ===== FORM TẠO BLOG Ở GIỮA TRANG ===== */
 .blog-form-wrapper {
   width: 100%;
   display: flex;
@@ -370,7 +368,6 @@
   box-shadow: 0 12px 30px rgba(0,0,0,0.45);
 }
 
-/* === Center the empty state box === */
 .no-blogs-wrapper {
   width: 100%;
   height: 70vh; /* đủ để đưa vào giữa màn hình */

@@ -137,7 +137,9 @@ class Attraction(db.Model):
             "averageRating": self.average_rating,
             "imageUrl": self.image_url,
             "type": self.type,
-            "spotType": self.spot_type if hasattr(self, "spot_type") else None
+            "spotType": self.spot_type if hasattr(self, "spot_type") else None,
+            "datetimeStart": "12/1",  # Mặc định mở cửa quanh năm
+            "datetimeEnd": "31/12"
         }
 
 class Festival(Attraction):
@@ -165,6 +167,13 @@ class Festival(Attraction):
             
             "type": "festival"
         })
+        return data
+    
+    def to_json_brief(self):
+        data = super().to_json_brief()
+        if self.original_start and self.original_end:
+            data["datetimeStart"] = self.original_start
+            data["datetimeEnd"] = self.original_end
         return data
 
 class CulturalSpot(Attraction):

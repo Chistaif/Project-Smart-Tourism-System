@@ -22,7 +22,7 @@ html, body, #root {
 
 .App {
   display: flex;
-  background-image: url('asset/home.png'); /* Remove the leading slash */
+  background-image: url('asset/home.png');
   flex-direction: column;
   color: #fff;
   position: relative;
@@ -109,8 +109,6 @@ nav a.active {
   margin-right: 4px;    
 }
 
-/*USERNAME + PASSWORD
-fixed*/
 .user-details {
   display: flex;
   flex-direction: column;   
@@ -253,7 +251,6 @@ p.lead {
   position: relative;
 }
 
-/* Tạo hiệu ứng bậc thang từ dưới lên */
 .col-0 {
   transform: translateX(0);
 }
@@ -320,7 +317,6 @@ footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* responsive */
 @media (max-width: 980px) {
   main.hero {
     flex-direction: column;
@@ -637,7 +633,6 @@ footer {
   }
 }
 
-/*LOGIN - SIGNUP - FORGOT*/
 @media (max-width: 480px) {
   .popup {
     min-width: 90%;
@@ -744,9 +739,6 @@ footer {
   text-decoration: underline;
 }
 
-/*BUTTON
-LOGOUT
-NEW*/
 .nav-logout-btn {
   padding: 8px 16px;
   background: rgba(239, 68, 68, 0.2);     
@@ -764,7 +756,6 @@ NEW*/
   border-color: rgba(239, 68, 68, 0.6);
 }
 
-/*SIGN UP*/
 .nav-btn-register {
   padding: 8px 16px;
   background: white;  
@@ -780,7 +771,6 @@ NEW*/
   background: rgba(255, 255, 255, 0.2);
 }
 
-/*LOGIN */
 .nav-btn-login {
   padding: 8px 16px;
   background: var(--accent);     
@@ -797,12 +787,6 @@ NEW*/
   border-color: #d4c50b;
 }
 
-/*BLOGS FRAME
-giao dien BLOGS 
-giong frame Service
-/*
-
-/* ----------- BLOGS SECTION ----------- */
 
 .blogs-preview {
   width: 100%;
@@ -857,11 +841,6 @@ giong frame Service
   box-shadow: 0 7px 20px rgba(196, 179, 10, 0.55);
 }
 
-/*BLOGS FRAME UPDATED*/
-
-/* ----------- BLOGS SECTION (UPDATED) ----------- */
-
-
 .blogs-preview {
   width: 100%;
   display: flex;
@@ -881,7 +860,6 @@ giong frame Service
   text-align: left;         
 }
 
-/* Tiêu đề Blogs */
 .blogs-title {
   font-size: 40px;
   margin-top: 10px;
@@ -900,7 +878,6 @@ giong frame Service
   max-width: 600px;
 }
 
-/* CTA Button */
 .blogs-cta {
   margin-top: 30px;
   padding: 14px 28px;
@@ -933,7 +910,6 @@ giong frame Service
   box-shadow: 0 8px 30px rgba(0,0,0,0.35);
 }
 
-/* Eyebrow */
 .blogs-eyebrow {
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -941,7 +917,6 @@ giong frame Service
   opacity: 0.85;
 }
 
-/* Title */
 .blogs-title {
   font-size: 40px;
   font-weight: 800;
@@ -953,7 +928,6 @@ giong frame Service
   -webkit-text-fill-color: transparent;
 }
 
-/* Description */
 .blogs-desc {
   opacity: 0.9;
   line-height: 1.6;
@@ -961,7 +935,6 @@ giong frame Service
   max-width: 600px;
 }
 
-/* Button */
 .blogs-btn {
   padding: 14px 28px;
   background: var(--accent);
@@ -986,8 +959,6 @@ giong frame Service
   justify-content: center;
   padding: 40px 0 40px;  
 }
-
-/* FRAME 4 */
 
 .inspire-section {
   width: 100%;
@@ -1028,8 +999,6 @@ giong frame Service
   color: #f8fafc;
   max-width: 700px;
 }
-
-/*FRAME 3*/
 
 .tour-section {
   transform: translateY(-120px);

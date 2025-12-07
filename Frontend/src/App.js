@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ItineraryPage from './pages/ItineraryPage';
 
 import Navigation from './layout/Navigation';
 import ChatAssistant from './layout/ChatBox';
 import Footer from './layout/Footer';
 import HomePage from './pages/HomePage';
 import Service from './pages/Service';
+import ItineraryPage from './pages/ItineraryPage';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
 import UserPage from './pages/User';
@@ -468,6 +468,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} />
           <Route path="/service" element={<Service currentUser={user} />} />
+          <Route path="/itinerary" element={<ItineraryPage />} />
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />

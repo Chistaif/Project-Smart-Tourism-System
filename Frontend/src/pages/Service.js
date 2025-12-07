@@ -1,39 +1,9 @@
-/* Service.js */
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { attractionsAPI } from '../utils/api';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"; 
 import './Service.css';
-
-// --- COMPONENT HIỂN THỊ KẾT QUẢ TOUR (Giữ nguyên) ---
-const TourResultView = ({ tourData, onReset }) => {
-    if (!tourData) return null;
-    return (
-        <div className="tour-result-container" style={{backgroundColor: '#0f172a'}}> 
-             <div className="tour-header">
-                <button onClick={onReset} className="back-btn">← Quay lại</button>
-                <h2 style={{color: '#60a5fa', textTransform: 'uppercase'}}>Lịch trình gợi ý</h2>
-            </div>
-            <div className="tour-content-layout">
-                <div className="timeline-column">
-                    {tourData.timeline.map((item, index) => (
-                         <div key={index} className="timeline-item">
-                            <div className="time-badge">{item.time}</div>
-                            <div className="timeline-content">
-                                <div className="timeline-card">
-                                    <h4>{item.name}</h4>
-                                    <p>{item.detail}</p>
-                                </div>
-                            </div>
-                         </div>
-                    ))}
-                </div>
-                <div className="map-column">
-                     <div dangerouslySetInnerHTML={{ __html: tourData.mapHtml }} style={{height: '100%'}} />
-                </div>
-            </div>
-        </div>
-    )
-};
 
 const TYPE_OPTIONS = [
   { label: 'Lễ hội', value: 'Lễ hội' },
@@ -48,23 +18,46 @@ const initialSelectedTypes = [];
 
 export default function Service({ currentUser }) {
   const navigate = useNavigate();
+
+  // --- KHÔI PHỤC DỮ LIỆU TỪ LOCAL STORAGE ---
+  const savedState = useMemo(() => {
+      try {
+          const saved = localStorage.getItem('service_page_draft');
+          return saved ? JSON.parse(saved) : null;
+      } catch (e) {
+          return null;
+      }
+  }, []);
   
   // --- STATES ---
-  const [searchTerm, setSearchTerm] = useState('');
-  const [startPoint, setStartPoint] = useState({ name: '', lat: null, lon: null });
+  const [searchTerm, setSearchTerm] = useState(savedState?.searchTerm || '');
+  const [startPoint, setStartPoint] = useState(savedState?.startPoint || { name: '', lat: null, lon: null });
+  const [startDate, setStartDate] = useState(savedState?.startDate || '');
+  const [endDate, setEndDate] = useState(savedState?.endDate || '');
+  const [selectedTypes, setSelectedTypes] = useState(savedState?.selectedTypes || initialSelectedTypes); 
+  const [selectedAttractions, setSelectedAttractions] = useState(savedState?.selectedAttractions || []);
+  
   const [customInput, setCustomInput] = useState(''); 
   const [showStartMenu, setShowStartMenu] = useState(false); 
   const [isTypingLocation, setIsTypingLocation] = useState(false); 
   const [isLocating, setIsLocating] = useState(false); 
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [selectedTypes, setSelectedTypes] = useState(initialSelectedTypes); 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAttractions, setSelectedAttractions] = useState([]);
-  const [tourResult, setTourResult] = useState(null);
 
-  // --- LOGIC FETCH DATA ---
+  // --- AUTO-SAVE EFFECT ---
+  useEffect(() => {
+      const stateToSave = {
+          searchTerm,
+          startPoint,
+          startDate,
+          endDate,
+          selectedTypes,
+          selectedAttractions
+      };
+      localStorage.setItem('service_page_draft', JSON.stringify(stateToSave));
+  }, [searchTerm, startPoint, startDate, endDate, selectedTypes, selectedAttractions]);
+
+  // --- FETCH DATA ---
   const fetchAttractions = async (params = {}) => {
     try {
         setLoading(true);
@@ -89,7 +82,6 @@ export default function Service({ currentUser }) {
     }
   };
 
-  // Effects
   useEffect(() => {
     fetchAttractions(); 
   }, [currentUser]); 
@@ -122,7 +114,7 @@ export default function Service({ currentUser }) {
         try {
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
           const data = await res.json();
-          const displayName = data.address.city || data.address.town || data.address.road || "Vị trí của tôi";
+          const displayName = data.address.city || data.address.town || data.address.road || "Không xác định được";
           setStartPoint({ name: displayName, lat: latitude, lon: longitude });
         } catch (error) {
           console.error("Lỗi lấy tên vị trí:", error);
@@ -162,12 +154,192 @@ export default function Service({ currentUser }) {
     setIsTypingLocation(false);
   };
 
-  const handleStartDateChange = (e) => {
-    const newStart = e.target.value;
-    setStartDate(newStart);
-    if (endDate && newStart > endDate) {
-      setEndDate('');
+  // --- HELPER FUNCTIONS ---
+  const formatDateLocal = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const parseDateString = (dateStr) => {
+    if (!dateStr) return null;
+    const currentYear = new Date().getFullYear();
+    const cleanStr = dateStr.split(" ")[0]; 
+    const parts = cleanStr.split("/");
+    if (parts.length >= 2) {
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; 
+        const date = new Date(currentYear, month, day);
+        date.setHours(0, 0, 0, 0);
+        return date;
     }
+    return null;
+  };
+
+  // --- VALIDATION LOGIC ---
+  const validateDateConstraints = (start, end, attractions) => {
+    if (!start && !end) return true;
+    const startDateObj = start ? new Date(start) : null;
+    const endDateObj = end ? new Date(end) : null;
+
+    // 1. Ngày đi <= Ngày về
+    if (startDateObj && endDateObj && startDateObj > endDateObj) {
+        alert("Thời gian đi phải sớm hơn hoặc bằng thời gian về!");
+        return false;
+    }
+
+    // 2. Logic ràng buộc Lễ hội
+    for (const attr of attractions) {
+        const isYearRound = attr.datetimeStart === "12/1" && attr.datetimeEnd === "31/12";
+        if (isYearRound) continue;
+
+        // Lấy ngày bắt đầu/kết thúc từ dữ liệu (mặc định năm hiện tại)
+        const festivalStart = parseDateString(attr.datetimeStart);
+        const festivalEnd = parseDateString(attr.datetimeEnd);
+
+        if (!festivalStart || !festivalEnd) continue;
+
+        // Logic đồng bộ năm
+        if (startDateObj && startDateObj.getFullYear() > festivalStart.getFullYear()) {
+            const yearDiff = startDateObj.getFullYear() - festivalStart.getFullYear();
+            festivalStart.setFullYear(festivalStart.getFullYear() + yearDiff);
+            festivalEnd.setFullYear(festivalEnd.getFullYear() + yearDiff);
+        }
+
+        // Kiểm tra: Ngày đi không được trễ hơn ngày kết thúc lễ hội
+        if (startDateObj && startDateObj > festivalEnd) {
+            alert(`Lỗi: Thời gian đi (${formatDateLocal(startDateObj)}) trễ hơn ngày kết thúc của ${attr.name} (${formatDateLocal(festivalEnd)}).`);
+            return false;
+        }
+
+        // Kiểm tra: Ngày về không được sớm hơn ngày bắt đầu lễ hội
+        if (endDateObj && endDateObj < festivalStart) {
+            alert(`Lỗi: Thời gian về (${formatDateLocal(endDateObj)}) sớm hơn ngày bắt đầu của ${attr.name} (${formatDateLocal(festivalStart)}).`);
+            return false;
+        }
+    }
+    return true;
+  };
+
+  // --- HANDLERS (DatePicker) ---
+  const handleStartDateChange = (date) => {
+    const newStartStr = date ? formatDateLocal(date) : '';
+    const isValid = validateDateConstraints(newStartStr, endDate, selectedAttractions);
+    
+    if (isValid) {
+        setStartDate(newStartStr);
+        if (endDate && newStartStr > endDate) setEndDate('');
+    } 
+  };
+
+  const handleEndDateChange = (date) => {
+    const newEndStr = date ? formatDateLocal(date) : '';
+    const isValid = validateDateConstraints(startDate, newEndStr, selectedAttractions);
+    
+    if (isValid) setEndDate(newEndStr);
+  };
+
+  // --- Logic tự động cập nhật ngày ---
+  const updateDatesBasedOnAllAttractions = (attractions) => {
+    if (attractions.length === 0) {
+        setStartDate(''); 
+        setEndDate('');
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = formatDateLocal(today);
+    const currentYear = today.getFullYear();
+
+    let currentStart = startDate;
+    if (!currentStart) {
+        currentStart = todayStr;
+        setStartDate(todayStr);
+    }
+
+    let minEventStart = null;
+    let maxEventEnd = null;
+    let hasEvent = false;
+
+    attractions.forEach(attr => {
+        const isYearRound = attr.datetimeStart === "12/1" && attr.datetimeEnd === "31/12";
+        
+        if (!isYearRound) {
+            hasEvent = true;
+            let start = parseDateString(attr.datetimeStart);
+            let end = parseDateString(attr.datetimeEnd);
+
+            if (start && end) {
+                const startYear = currentStart ? new Date(currentStart).getFullYear() : currentYear;
+                
+                if (startYear > end.getFullYear()) {
+                     start.setFullYear(startYear);
+                     end.setFullYear(startYear);
+                } else if (end < today) {
+                     start.setFullYear(currentYear + 1);
+                     end.setFullYear(currentYear + 1);
+                }
+
+                if (!minEventStart || start < minEventStart) minEventStart = start;
+                if (!maxEventEnd || end > maxEventEnd) maxEventEnd = end;
+            }
+        }
+    });
+
+    if (hasEvent && minEventStart && maxEventEnd) {
+        setStartDate(formatDateLocal(minEventStart));
+        setEndDate(formatDateLocal(maxEventEnd));
+    } else {
+        if (!startDate) setStartDate(todayStr);
+        if (!endDate) {
+            const startObj = startDate ? new Date(startDate) : new Date(today);
+            const defaultEnd = new Date(startObj);
+            defaultEnd.setDate(defaultEnd.getDate() + 2);
+            setEndDate(formatDateLocal(defaultEnd));
+        }
+    }
+  };
+
+  const handleToggleSelect = (item) => {
+    setSelectedAttractions(prev => {
+      const exists = prev.find(i => i.id === item.id);
+      let newSelection;
+      
+      if (exists) {
+          newSelection = prev.filter(i => i.id !== item.id);
+      } else {
+          newSelection = [...prev, item];
+      }
+      
+      updateDatesBasedOnAllAttractions(newSelection);
+      return newSelection;
+    });
+  };
+
+  const handleTypeToggle = (val) => {
+    setSelectedTypes(prev => prev.includes(val) ? prev.filter(t => t !== val) : [...prev, val]);
+  };
+  
+  // --- [MODIFIED] CREATE TOUR HANDLER ---
+  const handleCreateTour = () => {
+     if(selectedAttractions.length === 0) return alert("Vui lòng chọn ít nhất 1 địa điểm!");
+     if(!startPoint.lat || !startPoint.lon) return alert("Vui lòng chọn điểm xuất phát hợp lệ!");
+
+     if (!validateDateConstraints(startDate, endDate, selectedAttractions)) {
+         return;
+     }
+
+     // Thay vì fetch API trực tiếp, chuyển hướng sang trang Itinerary
+     navigate('/itinerary', { 
+        state: { 
+            selectedAttractions,
+            startPoint,
+            startDate, // format: YYYY-MM-DD
+            endDate    // format: YYYY-MM-DD
+        } 
+     });
   };
 
   const renderCardStars = (rating) => {
@@ -182,58 +354,16 @@ export default function Service({ currentUser }) {
     );
   };
 
-  const handleToggleSelect = (item) => {
-    setSelectedAttractions(prev => {
-      const exists = prev.find(i => i.id === item.id);
-      if (exists) return prev.filter(i => i.id !== item.id);
-      return [...prev, item];
-    });
-  };
-
-  const handleTypeToggle = (val) => {
-    setSelectedTypes(prev => prev.includes(val) ? prev.filter(t => t !== val) : [...prev, val]);
-  };
-  
-  const handleCreateTour = async () => {
-     if(selectedAttractions.length === 0) return alert("Vui lòng chọn ít nhất 1 địa điểm!");
-     if(!startPoint.lat || !startPoint.lon) return alert("Vui lòng chọn điểm xuất phát hợp lệ!");
-
-     const queryParams = new URLSearchParams({
-        startLat: startPoint.lat,
-        startLon: startPoint.lon,
-        startTime: startDate ? `${new Date(startDate).toLocaleDateString('en-GB')} 08:00` : new Date().toLocaleDateString('en-GB') + ' 08:00',
-        endTime: endDate ? `${new Date(endDate).toLocaleDateString('en-GB')} 20:00` : new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString('en-GB') + ' 20:00'
-     });
-
-    selectedAttractions.forEach(attr => queryParams.append('attractionIds', attr.id));
-
-    try {
-        const response = await fetch(`http://localhost:5000/api/quick-tour-creator?${queryParams.toString()}`);
-        const result = await response.json();
-        if(result.success) {
-            setTourResult(result.data);
-        } else {
-            alert(result.error);
-        }
-    } catch (error) {
-        console.error("Lỗi tạo tour:", error);
-        alert("Có lỗi xảy ra khi tạo lịch trình");
-    }
-  };
-
-  // --- DATA FILTERING VÀ LOGIC MỚI ---
+  // --- RENDER ---
   const isSelected = (id) => selectedAttractions.find(i => i.id === id);
 
-  // Kiểm tra xem có đang filter hoặc search không
   const isFiltering = useMemo(() => {
       return selectedTypes.length > 0 || searchTerm.trim() !== '';
   }, [selectedTypes, searchTerm]);
 
-  // Chia dữ liệu cho chế độ mặc định
   const mustVisitPlaces = useMemo(() => data.slice(0, 10), [data]); 
   const suitableSuggestions = useMemo(() => data.slice(10), [data]);
 
-  // --- HÀM RENDER CARD (Tách ra để dùng chung) ---
   const renderAttractionCard = (item) => (
     <div key={item.id} className="dest-card">
         <div 
@@ -262,15 +392,12 @@ export default function Service({ currentUser }) {
     </div>
   );
 
-  if (tourResult) return <TourResultView tourData={tourResult} onReset={() => setTourResult(null)} />;
-
   return (
     <div className="service-page">
       <div className="service-hero">
         <div className="hero-container">
           <h1>Kiến tạo hành trình văn hóa của riêng bạn</h1>
           
-          {/* HERO SEARCH SECTION */}
           <div className="hero-search-section">
             
             {/* 1. KHỐI XUẤT PHÁT ĐIỂM */}
@@ -303,7 +430,6 @@ export default function Service({ currentUser }) {
                     </button>
                 )}
 
-                {/* Dropdown Menu */}
                 {showStartMenu && (
                     <div className="start-options-dropdown">
                         <div className="start-option-item" onClick={handleGetCurrentLocation}>
@@ -384,23 +510,32 @@ export default function Service({ currentUser }) {
 
           <div className="date-picker-row">
             <span style={{fontWeight:600, color:'#94a3b8'}}>Ngày đi:</span>
-            <div className="date-display">
-                <input 
-                    type="date" 
-                    className="date-input-hidden" 
-                    value={startDate} 
-                    min={new Date().toISOString().split("T")[0]} 
-                    onChange={handleStartDateChange} 
-                />
-                <span style={{margin:'0 8px'}}>-</span>
-                <input 
-                    type="date" 
+            <div className="date-display custom-datepicker-wrapper">
+                <DatePicker 
+                    selected={startDate ? new Date(startDate) : null}
+                    onChange={handleStartDateChange}
+                    minDate={new Date()} 
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="dd/mm/yyyy"
                     className="date-input-hidden"
-                    value={endDate}
-                    min={startDate || new Date().toISOString().split("T")[0]}
-                    onChange={e => setEndDate(e.target.value)}
+                    onKeyDown={(e) => e.preventDefault()}
+                    portalId="root"
+                    popperClassName="datepicker-on-top"
+                />
+                
+                <span style={{margin:'0 8px'}}>-</span>
+                
+                <DatePicker 
+                    selected={endDate ? new Date(endDate) : null}
+                    onChange={handleEndDateChange}
+                    minDate={startDate ? new Date(startDate) : new Date()} 
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="dd/mm/yyyy"
                     disabled={!startDate}
-                    style={{ opacity: !startDate ? 0.5 : 1, cursor: !startDate ? 'not-allowed' : 'pointer' }}
+                    className="date-input-hidden"
+                    onKeyDown={(e) => e.preventDefault()}
+                    portalId="root"
+                    popperClassName="datepicker-on-top"
                 />
             </div>
           </div>
@@ -431,10 +566,9 @@ export default function Service({ currentUser }) {
             </button>
         </aside>
 
-        {/* CONTENT PHẢI - LOGIC THAY ĐỔI TẠI ĐÂY */}
+        {/* CONTENT PHẢI */}
         <main className="main-content">
             {isFiltering ? (
-                // --- TRƯỜNG HỢP CÓ FILTER/SEARCH: HIỂN THỊ 1 LIST DUY NHẤT ---
                 <>
                     <h2 className="section-title">Các địa điểm phù hợp</h2>
                     <div className="slider-container">
@@ -448,15 +582,12 @@ export default function Service({ currentUser }) {
                     </div>
                 </>
             ) : (
-                // --- TRƯỜNG HỢP MẶC ĐỊNH: HIỂN THỊ 2 LIST ---
                 <>
-                    {/* SECTION 1 */}
                     <h2 className="section-title">Các địa điểm không thể bỏ qua</h2>
                     <div className="slider-container">
                         {mustVisitPlaces.map(item => renderAttractionCard(item))}
                     </div>
 
-                    {/* SECTION 2 */}
                     <h2 className="section-title" style={{marginTop: '40px'}}>Các gợi ý phù hợp</h2>
                     <div className="slider-container">
                         {suitableSuggestions.length > 0 ? (

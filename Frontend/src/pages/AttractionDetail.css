@@ -14,7 +14,6 @@
   backdrop-filter: blur(10px);
 }
 
-/* --- VIEW 1: TÓM TẮT CHI TIẾT ĐỊA ĐIỂM --- */
 .summary-page-container {
   min-height: 100vh;
   display: flex;
@@ -136,7 +135,6 @@
 }
 .view-detail-link:hover { text-decoration: underline; color: #1e40af; }
 
-/* --- KHU VỰC NÚT BẤM --- */
 .summary-footer-actions {
   margin-top: 30px;
   display: flex;
@@ -211,7 +209,7 @@
 .detail-view-header {
   text-align: center;
   margin-bottom: 30px;
-  background: transparent !important; /* Đảm bảo trong suốt */
+  background: transparent !important;
   padding: 0;
   box-shadow: none;
   border: none;
@@ -236,7 +234,6 @@
   border-bottom: none;
 }
 
-/* --- KHUNG NỘI DUNG CHÍNH --- */
 .description-block {
   background: rgba(30, 41, 59, 0.5);
   padding: 30px;
@@ -252,15 +249,13 @@
   flex-direction: column;
 }
 
-/* Style đặc biệt cho LIST (Gợi ý tham quan) - Viền Xanh */
 .description-block-list {
-  background: rgba(255, 255, 255, 0.05); /* Nền sáng hơn chút */
-  border-left: 4px solid #3b82f6; /* Viền xanh dương */
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #3b82f6;
 }
 
-/* Tiêu đề từng phần (I, II, III...) */
 .content-title {
-  color: #818cf8; /* Tím nhạt */
+  color: #818cf8;
   margin-bottom: 15px;
   width: 100%;
   text-align: left;
@@ -282,7 +277,6 @@
   border-radius: 10px;
 }
 
-/* Nội dung chữ */
 .content-text {
   text-align: left;
   line-height: 1.8;
@@ -297,7 +291,6 @@
    margin-bottom: 6px;
 }
 
-/* --- KHUNG GỢI Ý DU KHÁCH --- */
 .tourist-tips {
   background: rgba(255, 255, 255, 0.05);
   padding: 30px;
@@ -369,7 +362,6 @@ color: #fde047;
 }
 .add-schedule-btn-small:hover { background: #eab308; }
 
-/* PHẦN ĐÁNH GIÁ (REVIEWS) */
 .attraction-reviews {
   max-width: 800px;
   margin: 40px auto 0;
@@ -377,7 +369,6 @@ color: #fde047;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 1. Header điểm số */
 .reviews-header-modern {
   display: flex;
   justify-content: space-between;
@@ -423,7 +414,6 @@ color: #fde047;
 .stars { font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 4px; }
 .rating-text { font-size: 0.9rem; font-weight: bold; color: #fff; }
 
-/* 2. Banner yêu cầu đăng nhập */
 .login-prompt-banner {
   display: flex;
   align-items: center;
@@ -452,7 +442,6 @@ color: #fde047;
   transform: scale(1.05);
 }
 
-/* 3. Form viết đánh giá */
 .review-form-modern {
   background: rgba(255,255,255,0.05);
   padding: 20px;
@@ -558,8 +547,6 @@ color: #fde047;
 .delete-review-link:hover { color: #f87171; }
 
 .no-reviews { text-align: center; color: #64748b; font-style: italic; margin-top: 20px; }
-
-   /* --- PHẦN REVIEW CARD STYLE --- */
 
 .review-input-container {
   margin-bottom: 30px;

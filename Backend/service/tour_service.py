@@ -23,87 +23,137 @@ GMM_RANDOM_STATE = 42
 IDEAL_TIME_DEFAULT = 1         # Chiều/tùy chọn
 IDEAL_TIME_ORDER = {0: 0, 1: 1, 2: 2}
 
+# Danh sách các sân bay lớn tại Việt Nam (Tên, Lat, Lon)
+VIETNAM_AIRPORTS = {
+    "SGN": {"name": "Sân bay Tân Sơn Nhất (HCM)", "lat": 10.818463, "lon": 106.658825},
+    "HAN": {"name": "Sân bay Nội Bài (Hà Nội)", "lat": 21.218715, "lon": 105.804171},
+    "DAD": {"name": "Sân bay Đà Nẵng", "lat": 16.053813, "lon": 108.204041},
+    "CXR": {"name": "Sân bay Cam Ranh (Khánh Hòa)", "lat": 11.998183, "lon": 109.219373},
+    "PQC": {"name": "Sân bay Phú Quốc", "lat": 10.158092, "lon": 103.993931},
+    "HPH": {"name": "Sân bay Cát Bi (Hải Phòng)", "lat": 20.819262, "lon": 106.724836},
+    "VCA": {"name": "Sân bay Cần Thơ", "lat": 10.082729, "lon": 105.712170},
+    "HUI": {"name": "Sân bay Phú Bài (Huế)", "lat": 16.400557, "lon": 107.697042},
+    "VII": {"name": "Sân bay Vinh (Nghệ An)", "lat": 18.730302, "lon": 105.677322},
+}
+
+def find_nearest_airport(lat, lon):
+    """Tìm sân bay gần nhất với tọa độ cho trước"""
+    nearest_code = None
+    min_dist = float('inf')
+    
+    for code, info in VIETNAM_AIRPORTS.items():
+        dist = geodesic((lat, lon), (info['lat'], info['lon'])).km
+        if dist < min_dist:
+            min_dist = dist
+            nearest_code = code
+            
+    return VIETNAM_AIRPORTS[nearest_code], min_dist
+
+# --- HÀM TIỆN ÍCH LÀM TRÒN GIỜ & FORMAT ---
+def round_to_nearest_10_minutes(dt):
+    """
+    Làm tròn thời gian về mốc 10 phút gần nhất.
+    VD: 8:03 -> 8:00, 8:06 -> 8:10, 8:33 -> 8:30, 8:38 -> 8:40
+    """
+    if not dt: return dt
+    minutes = dt.minute
+    remainder = minutes % 10
+    
+    if remainder < 5:
+        # Làm tròn xuống
+        delta = -remainder
+    else:
+        # Làm tròn lên
+        delta = 10 - remainder
+        
+    return dt + timedelta(minutes=delta)
+
+def format_time_vn(dt):
+    """
+    Chuyển đổi sang định dạng Việt Nam: 14h30p
+    """
+    if not dt: return ""
+    return f"{dt.hour}h{dt.minute:02d}p"
+
 def get_routing_info(coord_start, coord_end, vehicle='car'):
     """
-    Lấy thông tin di chuyển từ GraphHopper Local Server.
-    Input: tuple (lat, lon)
-    Output: (distance_km, duration_minutes, polyline_geometry)
+    Thông minh: Tự động chọn Máy bay nếu xa (>400km), Xe nếu gần.
+    Trả về: (distance_km, duration_minutes, geometry, transport_mode)
     """
-    # GraphHopper Local Server endpoint
-    base_url = "http://localhost:8989/route"
+    # 1. Tính khoảng cách đường chim bay trước
+    dist_straight = geodesic(coord_start, coord_end).km
+    
+    # 2. LOGIC MÁY BAY (Nếu xa hơn 400km)
+    if dist_straight > 400:
+        # Tìm sân bay đi và đến
+        airport_start, dist_to_airport = find_nearest_airport(coord_start[0], coord_start[1])
+        airport_end, dist_from_airport = find_nearest_airport(coord_end[0], coord_end[1])
+        
+        print(f"[Smart Route] Bay từ {airport_start['name']} -> {airport_end['name']}")
+        
+        # Thời gian: 
+        # Di chuyển ra sân bay (tốc độ 40km/h) + Bay (800km/h) + Thủ tục (120p)
+        road_time_min = (dist_to_airport + dist_from_airport) / 40 * 60
+        flight_dist = geodesic((airport_start['lat'], airport_start['lon']), 
+                               (airport_end['lat'], airport_end['lon'])).km
+        flight_time_min = (flight_dist / 800) * 60
+        
+        total_duration = int(road_time_min + flight_time_min + 120)
+        
+        # Tạo đường gấp khúc: Điểm đi -> SB đi -> SB đến -> Điểm đến
+        geometry = {
+            'type': 'LineString',
+            'coordinates': [
+                [coord_start[1], coord_start[0]],       # Xuất phát
+                [airport_start['lon'], airport_start['lat']], # Sân bay đi
+                [airport_end['lon'], airport_end['lat']],     # Sân bay đến
+                [coord_end[1], coord_end[0]]            # Đích đến
+            ]
+        }
+        
+        # Trả về thêm tên sân bay để hiển thị
+        route_desc = f"plane:{airport_start['name']}-{airport_end['name']}"
+        
+        return round(dist_straight, 2), total_duration, geometry, route_desc
 
-    # Parameters cho GraphHopper Local Server (GET request)
+    # 3. LOGIC XE - Nếu gần
+    base_url = "http://localhost:8989/route"
     params = {
         'point': [f"{coord_start[0]},{coord_start[1]}", f"{coord_end[0]},{coord_end[1]}"],
         'profile': vehicle,
         'locale': 'vi',
-        'instructions': 'false',  # Không cần instructions để giảm response size
         'points_encoded': 'false',
         'calc_points': 'true',
         'type': 'json'
     }
 
     try:
-        response = requests.get(base_url, params=params, timeout=15)
-        data = response.json()
-
-        if response.status_code == 200 and 'paths' in data and len(data['paths']) > 0:
-            path = data['paths'][0]
-
-            # GraphHopper trả về distance (m) và time (ms)
-            distance_km = round(path['distance'] / 1000, 2)
-            duration_min = round(path['time'] / (1000 * 60))  # Convert ms to minutes
-
-            # Convert points to GeoJSON format
-            geometry = None
-            if 'points' in path and path['points']['coordinates']:
-                # GraphHopper trả về [[lon, lat], [lon, lat], ...]
-                coordinates = path['points']['coordinates']
-                geometry = {
-                    'type': 'LineString',
-                    'coordinates': coordinates
-                }
-
-            print(f"[GraphHopper Local] Distance: {distance_km}km, Duration: {duration_min}min")
-            return distance_km, duration_min, geometry
-
-        else:
-            print(f"[GraphHopper Error] Status: {response.status_code}, Message: {data.get('message', 'Unknown error')}")
-
-    except requests.exceptions.ConnectionError:
-        print(f"[GraphHopper Failed] Cannot connect to local server at {base_url}. Make sure GraphHopper is running.")
-        print("  To start GraphHopper: java -jar graphhopper-web-*.jar server config.yml")
-    except requests.exceptions.Timeout:
-        print(f"[GraphHopper Failed] Request timeout after 15s")
+        response = requests.get(base_url, params=params, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            if 'paths' in data and len(data['paths']) > 0:
+                path = data['paths'][0]
+                dist = round(path['distance'] / 1000, 2)
+                mins = round(path['time'] / 60000)
+                
+                geometry = None
+                if 'points' in path and 'coordinates' in path['points']:
+                    geometry = {
+                        'type': 'LineString',
+                        'coordinates': path['points']['coordinates']
+                    }
+                return dist, mins, geometry, "car"
     except Exception as e:
-        print(f"[GraphHopper Failed] {e}")
+        print(f"[GraphHopper Error] {e}")
 
-    # --- FALLBACK: Geodesic calculation ---
-    print(f"[GraphHopper Fallback] Using geodesic calculation for {coord_start} -> {coord_end}")
-    dist = geodesic(coord_start, coord_end).km
-
-    # Intelligent speed calculation
-    if dist < 1:      # Trong vòng 1km
-        speed = 5     # Đi bộ
-    elif dist < 5:    # 1-5km
-        speed = 15    # Xe máy/thành phố
-    elif dist < 20:   # 5-20km
-        speed = 25    # Đường quốc lộ
-    else:             # >20km
-        speed = FALLBACK_SPEED_KMH  # Cao tốc
-
-    duration = round((dist / speed) * 60)
-
-    # Create simple geometry (straight line)
+    # 4. FALLBACK (Đường bộ giả định nếu GraphHopper lỗi)
+    speed = 40 # km/h
+    duration = round((dist_straight / speed) * 60)
     geometry = {
         'type': 'LineString',
-        'coordinates': [
-            [coord_start[1], coord_start[0]],  # [lon, lat]
-            [coord_end[1], coord_end[0]]       # [lon, lat]
-        ]
+        'coordinates': [[coord_start[1], coord_start[0]], [coord_end[1], coord_end[0]]]
     }
-
-    return round(dist, 2), duration, geometry
+    return round(dist_straight, 2), duration, geometry, "car"
 
 def _route_cache_key(coord_start, coord_end):
     return (
@@ -113,16 +163,17 @@ def _route_cache_key(coord_start, coord_end):
 
 
 def get_route_with_cache(coord_start, coord_end, cache):
-    """
-    Wrapper quanh get_routing_info với cache để giảm số lần gọi GraphHopper.
-    """
     key = _route_cache_key(coord_start, coord_end)
     if key in cache:
         return cache[key]
 
-    distance_km, duration_min, geometry = get_routing_info(coord_start, coord_end)
-    cache[key] = (distance_km, duration_min, geometry)
+    # Hứng 4 giá trị
+    distance_km, duration_min, geometry, mode = get_routing_info(coord_start, coord_end)
+    
+    # Lưu vào cache
+    cache[key] = (distance_km, duration_min, geometry, mode)
 
+    # Cache chiều ngược lại (đảo geometry)
     reverse_key = _route_cache_key(coord_end, coord_start)
     reversed_geometry = None
     if geometry and 'coordinates' in geometry:
@@ -130,7 +181,8 @@ def get_route_with_cache(coord_start, coord_end, cache):
             'type': geometry['type'],
             'coordinates': list(reversed(geometry['coordinates']))
         }
-    cache[reverse_key] = (distance_km, duration_min, reversed_geometry)
+    cache[reverse_key] = (distance_km, duration_min, reversed_geometry, mode)
+    
     return cache[key]
 
 def parse_opening_hours(open_str):
@@ -191,6 +243,37 @@ def get_weather_by_date_and_coordinates(api_key, date, lat, lon):
 
             if not daily_forecasts:
                 print(f"[Weather] No forecast data found for date {target_date_str}")
+                
+                # Nếu là ngày hôm nay mà không có dự báo
+                # gọi API Current Weather để lấy thời tiết hiện tại.
+                if target_date_str == datetime.now().strftime("%Y-%m-%d"):
+                    try:
+                        print("[Weather] Attempting to fetch Current Weather fallback...")
+                        current_url = "https://api.openweathermap.org/data/2.5/weather"
+                        c_params = {
+                            'lat': lat, 'lon': lon, 
+                            'appid': api_key, 'units': 'metric'
+                        }
+                        c_res = requests.get(current_url, params=c_params, timeout=5)
+                        if c_res.status_code == 200:
+                            c_data = c_res.json()
+                            # Giả lập cấu trúc dữ liệu giống forecast để trả về
+                            return {
+                                'date': target_date_str,
+                                'temp_min': round(c_data['main']['temp_min'], 1),
+                                'temp_max': round(c_data['main']['temp_max'], 1),
+                                'temp_avg': round(c_data['main']['temp'], 1),
+                                'humidity_avg': c_data['main']['humidity'],
+                                'description': c_data['weather'][0]['description'],
+                                'icon': c_data['weather'][0]['icon'],
+                                'main': c_data['weather'][0]['main'],
+                                'wind_speed': c_data.get('wind', {}).get('speed', 0),
+                                'clouds': c_data.get('clouds', {}).get('all', 0),
+                                'forecasts_count': 1
+                            }
+                    except Exception as e:
+                        print(f"[Weather Fallback Error] {e}")
+
                 return None
 
             # Tính trung bình các chỉ số thời tiết trong ngày
@@ -247,20 +330,37 @@ def is_attraction_available(attraction, current_time=None, start_datetime=None, 
             return False, "Lễ hội thiếu thông tin thời gian cụ thể"
         
         # Với festival diễn ra hàng năm, cần kiểm tra trong năm hiện tại
-        current_year = current_time.year
+        if current_time:
+            current_year = current_time.year
+            # Tạo khoảng thời gian diễn ra cho năm hiện tại
+            festival_start = fes.time_start.replace(year=current_year)
+            festival_end = fes.time_end.replace(year=current_year)
+            festival_start_date = festival_start.date()
+            festival_end_date = festival_end.date()
+            current_date = current_time.date()
             
-        # Tạo khoảng thời gian diễn ra cho năm hiện tại
-        festival_start = fes.time_start.replace(year=current_year)
-        festival_end = fes.time_end.replace(year=current_year)
-
-        festival_start = fes.time_start.date()
-        festival_end = fes.time_end.date()
-        if current_time and festival_start <= current_time <= festival_end:
-            return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
-            
-        if start_datetime and end_datetime:
-            if festival_end < start_datetime.date() or festival_start > end_datetime.date():
+            # Kiểm tra nếu current_time nằm trong khoảng thời gian festival
+            if festival_start_date <= current_date <= festival_end_date:
+                return True, ""  # Festival đang diễn ra
+            else:
                 return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
+            
+        # Kiểm tra với khoảng thời gian tour (start_datetime, end_datetime)
+        if start_datetime and end_datetime:
+            # Lấy năm từ start_datetime để kiểm tra
+            tour_year = start_datetime.year
+            festival_start = fes.time_start.replace(year=tour_year)
+            festival_end = fes.time_end.replace(year=tour_year)
+            festival_start_date = festival_start.date()
+            festival_end_date = festival_end.date()
+            tour_start_date = start_datetime.date()
+            tour_end_date = end_datetime.date()
+            
+            # Kiểm tra xem khoảng thời gian tour có giao với khoảng thời gian festival không
+            if festival_end_date < tour_start_date or festival_start_date > tour_end_date:
+                return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
+            else:
+                return True, ""  # Festival diễn ra trong khoảng thời gian tour
 
     # 2. Check CulturalSpot (Giờ mở cửa trong ngày)
     elif attraction.type == 'cultural_spot':
@@ -314,7 +414,7 @@ def estimate_cluster_duration(attractions, start_location, cache):
             pending,
             key=lambda attr: get_route_with_cache(current, (attr.lat, attr.lon), cache)[0]
         )
-        _, travel_min, _ = get_route_with_cache(current, (nearest.lat, nearest.lon), cache)
+        _, travel_min, _, _ = get_route_with_cache(current, (nearest.lat, nearest.lon), cache)
         total_minutes += travel_min + approximate_visit_duration(nearest)
         current = (nearest.lat, nearest.lon)
         pending.remove(nearest)
@@ -335,7 +435,7 @@ def cluster_attractions_with_gmm(attractions, start_location, max_days, cache, m
 
     features = []
     for attr in attractions:
-        _, travel_min, _ = get_route_with_cache(start_location, (attr.lat, attr.lon), cache)
+        _, travel_min, _, _ = get_route_with_cache(start_location, (attr.lat, attr.lon), cache)
         features.append([
             attr.lat / 180.0,
             attr.lon / 180.0,
@@ -399,7 +499,7 @@ def find_mst_tour_order(attractions, start_location, cache):
     for j in range(n):
         if j == start_idx:
             continue
-        dist, _, _ = get_route_with_cache(coords[start_idx], coords[j], cache)
+        dist, _, _, _ = get_route_with_cache(coords[start_idx], coords[j], cache)
         heapq.heappush(heap, (dist, start_idx, j))
 
     # Mở rộng MST
@@ -414,7 +514,7 @@ def find_mst_tour_order(attractions, start_location, cache):
         for nxt in range(n):
             if nxt in visited:
                 continue
-            ndist, _, _ = get_route_with_cache(coords[to], coords[nxt], cache)
+            ndist, _, _, _ = get_route_with_cache(coords[to], coords[nxt], cache)
             heapq.heappush(heap, (ndist, to, nxt))
 
     # DFS để lấy thứ tự tham quan
@@ -446,7 +546,7 @@ def find_mst_tour_order(attractions, start_location, cache):
 
     for attr in order:
         coord = (attr.lat, attr.lon)
-        dist, travel_min, geometry = get_route_with_cache(current_coord, coord, cache)
+        dist, travel_min, geometry, _ = get_route_with_cache(current_coord, coord, cache)
         legs.append({
             "from": current_label,
             "to": attr.id,
@@ -564,25 +664,52 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
 
     day_events = []
     routes = []
+    
+    # Làm tròn giờ xuất phát cho đẹp
+    current_time = round_to_nearest_10_minutes(day_start_datetime)
     current_loc = start_location
-    current_time = day_start_datetime
+    
     day_distance = 0
     day_travel_minutes = 0
     day_visit_minutes = 0
 
     for attraction in ordered:
         coord = (attraction.lat, attraction.lon)
-        dist, travel_min, geometry = get_route_with_cache(current_loc, coord, cache)
-        arrival_time = current_time + timedelta(minutes=travel_min)
+        dist, travel_min, geometry, mode = get_route_with_cache(current_loc, coord, cache)
+        
+        # Tính giờ đến nơi thô
+        arrival_raw = current_time + timedelta(minutes=travel_min)
+        
+        # LÀM TRÒN giờ đến nơi cho đẹp (VD: 8:33 -> 8:30)
+        arrival_time = round_to_nearest_10_minutes(arrival_raw)
+
+        # Nếu làm tròn khiến giờ đến < giờ đi (do di chuyển quá ngắn), cộng bù 10p
+        if arrival_time <= current_time:
+            arrival_time = current_time + timedelta(minutes=10)
+
+        # Recalculate travel min hiển thị theo giờ đã làm tròn (để logic hiển thị khớp nhau)
+        display_travel_min = int((arrival_time - current_time).total_seconds() / 60)
 
         if dist > 0:
+            # Check nếu mode bắt đầu bằng "plane:"
+            if isinstance(mode, str) and mode.startswith('plane:'):
+                airports = mode.split(':')[1].split('-') # Lấy tên 2 sân bay
+                action_name = f"✈️ {airports[0]} ➝ {airports[1]}"
+                detail_text = f"Khoảng {dist} km (Bay + Di chuyển)"
+            elif mode == 'plane': # Fallback cho code cũ
+                action_name = f"✈️ Bay tới {attraction.name}"
+                detail_text = f"{dist} km / ~{travel_min // 60}h{travel_min % 60}p"
+            else:
+                action_name = f"🚗 Di chuyển tới {attraction.name}"
+                detail_text = f"{dist} km / ~{travel_min} phút"
+
             day_events.append({
                 "day": day_number,
                 "date": current_time.strftime("%d/%m/%Y"),
-                "time": current_time.strftime("%H:%M"),
+                "time": format_time_vn(current_time),
                 "type": "TRAVEL",
-                "name": f"Di chuyển tới {attraction.name}",
-                "detail": f"{round(dist, 2)} km / {travel_min} phút"
+                "name": action_name, # Dùng tên hành động mới
+                "detail": detail_text
             })
 
             if geometry:
@@ -592,7 +719,7 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
             routes.append(path)
 
         day_distance += dist
-        day_travel_minutes += travel_min
+        day_travel_minutes += travel_min # Vẫn cộng thời gian thực tế để thống kê chính xác
 
         visit_duration = approximate_visit_duration(attraction)
         available, status = is_attraction_available(attraction, arrival_time)
@@ -601,7 +728,7 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         day_events.append({
             "day": day_number,
             "date": arrival_time.strftime("%d/%m/%Y"),
-            "time": arrival_time.strftime("%H:%M"),
+            "time": format_time_vn(arrival_time), 
             "type": "VISIT",
             "id": attraction.id,
             "name": attraction.name,
@@ -614,7 +741,11 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         })
 
         day_visit_minutes += visit_duration
-        current_time = arrival_time + timedelta(minutes=visit_duration)
+        
+        # Tính giờ rời đi và lại làm tròn tiếp
+        leave_time_raw = arrival_time + timedelta(minutes=visit_duration)
+        current_time = round_to_nearest_10_minutes(leave_time_raw)
+        
         current_loc = coord
 
     stats = {
@@ -638,11 +769,17 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
     """
     # Parse thời gian, tạo cache, lấy danh sách attraction
     try:
-        start_datetime = datetime.strptime(start_datetime_str, "%d/%m/%Y")
-        end_datetime = datetime.strptime(end_datetime_str, "%d/%m/%Y")
+        # Thử parse với format có giờ (từ API endpoint)
+        start_datetime = datetime.strptime(start_datetime_str, "%d/%m/%Y %H:%M")
+        end_datetime = datetime.strptime(end_datetime_str, "%d/%m/%Y %H:%M")
     except ValueError:
-        start_datetime = datetime.now()
-        end_datetime = start_datetime + timedelta(days=1)
+        # Fallback: thử parse không có giờ
+        try:
+            start_datetime = datetime.strptime(start_datetime_str, "%d/%m/%Y")
+            end_datetime = datetime.strptime(end_datetime_str, "%d/%m/%Y")
+        except ValueError:
+            start_datetime = datetime.now()
+            end_datetime = start_datetime + timedelta(days=1)
 
     start_location = (start_lat, start_lon)
     route_cache = {}
@@ -666,6 +803,9 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                     "name": attr.name,
                     "reason": reason
                 })
+        else:
+            # Với Bảo tàng, Di tích, Thiên nhiên -> Luôn thêm vào danh sách
+            valid_attractions.append(attr)
 
     if not valid_attractions:
         return {
@@ -731,18 +871,35 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
     for day_idx, cluster in enumerate(day_clusters):
         day_number = day_idx + 1
         day_date = start_datetime.date() + timedelta(days=day_idx)
+
+        # Xác định thời gian bắt đầu ngày
         if day_idx == 0:
             day_start_dt = start_datetime
         else:
             day_start_dt = datetime.combine(day_date, datetime.min.time()).replace(hour=WAKE_UP_HOUR, minute=0)
 
+        # Lấy thông tin thời tiết 
+        weather_info = None
+        if OPENWEATHERMAP_API_KEY:
+            # Sử dụng center của cluster hoặc start_location nếu không có center
+            weather_lat, weather_lon = cluster["center"] if cluster["center"] != start_location else start_location
+
+            weather_info = get_weather_by_date_and_coordinates(
+                OPENWEATHERMAP_API_KEY,
+                day_date,
+                weather_lat,
+                weather_lon
+            )
+
+
         timeline.append({
             "day": day_number,
             "date": day_start_dt.strftime("%d/%m/%Y"),
-            "time": day_start_dt.strftime("%H:%M"),
+            "time": format_time_vn(day_start_dt),
             "type": "DAY_START",
-            "name": f"Ngày {day_number}",
-            "detail": "Bắt đầu hành trình"
+            "name": f"Ngày {day_number} - Khởi hành",
+            "detail": "Bắt đầu hành trình",
+            "weather": weather_info
         })
 
         day_events, stats, routes, last_location, day_end_time = build_day_itinerary(
@@ -758,25 +915,13 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         timeline.append({
             "day": day_number,
             "date": day_end_time.strftime("%d/%m/%Y"),
-            "time": day_end_time.strftime("%H:%M"),
+            "time": format_time_vn(day_end_time),
             "type": "DAY_END",
             "name": "Kết thúc ngày",
             "detail": f"Tổng thời gian di chuyển {stats['travel_minutes']} phút"
         })
 
         daily_routes_map[day_number] = routes
-
-        # Lấy thông tin thời tiết cho ngày này
-        weather_info = None
-        if OPENWEATHERMAP_API_KEY:
-            # Sử dụng center của cluster hoặc start_location nếu không có center
-            weather_lat, weather_lon = cluster["center"] if cluster["center"] != start_location else start_location
-            weather_info = get_weather_by_date_and_coordinates(
-                OPENWEATHERMAP_API_KEY,
-                day_date,
-                weather_lat,
-                weather_lon
-            )
 
         day_summary = {
             "day": day_number,

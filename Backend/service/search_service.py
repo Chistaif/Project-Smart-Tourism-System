@@ -116,14 +116,14 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
                 if t == 'Lễ hội':
                     type_conditions.append(Attraction.type == 'festival')
                 
-                # 2. Xử lý Thiên nhiên (Tìm theo type nature HOẶC tag liên quan)
+                # 2. Xử lý Thiên nhiên
                 elif t == 'Thiên nhiên':
                     type_conditions.append(or_(
                         Attraction.type == 'nature',
                         Tag.tag_name.in_(['Thiên nhiên', 'Sinh thái', 'Núi rừng', 'Biển', 'Hang động'])
                     ))
                 
-                # 3. Xử lý Đền / Chùa (Tìm theo spot_type HOẶC tag tâm linh)
+                # 3. Xử lý Đền / Chùa
                 elif t == 'Đền/Chùa': 
                     type_conditions.append(or_(
                         cultural_spot_alias.spot_type.in_(['Đền', 'Chùa', 'Tôn giáo']),
@@ -144,14 +144,13 @@ def smart_recommendation_service(types_list=[], user_id=None, search_term=None, 
                         Tag.tag_name == t
                     ))
 
-            # Áp dụng bộ lọc (Dùng OR để lấy tập hợp các loại đã chọn)
+            # Áp dụng bộ lọc
             if type_conditions:
                 query = query.filter(or_(*type_conditions))
     
     # Lấy danh sách (dùng distinct để loại bỏ bản ghi trùng do join với tags)
     all_attractions = query.distinct().all()
 
-    # --- Phần tính điểm và trả về giữ nguyên như cũ ---
     interest_tags = get_user_interest_tags(user_id)
 
     @lru_cache(maxsize=128)
@@ -217,7 +216,7 @@ def precompute_nearby_attractions(radius=5):
         for other in all_attractions:
             if attraction.id != other.id:
                 # Sử dụng cache route chung để tránh tính toán lại
-                distance_km, _, _ = get_route_with_cache((attraction.lat, attraction.lon), (other.lat, other.lon), route_cache)
+                distance_km, _, _, _ = get_route_with_cache((attraction.lat, attraction.lon), (other.lat, other.lon), route_cache)
                 if distance_km <= radius:
                     nearby_ids.append(other.id)
 

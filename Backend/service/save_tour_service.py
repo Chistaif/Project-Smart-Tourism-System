@@ -12,6 +12,12 @@ def save_tour_service(user_id, tour_name, attraction_ids):
     if not attraction_ids or len(attraction_ids) == 0:
         raise ValueError("attractionIds không được rỗng")
     
+    # Loại bỏ duplicate attraction_ids và validate
+    unique_attraction_ids = list(set(attraction_ids))
+    if len(unique_attraction_ids) != len(attraction_ids):
+        # Có duplicate, nhưng vẫn tiếp tục với danh sách đã loại bỏ duplicate
+        pass
+    
     # Kiểm tra user tồn tại
     user = User.query.get(user_id)
     if not user:
@@ -23,8 +29,8 @@ def save_tour_service(user_id, tour_name, attraction_ids):
         raise ValueError(f"Tour '{tour_name}' đã tồn tại")
     
     # Kiểm tra attractions tồn tại
-    attractions = Attraction.query.filter(Attraction.id.in_(attraction_ids)).all()
-    if len(attractions) != len(attraction_ids):
+    attractions = Attraction.query.filter(Attraction.id.in_(unique_attraction_ids)).all()
+    if len(attractions) != len(unique_attraction_ids):
         raise ValueError("Một số attraction không tồn tại")
     
     # Tạo tour mới

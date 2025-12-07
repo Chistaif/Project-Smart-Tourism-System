@@ -140,7 +140,6 @@
   margin-bottom: 20px;
 }
 
-/* Profile Section */
 .profile-section h2 {
   margin: 0 0 24px 0;
   font-size: 24px;
@@ -173,7 +172,6 @@
   font-weight: 600;
 }
 
-/* Favorites Section */
 .favorites-section h2 {
   margin: 0 0 24px 0;
   font-size: 24px;
@@ -293,7 +291,6 @@
   background: rgba(239, 68, 68, 0.3);
 }
 
-/* History Section */
 .history-section h2 {
   margin: 0 0 24px 0;
   font-size: 24px;
@@ -415,7 +412,6 @@
   background: rgba(239, 68, 68, 0.3);
 }
 
-/* Empty State */
 .empty-state {
   text-align: center;
   padding: 60px 20px;
@@ -485,7 +481,6 @@
   }
 }
 
-/*BDR*/
 
 .user-page {
   min-height: 100vh;
@@ -629,7 +624,6 @@
   margin-bottom: 20px;
 }
 
-/* Profile Section */
 .profile-section h2 {
   margin: 0 0 24px 0;
   font-size: 24px;
@@ -662,7 +656,6 @@
   font-weight: 600;
 }
 
-/* Favorites Section */
 .favorites-section h2 {
   margin: 0 0 24px 0;
   font-size: 24px;
@@ -782,7 +775,6 @@
   background: rgba(239, 68, 68, 0.3);
 }
 
-/* History Section */
 .history-section h2 {
   margin: 0 0 24px 0;
   font-size: 24px;
@@ -904,7 +896,6 @@
   background: rgba(239, 68, 68, 0.3);
 }
 
-/* Empty State */
 .empty-state {
   text-align: center;
   padding: 60px 20px;

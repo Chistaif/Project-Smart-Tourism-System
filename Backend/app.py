@@ -415,11 +415,23 @@ def creator():
         if end_time <= start_time:
             return jsonify({"success": False, "error": "Thời gian kết thúc phải sau thời gian bắt đầu"}), 400
 
+        # Validate và parse tọa độ
+        try:
+            start_lat_float = float(start_lat)
+            start_lon_float = float(start_lon)
+            # Kiểm tra phạm vi hợp lệ cho tọa độ (lat: -90 đến 90, lon: -180 đến 180)
+            if not (-90 <= start_lat_float <= 90):
+                return jsonify({"success": False, "error": "Vĩ độ không hợp lệ (phải từ -90 đến 90)"}), 400
+            if not (-180 <= start_lon_float <= 180):
+                return jsonify({"success": False, "error": "Kinh độ không hợp lệ (phải từ -180 đến 180)"}), 400
+        except ValueError:
+            return jsonify({"success": False, "error": "Tọa độ không hợp lệ (startLat, startLon phải là số)"}), 400
+
         # 4. Gọi Service (Logic giữ nguyên)
         result = generate_smart_tour(
             attraction_ids, 
-            float(start_lat), 
-            float(start_lon), 
+            start_lat_float, 
+            start_lon_float, 
             start_time_str,
             end_time_str
         )

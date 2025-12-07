@@ -213,11 +213,45 @@ export const blogsAPI = {
   },
 };
 
+export const tourAPI = {
+  // Tạo lịch trình nhanh
+  createQuickTour: (params) => {
+    // params là object { attractionIds, startLat, startLon, startTime, endTime }
+    const queryParams = new URLSearchParams();
+    
+    if (params.attractionIds) {
+        params.attractionIds.forEach(id => queryParams.append('attractionIds', id));
+    }
+    if (params.startLat) queryParams.append('startLat', params.startLat);
+    if (params.startLon) queryParams.append('startLon', params.startLon);
+    if (params.startTime) queryParams.append('startTime', params.startTime);
+    if (params.endTime) queryParams.append('endTime', params.endTime);
+
+    return apiRequest(`/quick-tour-creator?${queryParams.toString()}`);
+  },
+
+  // Lưu tour
+  saveTour: (payload) => apiRequest('/save-tour', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  }),
+
+  // Hủy lưu tour
+  unsaveTour: (payload) => apiRequest('/save-tour', {
+      method: 'PATCH',
+      body: JSON.stringify(payload)
+  }),
+
+  // Lấy danh sách tour đã lưu
+  getSavedTours: (userId) => apiRequest(`/saved-tours?userId=${userId}`)
+};
+
 export default {
   destinationsAPI,
   attractionsAPI,
   authAPI,
   blogsAPI,
   userAPI,
+  tourAPI, // <--- Nhớ thêm dòng này
   healthCheck,
 };

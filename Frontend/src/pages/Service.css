@@ -1,23 +1,11 @@
 :root {
-  /* --- PALETTE MÀU SÁNG --- */
-  /* Nền chuyển từ tối sang xám nhạt/trắng */
   --bg-gradient: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-  
-  /* Sidebar chuyển thành trắng mờ */
-  --sidebar-glass: rgba(255, 255, 255, 0.85); 
-  
-  /* Chữ chính chuyển thành đen/xám đậm */
-  --text-primary: #1e293b; /* Slate 800 */
-  --text-secondary: #64748b; /* Slate 500 */
-  
-  /* Màu nhấn giữ nguyên hoặc đậm hơn một chút để nổi trên nền trắng */
-  --accent-blue: #2563eb; /* Blue 600 */
-  --accent-gold: #eab308; /* Yellow 500 */
-  
-  /* Viền chuyển sang xám nhạt */
+  --sidebar-glass: rgba(255, 255, 255, 0.85);
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --accent-blue: #2563eb;
+  --accent-gold: #eab308;
   --border-glass: rgba(0, 0, 0, 0.08);
-  
-  /* Bóng đổ mềm cho giao diện sáng */
   --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
@@ -51,11 +39,10 @@
   font-weight: 800;
   margin-bottom: 30px;
   text-transform: uppercase;
-  /* Chữ chuyển sang gradient tối hoặc màu solid */
   background: linear-gradient(to right, #1e293b, #3b82f6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: none; /* Bỏ bóng đen đậm */
+  text-shadow: none;
 }
 
 /* === SEARCH SECTION === */
@@ -73,8 +60,8 @@
 /* XUẤT PHÁT ĐIỂM */
 .start-point-box {
   position: relative;
-  background: #ffffff; /* Nền trắng hoàn toàn */
-  border: 1px solid #cbd5e1; /* Viền xám */
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 12px;
   padding: 8px 15px;
   min-width: 260px;
@@ -94,14 +81,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-blue); /* Icon màu xanh */
+  color: var(--accent-blue);
   opacity: 1;
 }
 
 .custom-location-input {
   background: transparent;
   border: none;
-  color: var(--text-primary); /* Chữ đen */
+  color: var(--text-primary);
   width: 100%;
   font-size: 1rem;
   outline: none;
@@ -113,7 +100,7 @@
 .start-display-btn {
   background: transparent;
   border: none;
-  color: var(--text-primary); /* Chữ đen */
+  color: var(--text-primary);
   font-weight: 600;
   cursor: pointer;
   width: 100%;
@@ -124,7 +111,6 @@
   font-size: 1rem;
 }
 
-/* Dropdown menu */
 .start-options-dropdown {
   position: absolute;
   top: calc(100% + 5px);
@@ -222,9 +208,13 @@
   gap: 10px;
   margin-bottom: 20px;
   font-size: 0.95rem;
-  color: #475569; /* Xám đậm */
+  color: #475569;
   min-height: 40px;
   font-weight: 600;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .route-tag {
@@ -237,8 +227,9 @@
   font-size: 0.9rem;
   line-height: 1;
   border: 1px solid #22c55e;
-  background-color: #f0fdf4; /* Nền xanh lá cực nhạt */
+  background-color: #f0fdf4;
   white-space: nowrap;
+  margin-bottom: 5px; 
 }
 
 /* CHỌN NGÀY */
@@ -266,7 +257,6 @@
   cursor: pointer;
   font-weight: 600;
 }
-/* Invert lại icon lịch để thành màu đen */
 .date-input-hidden::-webkit-calendar-picker-indicator { filter: none; opacity: 0.6; }
 
 .date-display {
@@ -333,7 +323,7 @@
 .checkbox-item input { accent-color: var(--accent-blue); transform: scale(1.1); }
 
 .btn-view-tour {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); /* Nút xanh dương đậm */
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: #ffffff;
   width: 100%;
   padding: 14px;
@@ -380,7 +370,6 @@
 .slider-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 .slider-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-/* CARD THIẾT KẾ LẠI CHO NỀN SÁNG */
 .dest-card {
   position: relative;
   flex: 0 0 260px;
@@ -403,7 +392,6 @@
 .dest-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 .dest-card:hover .dest-img { transform: scale(1.1); }
 
-/* Overlay trong Card vẫn giữ tối để chữ trắng dễ đọc trên ảnh */
 .dest-overlay {
   position: absolute;
   bottom: 0; 
@@ -429,20 +417,19 @@
   width: 100%;
 }
 
-/* Nút chọn/xóa trên Card */
 .card-select-btn {
   position: absolute;
-  top: 12px; 
+  top: 12px;
   right: 12px;
-  width: 36px; 
+  width: 36px;
   height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.9); /* Nền trắng */
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  color: #64748b; /* Icon xám */
+  color: #64748b;
   z-index: 10;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   transition: all 0.2s;
@@ -463,13 +450,12 @@
 
 .card-nav-action { width: 100%; height: 100%; display: block; }
 
-/* === TOUR RESULT (Override màu tối cũ) === */
 .tour-result-container {
-  background-color: #f8fafc !important; /* Force nền sáng */
+  background-color: #f8fafc !important;
   color: #1e293b;
 }
 .tour-header h2 {
-  color: #1d4ed8 !important; /* Tiêu đề xanh đậm */
+  color: #1d4ed8 !important;
 }
 .back-btn {
   background-color: #e2e8f0;
@@ -502,4 +488,99 @@
 @media (max-width: 768px) {
   .main-search-box { width: 100%; }
   .service-hero h1 { font-size: 2rem; }
+}
+
+.react-datepicker-popper {
+  z-index: 99999 !important;
+}
+
+.custom-datepicker-wrapper .react-datepicker-wrapper {
+  width: auto;
+  display: inline-block;
+}
+
+.custom-datepicker-wrapper .react-datepicker__input-container input {
+  background: transparent;
+  border: none;
+  color: #1e293b;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 100px;
+  text-align: center;
+}
+
+.react-datepicker {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+  background-color: #ffffff !important;
+  overflow: hidden;
+}
+
+.react-datepicker__header {
+  background-color: #f1f5f9 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  padding-top: 10px !important;
+}
+
+.react-datepicker__current-month {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+  margin-bottom: 5px;
+}
+
+.react-datepicker__day-name {
+  color: #64748b !important;
+}
+
+.react-datepicker__day {
+  color: #334155 !important;
+  border-radius: 50% !important;
+  transition: all 0.2s;
+}
+
+.react-datepicker__day:hover {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.react-datepicker__day--selected, 
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--accent-blue) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.react-datepicker__day--today {
+  font-weight: bold;
+  color: var(--accent-blue) !important;
+  position: relative;
+}
+.react-datepicker__day--today::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: var(--accent-blue);
+  border-radius: 50%;
+}
+
+.react-datepicker__day--selected.react-datepicker__day--today::after {
+  background-color: #fff;
+}
+
+.react-datepicker__day--disabled {
+  color: #cbd5e1 !important;
+  pointer-events: none;
+}
+
+.react-datepicker__triangle {
+  display: none !important;
 }
