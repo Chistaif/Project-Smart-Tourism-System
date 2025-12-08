@@ -17,10 +17,10 @@ OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
 
 # --- CẤU HÌNH ---
 WAKE_UP_HOUR = 6
-FALLBACK_SPEED_KMH = 30        # Đặt tốc độ tb khi di chuyển
-MAX_DAY_DURATION_MINUTES = 600 # 10 giờ/ngày (di chuyển + tham quan)
+FALLBACK_SPEED_KMH = 30        
+MAX_DAY_DURATION_MINUTES = 660 # 11 tiếng hoạt động/ngày
 GMM_RANDOM_STATE = 42
-IDEAL_TIME_DEFAULT = 1         # Chiều/tùy chọn
+IDEAL_TIME_DEFAULT = 1         
 IDEAL_TIME_ORDER = {0: 0, 1: 1, 2: 2}
 
 # Danh sách các sân bay lớn tại Việt Nam (Tên, Lat, Lon)
@@ -37,7 +37,7 @@ VIETNAM_AIRPORTS = {
 }
 
 def find_nearest_airport(lat, lon):
-    """Tìm sân bay gần nhất với tọa độ cho trước"""
+    """Tìm sân bay gần nhất"""
     nearest_code = None
     min_dist = float('inf')
     
@@ -48,6 +48,42 @@ def find_nearest_airport(lat, lon):
             nearest_code = code
             
     return VIETNAM_AIRPORTS[nearest_code], min_dist
+
+def _get_road_segment(coord_start, coord_end, vehicle='car'):
+    """
+    Gọi GraphHopper để lấy đường đi bộ chi tiết giữa 2 điểm ngắn.
+    Trả về: (distance_km, duration_min, list_of_coordinates)
+    """
+    base_url = "http://localhost:8989/route"
+    params = {
+        'point': [f"{coord_start[0]},{coord_start[1]}", f"{coord_end[0]},{coord_end[1]}"],
+        'profile': vehicle,
+        'locale': 'vi',
+        'points_encoded': 'false',
+        'calc_points': 'true',
+        'type': 'json'
+    }
+
+    try:
+        response = requests.get(base_url, params=params, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            if 'paths' in data and len(data['paths']) > 0:
+                path = data['paths'][0]
+                dist = round(path['distance'] / 1000, 2)
+                mins = round(path['time'] / 60000)
+                coords = path['points']['coordinates']
+                return dist, mins, coords
+    except Exception as e:
+        print(f"[GraphHopper Internal Error] {e}")
+
+    # Fallback: Đường thẳng nếu GraphHopper lỗi
+    dist = geodesic(coord_start, coord_end).km
+    speed = 30 if dist < 5 else 40
+    mins = round((dist / speed) * 60)
+    # GeoJSON format: [lon, lat]
+    coords = [[coord_start[1], coord_start[0]], [coord_end[1], coord_end[0]]]
+    return round(dist, 2), mins, coords
 
 # --- HÀM TIỆN ÍCH LÀM TRÒN GIỜ & FORMAT ---
 def round_to_nearest_10_minutes(dt):
@@ -77,83 +113,63 @@ def format_time_vn(dt):
 
 def get_routing_info(coord_start, coord_end, vehicle='car'):
     """
-    Thông minh: Tự động chọn Máy bay nếu xa (>400km), Xe nếu gần.
-    Trả về: (distance_km, duration_minutes, geometry, transport_mode)
+    Thông minh:
+    - Nếu đi máy bay: Tính đường bộ ra sân bay + bay + đường bộ về đích.
+    - Kết hợp đường đi chi tiết cho các chặng đường bộ.
     """
-    # 1. Tính khoảng cách đường chim bay trước
+    # 1. Tính khoảng cách đường chim bay tổng thể
     dist_straight = geodesic(coord_start, coord_end).km
     
     # 2. LOGIC MÁY BAY (Nếu xa hơn 400km)
     if dist_straight > 400:
-        # Tìm sân bay đi và đến
-        airport_start, dist_to_airport = find_nearest_airport(coord_start[0], coord_start[1])
-        airport_end, dist_from_airport = find_nearest_airport(coord_end[0], coord_end[1])
+        # A. Tìm sân bay
+        airport_start, dist_to_start_airport = find_nearest_airport(coord_start[0], coord_start[1])
+        airport_end, dist_from_end_airport = find_nearest_airport(coord_end[0], coord_end[1])
         
-        print(f"[Smart Route] Bay từ {airport_start['name']} -> {airport_end['name']}")
+        print(f"[Smart Route] Kết hợp: {airport_start['name']} -> {airport_end['name']}")
         
-        # Thời gian: 
-        # Di chuyển ra sân bay (tốc độ 40km/h) + Bay (800km/h) + Thủ tục (120p)
-        road_time_min = (dist_to_airport + dist_from_airport) / 40 * 60
+        # B. Tính toán 3 chặng
+        # Chặng 1: Điểm đi -> Sân bay đi (Đường bộ chi tiết)
+        d1, t1, coords1 = _get_road_segment(coord_start, (airport_start['lat'], airport_start['lon']))
+        
+        # Chặng 2: Bay (Đường thẳng)
         flight_dist = geodesic((airport_start['lat'], airport_start['lon']), 
                                (airport_end['lat'], airport_end['lon'])).km
-        flight_time_min = (flight_dist / 800) * 60
+        t2 = (flight_dist / 800) * 60 # Giả định bay 800km/h
+        # Tạo đường thẳng bay (2 điểm)
+        coords2 = [
+            [airport_start['lon'], airport_start['lat']], 
+            [airport_end['lon'], airport_end['lat']]
+        ]
+
+        # Chặng 3: Sân bay đến -> Điểm đến (Đường bộ chi tiết)
+        d3, t3, coords3 = _get_road_segment((airport_end['lat'], airport_end['lon']), coord_end)
+
+        # C. Tổng hợp
+        total_dist = round(d1 + flight_dist + d3, 2)
+        # Thời gian = Đi xe 1 + Bay + Đi xe 3 + 120p thủ tục
+        total_time = int(t1 + t2 + t3 + 120) 
         
-        total_duration = int(road_time_min + flight_time_min + 120)
-        
-        # Tạo đường gấp khúc: Điểm đi -> SB đi -> SB đến -> Điểm đến
+        # Nối 3 đoạn đường lại thành 1 danh sách tọa độ duy nhất
+        # coords1 + coords2 + coords3
+        full_coordinates = coords1 + coords2 + coords3
+
         geometry = {
             'type': 'LineString',
-            'coordinates': [
-                [coord_start[1], coord_start[0]],       # Xuất phát
-                [airport_start['lon'], airport_start['lat']], # Sân bay đi
-                [airport_end['lon'], airport_end['lat']],     # Sân bay đến
-                [coord_end[1], coord_end[0]]            # Đích đến
-            ]
+            'coordinates': full_coordinates
         }
         
-        # Trả về thêm tên sân bay để hiển thị
         route_desc = f"plane:{airport_start['name']}-{airport_end['name']}"
-        
-        return round(dist_straight, 2), total_duration, geometry, route_desc
+        return total_dist, total_time, geometry, route_desc
 
-    # 3. LOGIC XE - Nếu gần
-    base_url = "http://localhost:8989/route"
-    params = {
-        'point': [f"{coord_start[0]},{coord_start[1]}", f"{coord_end[0]},{coord_end[1]}"],
-        'profile': vehicle,
-        'locale': 'vi',
-        'points_encoded': 'false',
-        'calc_points': 'true',
-        'type': 'json'
-    }
-
-    try:
-        response = requests.get(base_url, params=params, timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            if 'paths' in data and len(data['paths']) > 0:
-                path = data['paths'][0]
-                dist = round(path['distance'] / 1000, 2)
-                mins = round(path['time'] / 60000)
-                
-                geometry = None
-                if 'points' in path and 'coordinates' in path['points']:
-                    geometry = {
-                        'type': 'LineString',
-                        'coordinates': path['points']['coordinates']
-                    }
-                return dist, mins, geometry, "car"
-    except Exception as e:
-        print(f"[GraphHopper Error] {e}")
-
-    # 4. FALLBACK (Đường bộ giả định nếu GraphHopper lỗi)
-    speed = 40 # km/h
-    duration = round((dist_straight / speed) * 60)
+    # 3. LOGIC XE (Gần < 400km) - Gọi hàm helper trực tiếp
+    dist, mins, coords = _get_road_segment(coord_start, coord_end, vehicle)
+    
     geometry = {
         'type': 'LineString',
-        'coordinates': [[coord_start[1], coord_start[0]], [coord_end[1], coord_end[0]]]
+        'coordinates': coords
     }
-    return round(dist_straight, 2), duration, geometry, "car"
+    return dist, mins, geometry, "car"
 
 def _route_cache_key(coord_start, coord_end):
     return (
@@ -167,21 +183,33 @@ def get_route_with_cache(coord_start, coord_end, cache):
     if key in cache:
         return cache[key]
 
-    # Hứng 4 giá trị
+    # Hứng 4 giá trị từ API/Hàm tính toán
     distance_km, duration_min, geometry, mode = get_routing_info(coord_start, coord_end)
     
-    # Lưu vào cache
+    # Lưu chiều xuôi vào cache
     cache[key] = (distance_km, duration_min, geometry, mode)
 
-    # Cache chiều ngược lại (đảo geometry)
+    # Xử lý cache chiều ngược
     reverse_key = _route_cache_key(coord_end, coord_start)
+    
     reversed_geometry = None
     if geometry and 'coordinates' in geometry:
         reversed_geometry = {
             'type': geometry['type'],
             'coordinates': list(reversed(geometry['coordinates']))
         }
-    cache[reverse_key] = (distance_km, duration_min, reversed_geometry, mode)
+    
+    # Logic đảo ngược tên sân bay cho biến mode
+    reverse_mode = mode
+    if isinstance(mode, str) and mode.startswith('plane:'):
+        try:
+            prefix, names = mode.split(':', 1)
+            airport_start, airport_end = names.split('-')
+            reverse_mode = f"{prefix}:{airport_end}-{airport_start}"
+        except ValueError:
+            pass
+            
+    cache[reverse_key] = (distance_km, duration_min, reversed_geometry, reverse_mode)
     
     return cache[key]
 
@@ -192,7 +220,6 @@ def parse_opening_hours(open_str):
     if not open_str: 
         return None
     try:
-        # Regex tìm giờ:phút AM/PM
         times = re.findall(r'(\d{1,2}):?(\d{2})?\s*(AM|PM)?', open_str, re.IGNORECASE)
         if len(times) >= 2:
             def to_24h(h, m, ampm):
@@ -224,7 +251,7 @@ def get_weather_by_date_and_coordinates(api_key, date, lat, lon):
         'lon': lon,
         'appid': api_key,
         'units': 'metric',
-        'cnt': 40  # Lấy tối đa 40 điểm dữ liệu (5 ngày x 8 điểm/ngày)
+        'cnt': 40
     }
 
     try:
@@ -321,61 +348,168 @@ def get_weather_by_date_and_coordinates(api_key, date, lat, lon):
 
 def is_attraction_available(attraction, current_time=None, start_datetime=None, end_datetime=None):
     """
-    Kiểm tra xem địa điểm có mở cửa/hoạt động vào thời điểm này không.
+    Kiểm tra tình trạng mở cửa.
+    - Trả về (True, "") nếu mở cửa.
+    - Trả về (False, float_hour) nếu chưa mở cửa (QUAN TRỌNG: Phải trả về số để tính toán).
+    - Trả về (False, string) nếu đã đóng cửa hoặc lý do khác.
     """
-    # 1. Check Festival (Ngày diễn ra)
+    # 1. Check Festival
     if attraction.type == 'festival':
         fes = Festival.query.get(attraction.id)
-        if not fes or not fes.time_start or not fes.time_end:
-            return False, "Lễ hội thiếu thông tin thời gian cụ thể"
+        if not fes or not fes.time_start: return False, "Thiếu thời gian"
         
-        # Với festival diễn ra hàng năm, cần kiểm tra trong năm hiện tại
-        if current_time:
-            current_year = current_time.year
-            # Tạo khoảng thời gian diễn ra cho năm hiện tại
-            festival_start = fes.time_start.replace(year=current_year)
-            festival_end = fes.time_end.replace(year=current_year)
-            festival_start_date = festival_start.date()
-            festival_end_date = festival_end.date()
-            current_date = current_time.date()
-            
-            # Kiểm tra nếu current_time nằm trong khoảng thời gian festival
-            if festival_start_date <= current_date <= festival_end_date:
-                return True, ""  # Festival đang diễn ra
-            else:
-                return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
-            
-        # Kiểm tra với khoảng thời gian tour (start_datetime, end_datetime)
+        # Logic check năm (Giữ nguyên như cũ)
+        years = []
         if start_datetime and end_datetime:
-            # Lấy năm từ start_datetime để kiểm tra
-            tour_year = start_datetime.year
-            festival_start = fes.time_start.replace(year=tour_year)
-            festival_end = fes.time_end.replace(year=tour_year)
-            festival_start_date = festival_start.date()
-            festival_end_date = festival_end.date()
-            tour_start_date = start_datetime.date()
-            tour_end_date = end_datetime.date()
-            
-            # Kiểm tra xem khoảng thời gian tour có giao với khoảng thời gian festival không
-            if festival_end_date < tour_start_date or festival_start_date > tour_end_date:
-                return False, f"Chưa diễn ra hoặc đã kết thúc ({fes.time_start.strftime('%d/%m')} - {fes.time_end.strftime('%d/%m')})"
-            else:
-                return True, ""  # Festival diễn ra trong khoảng thời gian tour
+            years = range(start_datetime.year, end_datetime.year + 1)
+        elif current_time:
+            years = [current_time.year]
+        else:
+            years = [datetime.now().year]
 
-    # 2. Check CulturalSpot (Giờ mở cửa trong ngày)
+        is_match, display_str = False, ""
+        for y in years:
+            try:
+                fs = fes.time_start.replace(year=y)
+                fe = fes.time_end.replace(year=y)
+                display_str = f"{fs.strftime('%d/%m')} - {fe.strftime('%d/%m')}"
+                if start_datetime and end_datetime:
+                    if (fs.date() <= end_datetime.date()) and (fe.date() >= start_datetime.date()):
+                        is_match = True; break
+                elif current_time:
+                    if fs.date() <= current_time.date() <= fe.date():
+                        is_match = True; break
+            except: continue
+            
+        return (True, "") if is_match else (False, f"Chưa diễn ra ({display_str})")
+
+    # 2. Check CulturalSpot
     elif attraction.type == 'cultural_spot':
         spot = CulturalSpot.query.get(attraction.id)
         if spot and spot.opening_hours:
             hours = parse_opening_hours(spot.opening_hours)
-            if hours:
+            if hours and current_time:
                 start_h, end_h = hours
                 curr_h = current_time.hour + current_time.minute/60
-                # Logic đơn giản: Nếu đến quá sớm hoặc quá muộn
-                if not (start_h <= curr_h <= end_h):
-                    return False, f"Đóng cửa (Giờ mở: {spot.opening_hours})"
+                
+                # NẾU ĐẾN SỚM: Trả về số thực để hàm build_itinerary tính giờ chờ
+                if curr_h < start_h: 
+                    return False, start_h
+                
+                # NẾU ĐẾN MUỘN: Trả về text thông báo
+                if curr_h > end_h: 
+                    return False, f"Đã đóng cửa (Mở đến {spot.opening_hours})"
     
     return True, ""
 
+def calculate_tag_relevance(main_attr, candidate_attr):
+    """
+    Tính điểm liên quan dựa trên tags.
+    FIX: Xử lý trường hợp tags là InstrumentedList (Relationship) thay vì String.
+    """
+    score = 0
+    
+    # 1. So sánh Type
+    if main_attr.type == candidate_attr.type:
+        score += 2
+        
+    # 2. So sánh Tags
+    def get_tags_set(attr_obj):
+        raw_tags = getattr(attr_obj, 'tags', [])
+        
+        if not raw_tags:
+            return set()
+        try:
+            tags_set = set()
+            for item in raw_tags:
+                tag_name = getattr(item, 'name', getattr(item, 'tag_name', str(item)))
+                tags_set.add(tag_name.lower())
+            return tags_set
+        except TypeError:
+            return set()
+
+    tags_a = get_tags_set(main_attr)
+    tags_b = get_tags_set(candidate_attr)
+    
+    if tags_a and tags_b:
+        common_tags = tags_a.intersection(tags_b)
+        score += len(common_tags) * 3 # Mỗi tag trùng +3 điểm
+        
+    return score
+
+def find_supplementary_attraction(current_loc, current_time, visited_ids, main_attr, cache, max_day_limit_time):
+    """
+    Tìm địa điểm B phụ:
+    1. Gần A (bán kính < 5km).
+    2. Chưa đi (không nằm trong visited_ids).
+    3. Thỏa mãn thời gian: Đi + Chơi <= Giờ đóng cửa & <= Giới hạn ngày.
+    4. Sắp xếp theo độ liên quan tags.
+    """
+    # Lấy tất cả địa điểm trong DB trừ những điểm đã đi
+    candidates = Attraction.query.filter(Attraction.id.notin_(visited_ids)).all()
+    
+    valid_candidates = []
+    
+    for cand in candidates:
+        # 1. Lọc sơ bộ khoảng cách (Chim bay < 10km để đỡ tốn API)
+        dist_straight = geodesic(current_loc, (cand.lat, cand.lon)).km
+        if dist_straight > 10: 
+            continue
+
+        # 2. Tính toán đường đi thực tế
+        dist, travel_min, geometry, mode = get_route_with_cache(current_loc, (cand.lat, cand.lon), cache)
+        
+        # Nếu xa quá (> 30p di chuyển) thì bỏ qua để tiết kiệm thời gian
+        if travel_min > 30: 
+            continue
+            
+        arrival_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=travel_min))
+        
+        # 3. Kiểm tra giờ mở cửa
+        is_open, open_info = is_attraction_available(cand, arrival_time)
+        if not is_open:
+            continue
+            
+        visit_duration = approximate_visit_duration(cand)
+        finish_time = arrival_time + timedelta(minutes=visit_duration)
+        
+        # 4. Kiểm tra giới hạn ngày (MAX_DAY_DURATION)
+        # max_day_limit_time là datetime object (VD: 17:00 chiều)
+        if finish_time > max_day_limit_time:
+            continue
+
+        # 5. Kiểm tra giờ đóng cửa cụ thể của địa điểm B
+        # Hàm is_attraction_available chỉ check lúc đến, giờ check lúc về
+        if cand.type == 'cultural_spot':
+             # Query lại để lấy giờ đóng cửa chính xác
+             spot = CulturalSpot.query.get(cand.id)
+             if spot and spot.opening_hours:
+                 h_range = parse_opening_hours(spot.opening_hours)
+                 if h_range:
+                     _, end_h = h_range
+                     finish_h = finish_time.hour + finish_time.minute/60
+                     if finish_h > end_h:
+                         continue
+
+        # Tính điểm liên quan
+        relevance_score = calculate_tag_relevance(main_attr, cand)
+        
+        valid_candidates.append({
+            "attraction": cand,
+            "score": relevance_score,
+            "dist": dist,
+            "travel_min": travel_min,
+            "geometry": geometry,
+            "mode": mode,
+            "visit_duration": visit_duration
+        })
+
+    # Sắp xếp: Ưu tiên Điểm cao nhất -> Sau đó đến Khoảng cách gần nhất
+    valid_candidates.sort(key=lambda x: (-x['score'], x['dist']))
+    
+    if valid_candidates:
+        return valid_candidates[0] # Trả về ứng viên tốt nhất
+    return None
 
 def approximate_visit_duration(attraction):
     """
@@ -400,25 +534,40 @@ def ideal_time_code(attraction):
 
 def estimate_cluster_duration(attractions, start_location, cache):
     """
-    Ước lượng tổng thời gian (di chuyển + tham quan) cho một cụm.
+    Ước lượng tổng thời gian (di chuyển + tham quan + ĂN UỐNG) cho một cụm.
     """
-    if not attractions:
-        return 0
-
+    if not attractions: return 0
     pending = attractions[:]
     current = start_location
     total_minutes = 0
-
+    
+    # Giả định bắt đầu lúc 6h sáng
+    virtual_time_hour = WAKE_UP_HOUR 
+    
+    has_lunch = False
+    
     while pending:
-        nearest = min(
-            pending,
-            key=lambda attr: get_route_with_cache(current, (attr.lat, attr.lon), cache)[0]
-        )
+        # Tìm điểm gần nhất
+        nearest = min(pending, key=lambda attr: get_route_with_cache(current, (attr.lat, attr.lon), cache)[0])
         _, travel_min, _, _ = get_route_with_cache(current, (nearest.lat, nearest.lon), cache)
-        total_minutes += travel_min + approximate_visit_duration(nearest)
+        
+        # Cộng thời gian di chuyển
+        total_minutes += travel_min
+        virtual_time_hour += travel_min / 60.0
+        
+        # Nếu quá trưa (11.5) mà chưa tính ăn -> Cộng thêm 90p vào tổng thời gian ước lượng
+        if not has_lunch and virtual_time_hour >= 11.5:
+            total_minutes += 90
+            virtual_time_hour += 1.5
+            has_lunch = True
+
+        visit_min = approximate_visit_duration(nearest)
+        total_minutes += visit_min
+        virtual_time_hour += visit_min / 60.0
+        
         current = (nearest.lat, nearest.lon)
         pending.remove(nearest)
-
+        
     return total_minutes
 
 
@@ -430,6 +579,11 @@ def cluster_attractions_with_gmm(attractions, start_location, max_days, cache, m
     if not attractions:
         return [], []
 
+    # Nếu chỉ có 1 địa điểm hoặc số ngày cho phép là 1, không cần chạy GMM
+    if len(attractions) == 1:
+        # Trả về 1 cụm duy nhất chứa địa điểm đó
+        return [attractions], [[attractions[0].lat / 180.0, attractions[0].lon / 180.0, 0, 0, 0]]
+    
     capped_days = min(max_days, len(attractions))
     capped_days = max(1, capped_days)
 
@@ -647,201 +801,295 @@ def assign_clusters_to_days(clusters, centers, festival_constraints, start_locat
 
 def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_location, cache, order_index_map):
     """
-    Sinh timeline cho từng ngày dựa trên danh sách attraction.
+    Sinh timeline cho từng ngày.
+    Thêm Post-Visit Meal Check để đảm bảo không bị 'đói' khi đi điểm phụ.
     """
     if not day_attractions:
-        return [], {
-            "distance_km": 0,
-            "travel_minutes": 0,
-            "visit_minutes": 0,
-            "point_count": 0
-        }, [], start_location, day_start_datetime
+        return [], {"distance_km": 0, "travel_minutes": 0, "visit_minutes": 0, "point_count": 0}, [], start_location, day_start_datetime
 
-    ordered = sorted(
+    # Sắp xếp danh sách candidates ban đầu theo thứ tự MST
+    candidates = sorted(
         day_attractions,
-        key=lambda attr: (attr.ideal_time, order_index_map.get(attr.id, 0))
+        key=lambda attr: (order_index_map.get(attr.id, float('inf')), getattr(attr, 'ideal_time', 0))
     )
-
+    
+    visited_ids = set([a.id for a in day_attractions])
+    
     day_events = []
     routes = []
-    
-    # Làm tròn giờ xuất phát cho đẹp
     current_time = round_to_nearest_10_minutes(day_start_datetime)
     current_loc = start_location
+    
+    day_end_limit = day_start_datetime + timedelta(minutes=MAX_DAY_DURATION_MINUTES)
     
     day_distance = 0
     day_travel_minutes = 0
     day_visit_minutes = 0
 
-    for attraction in ordered:
-        coord = (attraction.lat, attraction.lon)
-        dist, travel_min, geometry, mode = get_route_with_cache(current_loc, coord, cache)
+    has_lunch = False
+    has_dinner = False
+
+    while candidates:
+        # ============================================================
+        # 1. PRE-CHECK MEAL (Đầu vòng lặp - Xử lý khi vừa di chuyển đến)
+        # ============================================================
+        current_hour = current_time.hour + current_time.minute / 60.0
         
-        # Tính giờ đến nơi thô
-        arrival_raw = current_time + timedelta(minutes=travel_min)
-        
-        # LÀM TRÒN giờ đến nơi cho đẹp (VD: 8:33 -> 8:30)
-        arrival_time = round_to_nearest_10_minutes(arrival_raw)
-
-        # Nếu làm tròn khiến giờ đến < giờ đi (do di chuyển quá ngắn), cộng bù 10p
-        if arrival_time <= current_time:
-            arrival_time = current_time + timedelta(minutes=10)
-
-        # Recalculate travel min hiển thị theo giờ đã làm tròn (để logic hiển thị khớp nhau)
-        display_travel_min = int((arrival_time - current_time).total_seconds() / 60)
-
-        if dist > 0:
-            # Check nếu mode bắt đầu bằng "plane:"
-            if isinstance(mode, str) and mode.startswith('plane:'):
-                airports = mode.split(':')[1].split('-') # Lấy tên 2 sân bay
-                action_name = f"✈️ {airports[0]} ➝ {airports[1]}"
-                detail_text = f"Khoảng {dist} km (Bay + Di chuyển)"
-            elif mode == 'plane': # Fallback cho code cũ
-                action_name = f"✈️ Bay tới {attraction.name}"
-                detail_text = f"{dist} km / ~{travel_min // 60}h{travel_min % 60}p"
-            else:
-                action_name = f"🚗 Di chuyển tới {attraction.name}"
-                detail_text = f"{dist} km / ~{travel_min} phút"
-
+        # Ăn trưa (Ưu tiên số 1 nếu đã quá 11:30)
+        if not has_lunch and current_hour >= 11.5:
+            lunch_duration = 90
             day_events.append({
-                "day": day_number,
-                "date": current_time.strftime("%d/%m/%Y"),
-                "time": format_time_vn(current_time),
-                "type": "TRAVEL",
-                "name": action_name, # Dùng tên hành động mới
-                "detail": detail_text
+                "day": day_number, "date": current_time.strftime("%d/%m/%Y"),
+                "time": format_time_vn(current_time), "type": "INFO", 
+                "name": "Nghỉ ngơi & Ăn trưa",
+                "detail": f"Nạp năng lượng giữa ngày ({lunch_duration} phút)",
+                "duration": lunch_duration
             })
+            current_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=lunch_duration))
+            has_lunch = True
+            continue
 
-            if geometry:
-                path = [[p[1], p[0]] for p in geometry['coordinates']]
-            else:
-                path = [[current_loc[0], current_loc[1]], [coord[0], coord[1]]]
-            routes.append(path)
+        # Ăn tối (Nếu quá 18:00)
+        if not has_dinner and current_hour >= 18.0:
+            dinner_duration = 90
+            day_events.append({
+                "day": day_number, "date": current_time.strftime("%d/%m/%Y"),
+                "time": format_time_vn(current_time), "type": "INFO",
+                "name": "Ăn tối & Tự do",
+                "detail": f"Thưởng thức ẩm thực địa phương ({dinner_duration} phút)",
+                "duration": dinner_duration
+            })
+            current_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=dinner_duration))
+            has_dinner = True
+            continue
 
-        day_distance += dist
-        day_travel_minutes += travel_min # Vẫn cộng thời gian thực tế để thống kê chính xác
+        # ============================================================
+        # 2. XỬ LÝ ĐIỂM CHÍNH (MAIN TARGET)
+        # ============================================================
+        best_candidate = candidates[0]
+        
+        # Tính toán di chuyển
+        dist, t_min, _, _ = get_route_with_cache(current_loc, (best_candidate.lat, best_candidate.lon), cache)
+        arrival_raw = current_time + timedelta(minutes=t_min)
+        arrival_time = round_to_nearest_10_minutes(arrival_raw)
+        
+        # Check mở cửa
+        is_open, open_info = is_attraction_available(best_candidate, arrival_time)
+        final_target = best_candidate
+        
+        # --- Logic Gap Filling (Nếu đến quá sớm) ---
+        if not is_open and isinstance(open_info, (int, float)):
+            open_dt = arrival_time.replace(hour=int(open_info), minute=int((open_info-int(open_info))*60))
+            if (open_dt - arrival_time).total_seconds()/60 > 45 and len(candidates) > 1:
+                for alt in candidates[1:]:
+                    _, t_alt, _, _ = get_route_with_cache(current_loc, (alt.lat, alt.lon), cache)
+                    arr_alt = round_to_nearest_10_minutes(current_time + timedelta(minutes=t_alt))
+                    if is_attraction_available(alt, arr_alt)[0]:
+                        vis_alt = approximate_visit_duration(alt)
+                        _, t_back, _, _ = get_route_with_cache((alt.lat, alt.lon), (best_candidate.lat, best_candidate.lon), cache)
+                        if arr_alt + timedelta(minutes=vis_alt + t_back) >= open_dt:
+                            final_target = alt; break
+        
+        # --- Thực hiện di chuyển đến điểm chốt ---
+        target_coord = (final_target.lat, final_target.lon)
+        dist, t_min, geometry, mode = get_route_with_cache(current_loc, target_coord, cache)
+        arrival_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=t_min))
+        
+        # Check chờ mở cửa (lần cuối)
+        ok, val = is_attraction_available(final_target, arrival_time)
+        if not ok and isinstance(val, (int, float)):
+            opens_at = arrival_time.replace(hour=int(val), minute=int((val-int(val))*60))
+            wait = (opens_at - arrival_time).total_seconds()/60
+            if wait > 15:
+                day_events.append({"day": day_number, "date": arrival_time.strftime("%d/%m"), "time": format_time_vn(arrival_time), "type": "INFO", "name": "Nghỉ ngơi chờ mở cửa", "detail": f"Thư giãn {int(wait)} phút"})
+                current_time = opens_at; arrival_time = opens_at
 
-        visit_duration = approximate_visit_duration(attraction)
-        available, status = is_attraction_available(attraction, arrival_time)
-        detail = "Mở cửa" if available else status or "Cần kiểm tra thêm"
+        # [ADD EVENT] Travel
+        if dist > 0.01:
+            nm = f"Bay tới {final_target.name}" if "plane" in str(mode) else f"Di chuyển tới {final_target.name}"
+            day_events.append({
+                "day": day_number, "date": current_time.strftime("%d/%m/%Y"),
+                "time": format_time_vn(current_time), "type": "TRAVEL",
+                "name": nm, "detail": f"{dist} km / ~{t_min} phút"
+            })
+            path = [[p[1], p[0]] for p in geometry['coordinates']] if geometry else [[current_loc[0], current_loc[1]], [target_coord[0], target_coord[1]]]
+            routes.append({"path": path, "type": "flight" if "plane" in str(mode) else "road"})
+            day_distance += dist; day_travel_minutes += t_min
 
+        # [ADD EVENT] Visit
+        vis_dur = approximate_visit_duration(final_target)
+        avail, stat = is_attraction_available(final_target, arrival_time)
         day_events.append({
-            "day": day_number,
-            "date": arrival_time.strftime("%d/%m/%Y"),
-            "time": format_time_vn(arrival_time), 
-            "type": "VISIT",
-            "id": attraction.id,
-            "name": attraction.name,
-            "idealTime": getattr(attraction, 'ideal_time', IDEAL_TIME_DEFAULT),
-            "detail": detail,
-            "duration": visit_duration,
-            "lat": attraction.lat,
-            "lon": attraction.lon,
-            "imageUrl": getattr(attraction, 'image_url', None)
+            "day": day_number, "date": arrival_time.strftime("%d/%m/%Y"),
+            "time": format_time_vn(arrival_time), "type": "VISIT",
+            "id": final_target.id, "name": final_target.name,
+            "detail": "Mở cửa" if avail else (str(stat) if stat else "Tham quan"),
+            "duration": vis_dur, "lat": final_target.lat, "lon": final_target.lon, "imageUrl": getattr(final_target, 'image_url', None)
         })
+        day_visit_minutes += vis_dur
+        
+        # Cập nhật thời gian sau khi thăm xong A
+        leave_A_time = round_to_nearest_10_minutes(arrival_time + timedelta(minutes=vis_dur))
+        
+        # =========================
+        # 3. POST-VISIT MEAL CHECK 
+        # =========================
+        current_hour_decimal = leave_A_time.hour + leave_A_time.minute / 60.0
+        
+        # Nếu thăm xong mà đã quá 11h00 -> Cho ăn luôn
+        if not has_lunch and current_hour_decimal >= 11.0:
+            lunch_dur = 90
+            day_events.append({
+                "day": day_number, "date": leave_A_time.strftime("%d/%m/%Y"), 
+                "time": format_time_vn(leave_A_time), "type": "INFO", 
+                "name": "Nghỉ ngơi & Ăn trưa", 
+                "detail": f"Nạp năng lượng ({lunch_dur} phút)",
+                "duration": lunch_dur
+            })
+            leave_A_time = round_to_nearest_10_minutes(leave_A_time + timedelta(minutes=lunch_dur))
+            has_lunch = True
+            
+        elif not has_dinner and current_hour_decimal >= 18.0:
+            dinner_dur = 90
+            day_events.append({
+                "day": day_number, "date": leave_A_time.strftime("%d/%m/%Y"), 
+                "time": format_time_vn(leave_A_time), "type": "INFO", 
+                "name": "Ăn tối", "detail": "Thưởng thức bữa tối", "duration": dinner_dur
+            })
+            leave_A_time = round_to_nearest_10_minutes(leave_A_time + timedelta(minutes=dinner_dur))
+            has_dinner = True
 
-        day_visit_minutes += visit_duration
+        # =========================================================================
+        # 4. OPPORTUNISTIC INSERTION (TÌM ĐIỂM PHỤ)
+        # =========================================================================
+        inserted_bonus = False
+        time_left = (day_end_limit - leave_A_time).total_seconds() / 60
         
-        # Tính giờ rời đi và lại làm tròn tiếp
-        leave_time_raw = arrival_time + timedelta(minutes=visit_duration)
-        current_time = round_to_nearest_10_minutes(leave_time_raw)
+        # Nếu còn dư > 90 phút (lúc này đã tính giờ ăn rồi nên yên tâm chèn)
+        if time_left > 90:
+            supp = find_supplementary_attraction(
+                current_loc=(final_target.lat, final_target.lon),
+                current_time=leave_A_time,
+                visited_ids=visited_ids,
+                main_attr=final_target,
+                cache=cache,
+                max_day_limit_time=day_end_limit
+            )
+            
+            if supp:
+                cand_B = supp['attraction']
+                
+                # Di chuyển A (hoặc Quán ăn) -> B
+                if supp['dist'] > 0.01:
+                    is_flight_B = isinstance(supp['mode'], str) and supp['mode'].startswith('plane')
+                    day_events.append({
+                        "day": day_number, "date": leave_A_time.strftime("%d/%m/%Y"),
+                        "time": format_time_vn(leave_A_time), "type": "TRAVEL",
+                        "name": f"Ghé thêm: {cand_B.name}",
+                        "detail": f"{supp['dist']} km (Gợi ý thêm)"
+                    })
+                    path_B = [[p[1], p[0]] for p in supp['geometry']['coordinates']] if supp['geometry'] else []
+                    routes.append({"path": path_B, "type": "flight" if is_flight_B else "road"})
+                    day_distance += supp['dist']; day_travel_minutes += supp['travel_min']
+                
+                # Tham quan B
+                arr_B = round_to_nearest_10_minutes(leave_A_time + timedelta(minutes=supp['travel_min']))
+                day_events.append({
+                    "day": day_number, "date": arr_B.strftime("%d/%m/%Y"),
+                    "time": format_time_vn(arr_B), "type": "VISIT",
+                    "id": cand_B.id, "name": cand_B.name,
+                    "detail": "Điểm gợi ý thêm",
+                    "duration": supp['visit_duration'],
+                    "lat": cand_B.lat, "lon": cand_B.lon,
+                    "imageUrl": getattr(cand_B, 'image_url', None)
+                })
+                
+                day_visit_minutes += supp['visit_duration']
+                visited_ids.add(cand_B.id)
+                
+                # Cập nhật State từ B
+                leave_B = arr_B + timedelta(minutes=supp['visit_duration'])
+                current_time = round_to_nearest_10_minutes(leave_B)
+                current_loc = (cand_B.lat, cand_B.lon)
+                inserted_bonus = True
+
+        # Nếu không chèn điểm phụ -> Cập nhật từ A (đã tính giờ ăn)
+        if not inserted_bonus:
+            current_time = leave_A_time
+            current_loc = target_coord
         
-        current_loc = coord
+        candidates.remove(final_target)
 
     stats = {
         "distance_km": round(day_distance, 2),
         "travel_minutes": day_travel_minutes,
         "visit_minutes": day_visit_minutes,
-        "point_count": len(ordered)
+        "point_count": len([e for e in day_events if e['type'] == 'VISIT'])
     }
 
     return day_events, stats, routes, current_loc, current_time
 
 def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str, end_datetime_str):
     """
-    Logic mới:
-    1. Ưu tiên kiểm tra lễ hội trước khi xét các điểm khác.
-    2. Dùng MST (Prim) để tạo tour order tổng thể.
-    3. Tối ưu số ngày bằng GMM + ràng buộc thời gian (<= 10h/ngày).
-    4. Chia ngày dựa trên cụm GMM, đảm bảo lễ hội diễn ra đúng ngày.
-    5. Bên trong mỗi ngày: sắp xếp theo ideal_time -> MST order, kèm quãng đường/thời gian.
-    6. Trả về tổng số ngày, tổng khoảng cách, thống kê từng ngày, tâm cụm, số điểm phù hợp.
+    Hàm tạo lịch trình thông minh V3 (Final).
+    Tính năng:
+    - Xử lý đa năm (2025-2026).
+    - Tối ưu hóa cụm (GMM + MST).
+    - Smart Transit: Di chuyển đón đầu vào buổi tối nếu chặng sau quá xa.
     """
-    # Parse thời gian, tạo cache, lấy danh sách attraction
+    # 1. Parse thời gian
     try:
-        # Thử parse với format có giờ (từ API endpoint)
-        start_datetime = datetime.strptime(start_datetime_str, "%d/%m/%Y %H:%M")
-        end_datetime = datetime.strptime(end_datetime_str, "%d/%m/%Y %H:%M")
+        start_dt = datetime.strptime(start_datetime_str, "%d/%m/%Y %H:%M")
+        end_dt = datetime.strptime(end_datetime_str, "%d/%m/%Y %H:%M")
     except ValueError:
-        # Fallback: thử parse không có giờ
         try:
-            start_datetime = datetime.strptime(start_datetime_str, "%d/%m/%Y")
-            end_datetime = datetime.strptime(end_datetime_str, "%d/%m/%Y")
+            start_dt = datetime.strptime(start_datetime_str, "%d/%m/%Y")
+            end_dt = datetime.strptime(end_datetime_str, "%d/%m/%Y")
         except ValueError:
-            start_datetime = datetime.now()
-            end_datetime = start_datetime + timedelta(days=1)
+            start_dt = datetime.now()
+            end_dt = start_dt + timedelta(days=1)
 
     start_location = (start_lat, start_lon)
     route_cache = {}
-
     
-    raw_attractions = Attraction.query.filter(Attraction.id.in_(attraction_ids)).all()
-    valid_attractions = []
-    invalid_attractions = []
-
-    max_days_allowed = max(1, (end_datetime.date() - start_datetime.date()).days + 1)
-
-    # Festival không phù hợp -> invalid
-    for attr in raw_attractions:
-        if attr.type == 'festival':
-            is_available, reason = is_attraction_available(attr, start_datetime, start_datetime, end_datetime)
-            if is_available:
-                valid_attractions.append(attr)
-            else:
-                invalid_attractions.append({
-                    "id": attr.id,
-                    "name": attr.name,
-                    "reason": reason
-                })
+    # 2. Lấy dữ liệu và Lọc sơ bộ
+    raw_attrs = Attraction.query.filter(Attraction.id.in_(attraction_ids)).all()
+    valid_attrs = []
+    invalid_attrs = []
+    
+    for a in raw_attrs:
+        is_ok, reason = is_attraction_available(a, start_datetime=start_dt, end_datetime=end_dt)
+        if is_ok:
+            valid_attrs.append(a)
         else:
-            # Với Bảo tàng, Di tích, Thiên nhiên -> Luôn thêm vào danh sách
-            valid_attractions.append(attr)
+            rt = str(reason) if not isinstance(reason, (int, float)) else f"Giờ mở: {reason}h"
+            invalid_attrs.append({"id": a.id, "name": a.name, "reason": rt})
 
-    if not valid_attractions:
+    if not valid_attrs:
         return {
-            "timeline": [],
-            "mapHtml": "",
-            "invalidAttractions": invalid_attractions,
-            "totalDestinations": 0,
-            "totalDays": 0,
-            "dailySummaries": [],
-            "totalDistanceKm": 0,
-            "dayCenters": []
+            "timeline": [], "routes": {}, "dailySummaries": [], 
+            "invalidAttractions": invalid_attrs,
+            "totalDays": 0, "totalDestinations": 0, "totalDistanceKm": 0
         }
 
-    # 
-    mst_result = find_mst_tour_order(valid_attractions, start_location, route_cache)
+    # 3. Tính toán số ngày và Phân cụm
+    max_days_allowed = max(1, (end_dt.date() - start_dt.date()).days + 1)
+    
+    mst_res = find_mst_tour_order(valid_attrs, start_location, route_cache)
+    
     festival_constraints = []
-    for attr in valid_attractions:
+    for attr in valid_attrs:
         if attr.type == 'festival':
             fes = Festival.query.get(attr.id)
             if fes and fes.time_start:
-                offset = (fes.time_start.date() - start_datetime.date()).days
-                if offset < 0:
-                    offset = 0
-                if offset >= max_days_allowed:
-                    offset = max_days_allowed - 1
-                festival_constraints.append({
-                    "attraction": attr,
-                    "day_offset": offset
-                })
+                offset = (fes.time_start.date() - start_dt.date()).days
+                if offset < 0: offset = 0
+                if offset >= max_days_allowed: offset = max_days_allowed - 1
+                
+                festival_constraints.append({"attraction": attr, "day_offset": offset})
 
     clusters, centers = cluster_attractions_with_gmm(
-        valid_attractions,
-        start_location,
-        max_days_allowed,
-        route_cache,
-        MAX_DAY_DURATION_MINUTES
+        valid_attrs, start_location, max_days_allowed, route_cache, MAX_DAY_DURATION_MINUTES
     )
 
     if not centers:
@@ -852,125 +1100,207 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         clusters.append([])
         centers.append([start_lat / 180.0, start_lon / 180.0, 0, 0, 0])
 
-    day_clusters = assign_clusters_to_days(
-        clusters,
-        centers,
-        festival_constraints,
-        start_location,
-        mst_result["order_index"]
+    day_clusters_raw = assign_clusters_to_days(
+        clusters, centers, festival_constraints, start_location, mst_res["order_index"]
     )
 
+    active_clusters = [c for c in day_clusters_raw if c["attractions"]]
+    
+    day_clusters = []
+    for c in active_clusters:
+        day_clusters.append({
+            "attractions": c["attractions"],
+            "center": c["center"]
+        })
+
+    # 4. Xây dựng Timeline
     timeline = []
-    daily_summaries = []
     daily_routes_map = {}
+    daily_summaries = []
     day_centers = []
+
     total_distance = 0
     total_travel_minutes = 0
-    last_location = start_location
 
-    for day_idx, cluster in enumerate(day_clusters):
-        day_number = day_idx + 1
-        day_date = start_datetime.date() + timedelta(days=day_idx)
+    # --- KHỞI TẠO BIẾN CHO SMART TRANSIT ---
+    curr_date = start_dt
+    curr_loc = start_location
+    overnight_place_name = "vị trí xuất phát" 
+    
+    # Đếm số ngày thực tế (Logical Day)
+    logical_day_number = 0
 
-        # Xác định thời gian bắt đầu ngày
-        if day_idx == 0:
-            day_start_dt = start_datetime
-        else:
-            day_start_dt = datetime.combine(day_date, datetime.min.time()).replace(hour=WAKE_UP_HOUR, minute=0)
-
-        # Lấy thông tin thời tiết 
+    for idx, cluster_info in enumerate(day_clusters):
+        logical_day_number += 1
+        
+        # Reset giờ xuất phát: 6h sáng
+        day_start_dt = datetime.combine(curr_date.date(), datetime.min.time()).replace(hour=WAKE_UP_HOUR, minute=0)
+        
+        # Lấy thời tiết tại tâm cụm
         weather_info = None
         if OPENWEATHERMAP_API_KEY:
-            # Sử dụng center của cluster hoặc start_location nếu không có center
-            weather_lat, weather_lon = cluster["center"] if cluster["center"] != start_location else start_location
+            c_lat, c_lon = cluster_info['center']
+            # Fallback về start_loc nếu center bị lỗi
+            if c_lat == 0 and c_lon == 0: c_lat, c_lon = start_location
+            weather_info = get_weather_by_date_and_coordinates(OPENWEATHERMAP_API_KEY, day_start_dt, c_lat, c_lon)
 
-            weather_info = get_weather_by_date_and_coordinates(
-                OPENWEATHERMAP_API_KEY,
-                day_date,
-                weather_lat,
-                weather_lon
-            )
-
-
+        # A. EVENT START DAY
         timeline.append({
-            "day": day_number,
-            "date": day_start_dt.strftime("%d/%m/%Y"),
+            "day": logical_day_number, 
+            "date": day_start_dt.strftime("%d/%m/%Y"), 
             "time": format_time_vn(day_start_dt),
-            "type": "DAY_START",
-            "name": f"Ngày {day_number} - Khởi hành",
-            "detail": "Bắt đầu hành trình",
+            "type": "DAY_START", 
+            "name": f"Ngày {logical_day_number}", 
+            "detail": f"Thức dậy tại vị trí {overnight_place_name}, sẵn sàng khởi hành", 
             "weather": weather_info
         })
-
-        day_events, stats, routes, last_location, day_end_time = build_day_itinerary(
-            day_number,
-            cluster["attractions"],
-            day_start_dt,
-            last_location,
-            route_cache,
-            mst_result["order_index"]
+        
+        # B. BUILD ITINERARY (Đi các điểm trong ngày)
+        events, stats, routes, last_location, day_end_time = build_day_itinerary(
+            logical_day_number, 
+            cluster_info['attractions'], 
+            day_start_dt, 
+            curr_loc, 
+            route_cache, 
+            mst_res['order_index']
         )
+        timeline.extend(events)
 
-        timeline.extend(day_events)
-        timeline.append({
-            "day": day_number,
-            "date": day_end_time.strftime("%d/%m/%Y"),
-            "time": format_time_vn(day_end_time),
-            "type": "DAY_END",
-            "name": "Kết thúc ngày",
-            "detail": f"Tổng thời gian di chuyển {stats['travel_minutes']} phút"
-        })
+        # C. SMART TRANSIT: QUYẾT ĐỊNH DI CHUYỂN CUỐI NGÀY
+        
+        is_last_day = (idx == len(day_clusters) - 1)
+        next_start_loc = last_location # Mặc định: Sáng mai dậy ở chỗ cũ
+        
+        if is_last_day:
+            # === NGÀY CUỐI: VỀ NHÀ (Start Point ban đầu) ===
+            d_home, t_home, g_home, m_home = get_route_with_cache(last_location, start_location, route_cache)
+            
+            # Chỉ vẽ nếu khoảng cách về > 1km
+            if d_home > 1:
+                arr_home = day_end_time + timedelta(minutes=t_home)
+                is_flight = isinstance(m_home, str) and m_home.startswith('plane')
+                nm = "Bay về điểm kết thúc" if is_flight else "Về điểm trả khách ban đầu"
+                
+                timeline.append({
+                    "day": logical_day_number, 
+                    "date": arr_home.strftime("%d/%m/%Y"), 
+                    "time": format_time_vn(arr_home), 
+                    "type": "TRAVEL", 
+                    "name": nm, 
+                    "detail": f"{d_home} km (Kết thúc hành trình)"
+                })
+                
+                if g_home:
+                    path_home = [[p[1], p[0]] for p in g_home['coordinates']]
+                    routes.append({
+                        "path": path_home, 
+                        "type": "flight" if is_flight else "road", 
+                        "is_return": True # Màu đen nét đứt
+                    })
+                
+                stats['distance_km'] += d_home
+                stats['travel_minutes'] += t_home
+                # Cập nhật thời gian kết thúc thật sự
+                day_end_time = arr_home
 
-        daily_routes_map[day_number] = routes
+        else:
+            # === NGÀY GIỮA: KIỂM TRA NGÀY MAI Ở ĐÂU? ===
+            next_cluster = day_clusters[idx+1]
+            next_center = next_cluster['center'] # Tâm điểm ngày mai
+            
+            # Tính khoảng cách từ điểm cuối hôm nay -> Tâm điểm ngày mai
+            d_next, t_next, g_next, m_next = get_route_with_cache(last_location, next_center, route_cache)
+            
+            #  Nếu xa hơn 50km -> Đề xuất di chuyển ngay tối nay
+            if d_next > 50:
+                is_flight = isinstance(m_next, str) and m_next.startswith('plane')
+                move_name = "Bay đến điểm tiếp theo" if is_flight else "Di chuyển đến thành phố tiếp theo"
+                
+                # Thời gian di chuyển (Đi đêm: Sau khi tham quan xong + 60p ăn tối/nghỉ)
+                depart_transit = day_end_time + timedelta(minutes=60) 
+                
+                timeline.append({
+                    "day": logical_day_number, 
+                    "date": depart_transit.strftime("%d/%m/%Y"), 
+                    "time": format_time_vn(depart_transit),
+                    "type": "TRAVEL", 
+                    "name": move_name, 
+                    "detail": f"{d_next} km (Di chuyển đêm để sáng mai kịp lịch trình)"
+                })
+                
+                # Vẽ đường di chuyển này vào map NGÀY HÔM NAY
+                if g_next:
+                    path_next = [[p[1], p[0]] for p in g_next['coordinates']]
+                    routes.append({
+                        "path": path_next, 
+                        "type": "flight" if is_flight else "road"
+                    })
+                
+                stats['distance_km'] += d_next
+                stats['travel_minutes'] += t_next
+                
+                # CẬP NHẬT CHO NGÀY MAI
+                next_start_loc = next_center # Ngày mai thức dậy ở tâm cụm mới
 
+                # Lấy tên điểm tham quan đầu tiên của ngày mai làm tên khu vực
+                if next_cluster["attractions"]:
+                    # Lấy điểm đầu tiên trong danh sách để làm đại diện
+                    first_dest = next_cluster["attractions"][0]
+                    overnight_place_name = f"khu vực gần {first_dest.name}"
+                else:
+                    overnight_place_name = "khu vực tham quan tiếp theo"
+                
+                # Cập nhật thời gian kết thúc ngày (sau khi di chuyển xong)
+                day_end_time = depart_transit + timedelta(minutes=t_next)
+                
+            else:
+                # Nếu gần (< 50km): Ngủ lại quanh đây
+                timeline.append({
+                    "day": logical_day_number, 
+                    "date": day_end_time.strftime("%d/%m/%Y"), 
+                    "time": format_time_vn(day_end_time),
+                    "type": "INFO", "name": "Nghỉ ngơi tại khách sạn", 
+                    "detail": "Nạp năng lượng cho hành trình ngày mai"
+                })
+                next_start_loc = last_location 
+                overnight_place_name = "khách sạn khu vực hiện tại"
+
+
+        # Tổng kết số liệu ngày
+        daily_routes_map[logical_day_number] = routes
+        
         day_summary = {
-            "day": day_number,
+            "day": logical_day_number,
             "date": day_start_dt.strftime("%d/%m/%Y"),
-            "distanceKm": stats["distance_km"],
+            "distanceKm": round(stats["distance_km"], 2),
             "travelMinutes": stats["travel_minutes"],
             "visitMinutes": stats["visit_minutes"],
             "pointCount": stats["point_count"],
-            "center": cluster["center"],
-            "includesFestival": any(a.type == 'festival' for a in cluster["attractions"]),
+            "center": cluster_info["center"],
+            "includesFestival": any(a.type == 'festival' for a in cluster_info["attractions"]),
             "weather": weather_info
         }
         daily_summaries.append(day_summary)
-        day_centers.append({"day": day_number, "center": cluster["center"]})
+        day_centers.append({"day": logical_day_number, "center": cluster_info["center"]})
+
         total_distance += stats["distance_km"]
         total_travel_minutes += stats["travel_minutes"]
-
-    visit_points = [evt for evt in timeline if evt.get("lat") and evt["type"] == "VISIT"]
-
-    m = folium.Map(location=[start_lat, start_lon], zoom_start=12)
-    folium.Marker(
-        [start_lat, start_lon],
-        popup="Điểm xuất phát",
-        icon=folium.Icon(color='green', icon='play')
-    ).add_to(m)
-
-    for paths in daily_routes_map.values():
-        for path in paths:
-            folium.PolyLine(path, color="red", weight=4, opacity=0.8).add_to(m)
-
-    for idx, p in enumerate(visit_points):
-        folium.Marker(
-            [p['lat'], p['lon']],
-            popup=f"<b>{idx + 1}. {p['name']}</b><br>Ngày {p['day']}",
-            icon=folium.Icon(color='orange', icon='camera')
-        ).add_to(m)
-
-    map_html = m._repr_html_()
+        
+        # Cập nhật cho vòng lặp sau
+        curr_loc = next_start_loc 
+        # Tăng ngày (Logic: Ngày hôm sau là ngày tiếp theo trên lịch)
+        curr_date = curr_date + timedelta(days=1)
 
     return {
         "timeline": timeline,
-        "mapHtml": map_html,
+        "mapHtml": "", # Legacy support
         "dailySummaries": daily_summaries,
         "dayCenters": day_centers,
-        "totalDays": len(day_clusters),
+        "totalDays": logical_day_number, 
         "totalDistanceKm": round(total_distance, 2),
         "totalTravelMinutes": total_travel_minutes,
-        "totalDestinations": len(valid_attractions),
-        "invalidAttractions": invalid_attractions,
+        "totalDestinations": len(valid_attrs),
+        "invalidAttractions": invalid_attrs,
         "festivalPriorities": [
             {
                 "id": constraint["attraction"].id,

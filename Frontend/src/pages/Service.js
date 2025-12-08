@@ -19,10 +19,10 @@ const initialSelectedTypes = [];
 export default function Service({ currentUser }) {
   const navigate = useNavigate();
 
-  // --- KHÔI PHỤC DỮ LIỆU TỪ LOCAL STORAGE ---
+  // --- KHÔI PHỤC DỮ LIỆU TỪ SESSION STORAGE ---
   const savedState = useMemo(() => {
       try {
-          const saved = localStorage.getItem('service_page_draft');
+          const saved = sessionStorage.getItem('service_page_draft');
           return saved ? JSON.parse(saved) : null;
       } catch (e) {
           return null;
@@ -54,8 +54,36 @@ export default function Service({ currentUser }) {
           selectedTypes,
           selectedAttractions
       };
-      localStorage.setItem('service_page_draft', JSON.stringify(stateToSave));
+      sessionStorage.setItem('service_page_draft', JSON.stringify(stateToSave));
   }, [searchTerm, startPoint, startDate, endDate, selectedTypes, selectedAttractions]);
+
+  // --- DEBOUNCE SEARCH ---
+  useEffect(() => {
+    if (!customInput || customInput.trim().length < 3) return;
+
+    const timerId = setTimeout(async () => {
+        console.log("🔍 Đang tự động tìm kiếm cho:", customInput);
+        try {
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(customInput)}&limit=1&addressdetails=1&countrycodes=vn`
+            );
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                const result = data[0];
+                setStartPoint(prev => ({
+                    ...prev,
+                    lat: parseFloat(result.lat),
+                    lon: parseFloat(result.lon),
+                }));
+            }
+        } catch (error) {
+            console.error("Lỗi tìm kiếm tự động:", error);
+        }
+    }, 1200); 
+
+    return () => clearTimeout(timerId);
+  }, [customInput]);
 
   // --- FETCH DATA ---
   const fetchAttractions = async (params = {}) => {
@@ -104,31 +132,50 @@ export default function Service({ currentUser }) {
       alert("Trình duyệt của bạn không hỗ trợ định vị.");
       return;
     }
+
     setIsLocating(true);
     setShowStartMenu(false);
     setIsTypingLocation(false);
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-          const data = await res.json();
-          const displayName = data.address.city || data.address.town || data.address.road || "Không xác định được";
-          setStartPoint({ name: displayName, lat: latitude, lon: longitude });
-        } catch (error) {
-          console.error("Lỗi lấy tên vị trí:", error);
-          setStartPoint({ name: "Vị trí hiện tại (GPS)", lat: latitude, lon: longitude });
-        } finally {
-          setIsLocating(false);
-        }
-      },
-      (error) => {
-        console.error(error);
-        alert("Không thể lấy vị trí. Vui lòng kiểm tra quyền truy cập vị trí.");
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    };
+
+    const success = async (position) => {
+      const { latitude, longitude } = position.coords;
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+          { headers: { 'Accept-Language': 'vi-VN' } }
+        );
+        const data = await res.json();
+        const addr = data.address || {};
+        const displayName = addr.road 
+            ? `${addr.road}, ${addr.suburb || addr.quarter || addr.city_district || addr.city}`
+            : (data.display_name ? data.display_name.split(',')[0] : "Vị trí của bạn");
+
+        setStartPoint({ name: displayName, lat: latitude, lon: longitude });
+      } catch (error) {
+        setStartPoint({ name: `Vị trí GPS (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`, lat: latitude, lon: longitude });
+      } finally {
         setIsLocating(false);
       }
-    );
+    };
+
+    const error = (err) => {
+      console.error(err);
+      setIsLocating(false);
+      switch(err.code) {
+          case err.PERMISSION_DENIED: alert("Bạn đã từ chối quyền truy cập vị trí."); break;
+          case err.POSITION_UNAVAILABLE: alert("Không thể xác định vị trí hiện tại."); break;
+          case err.TIMEOUT: alert("Quá thời gian chờ lấy vị trí."); break;
+          default: alert("Lỗi định vị không xác định.");
+      }
+    };
+
+    navigator.geolocation.getCurrentPosition(success, error, options);
   };
 
   const handleSelectCustom = () => {
@@ -143,15 +190,27 @@ export default function Service({ currentUser }) {
         return;
     }
     try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(customInput)}&limit=1`);
-        const data = await res.json();
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(customInput)}&limit=1`
+        );
+        const data = await response.json();
+
         if (data && data.length > 0) {
-            setStartPoint({ name: customInput, lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) });
+            const result = data[0];
+            setStartPoint({ 
+                name: result.display_name,
+                lat: parseFloat(result.lat), 
+                lon: parseFloat(result.lon) 
+            });
         } else {
+            alert("Không tìm thấy địa điểm này. Vui lòng nhập cụ thể hơn.");
             setStartPoint({ name: customInput, lat: null, lon: null });
         }
-    } catch (e) { console.error(e); }
-    setIsTypingLocation(false);
+    } catch (error) {
+        console.error("Lỗi tìm kiếm địa chỉ:", error);
+    } finally {
+        setIsTypingLocation(false);
+    }
   };
 
   // --- HELPER FUNCTIONS ---
@@ -177,7 +236,6 @@ export default function Service({ currentUser }) {
     return null;
   };
 
-  // --- VALIDATION LOGIC ---
   const validateDateConstraints = (start, end, attractions) => {
     if (!start && !end) return true;
     const startDateObj = start ? new Date(start) : null;
@@ -191,31 +249,40 @@ export default function Service({ currentUser }) {
 
     // 2. Logic ràng buộc Lễ hội
     for (const attr of attractions) {
+        // Bỏ qua các điểm mở quanh năm
         const isYearRound = attr.datetimeStart === "12/1" && attr.datetimeEnd === "31/12";
         if (isYearRound) continue;
 
-        // Lấy ngày bắt đầu/kết thúc từ dữ liệu (mặc định năm hiện tại)
+        // Parse ngày lễ hội (Mặc định lấy năm hiện tại khi parse)
         const festivalStart = parseDateString(attr.datetimeStart);
         const festivalEnd = parseDateString(attr.datetimeEnd);
 
         if (!festivalStart || !festivalEnd) continue;
 
-        // Logic đồng bộ năm
-        if (startDateObj && startDateObj.getFullYear() > festivalStart.getFullYear()) {
-            const yearDiff = startDateObj.getFullYear() - festivalStart.getFullYear();
-            festivalStart.setFullYear(festivalStart.getFullYear() + yearDiff);
-            festivalEnd.setFullYear(festivalEnd.getFullYear() + yearDiff);
-        }
+        // Nếu người dùng chọn năm đi
+        if (startDateObj) {
+            const tripYear = startDateObj.getFullYear();
+            
+            // Gán năm chuyến đi vào năm lễ hội để so sánh
+            festivalStart.setFullYear(tripYear);
+            festivalEnd.setFullYear(tripYear);
 
-        // Kiểm tra: Ngày đi không được trễ hơn ngày kết thúc lễ hội
+            if (startDateObj > festivalEnd) {
+                festivalStart.setFullYear(tripYear + 1);
+                festivalEnd.setFullYear(tripYear + 1);
+            }
+        }
+        // ----------------------------------------
+
+        // Kiểm tra 1: Ngày đi có trễ hơn ngày kết thúc lễ hội (của đợt phù hợp nhất) không?
         if (startDateObj && startDateObj > festivalEnd) {
-            alert(`Lỗi: Thời gian đi (${formatDateLocal(startDateObj)}) trễ hơn ngày kết thúc của ${attr.name} (${formatDateLocal(festivalEnd)}).`);
+            alert(`Lỗi: Bạn chọn khởi hành ngày ${formatDateLocal(startDateObj)}, nhưng ${attr.name} đã kết thúc vào ${formatDateLocal(festivalEnd)}.`);
             return false;
         }
 
-        // Kiểm tra: Ngày về không được sớm hơn ngày bắt đầu lễ hội
+        // Kiểm tra 2: Ngày về có sớm hơn ngày bắt đầu lễ hội không?
         if (endDateObj && endDateObj < festivalStart) {
-            alert(`Lỗi: Thời gian về (${formatDateLocal(endDateObj)}) sớm hơn ngày bắt đầu của ${attr.name} (${formatDateLocal(festivalStart)}).`);
+            alert(`Lưu ý: Bạn chọn về ngày ${formatDateLocal(endDateObj)}, nhưng ${attr.name} tới ngày ${formatDateLocal(festivalStart)} mới bắt đầu. Nếu bạn muốn tham gia lễ hội, hãy chọn ngày trong khoảng thời gian đó.`);
             return false;
         }
     }
@@ -240,7 +307,6 @@ export default function Service({ currentUser }) {
     if (isValid) setEndDate(newEndStr);
   };
 
-  // --- Logic tự động cập nhật ngày ---
   const updateDatesBasedOnAllAttractions = (attractions) => {
     if (attractions.length === 0) {
         setStartDate(''); 
@@ -322,7 +388,6 @@ export default function Service({ currentUser }) {
     setSelectedTypes(prev => prev.includes(val) ? prev.filter(t => t !== val) : [...prev, val]);
   };
   
-  // --- [MODIFIED] CREATE TOUR HANDLER ---
   const handleCreateTour = () => {
      if(selectedAttractions.length === 0) return alert("Vui lòng chọn ít nhất 1 địa điểm!");
      if(!startPoint.lat || !startPoint.lon) return alert("Vui lòng chọn điểm xuất phát hợp lệ!");
@@ -331,13 +396,12 @@ export default function Service({ currentUser }) {
          return;
      }
 
-     // Thay vì fetch API trực tiếp, chuyển hướng sang trang Itinerary
      navigate('/itinerary', { 
         state: { 
             selectedAttractions,
             startPoint,
-            startDate, // format: YYYY-MM-DD
-            endDate    // format: YYYY-MM-DD
+            startDate, 
+            endDate    
         } 
      });
   };
@@ -354,7 +418,6 @@ export default function Service({ currentUser }) {
     );
   };
 
-  // --- RENDER ---
   const isSelected = (id) => selectedAttractions.find(i => i.id === id);
 
   const isFiltering = useMemo(() => {
@@ -399,8 +462,6 @@ export default function Service({ currentUser }) {
           <h1>Kiến tạo hành trình văn hóa của riêng bạn</h1>
           
           <div className="hero-search-section">
-            
-            {/* 1. KHỐI XUẤT PHÁT ĐIỂM */}
             <div className="start-point-box">
                 <span className="start-label-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -444,7 +505,6 @@ export default function Service({ currentUser }) {
                 )}
             </div>
 
-            {/* 2. KHỐI TÌM KIẾM */}
             <div className="main-search-box">
                 <div className="search-icon-wrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -463,12 +523,11 @@ export default function Service({ currentUser }) {
             </div>
           </div>
 
-          {/* ROUTE INFO LINE */}
           <div className="route-info-line">
              <span style={{color: '#ffffff'}}>Từ:</span>
              {startPoint.name ? (
                 <span className="route-tag" style={{borderColor: '#22c55e', color: '#22c55e'}}>
-                    📍 {startPoint.name}
+                    {startPoint.name}
                 </span>
              ) : (
                 <span style={{fontStyle:'italic', opacity:0.7, marginLeft:'5px', color: '#ffffff'}}>[Chưa có]</span>
@@ -543,8 +602,6 @@ export default function Service({ currentUser }) {
       </div>
 
       <div className="service-body-container">
-        
-        {/* SIDEBAR TRÁI */}
         <aside className="sidebar">
             <div className="filter-box">
                 <h3>Loại hình điểm đến</h3>
@@ -566,7 +623,6 @@ export default function Service({ currentUser }) {
             </button>
         </aside>
 
-        {/* CONTENT PHẢI */}
         <main className="main-content">
             {isFiltering ? (
                 <>

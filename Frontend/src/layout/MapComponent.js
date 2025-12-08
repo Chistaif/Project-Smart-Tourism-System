@@ -1,89 +1,192 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+// --- BẢNG MÀU ---
+const COLOR_PALETTE = ['red', 'blue', 'green', 'orange', 'violet', 'gold', 'grey', 'black'];
 
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
+// Hàm tạo icon marker theo màu
+const createColorIcon = (colorName) => {
+  return new L.Icon({
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${colorName}.png`,
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
-    tooltipAnchor: [16, -28],
     shadowSize: [41, 41]
-});
+  });
+};
 
-L.Marker.prototype.options.icon = DefaultIcon;
-
-// --- Component phụ để tự động zoom bản đồ bao quát các điểm ---
+// Component phụ để tự động Zoom bản đồ
 function ChangeView({ bounds }) {
   const map = useMap();
   useEffect(() => {
     if (bounds && bounds.length > 0) {
-      map.fitBounds(bounds, { padding: [50, 50] });
+      try {
+        map.fitBounds(bounds, { padding: [50, 50] });
+      } catch (e) {
+        console.warn("Lỗi fitBounds:", e);
+      }
     }
   }, [bounds, map]);
   return null;
 }
 
-export default function MapComponent({ locations = [], routePath = [] }) {
-  // locations: Danh sách điểm đến [{id, name, lat, lon, imageUrl, ...}]
-  // routePath: Mảng tọa độ vẽ đường đi [[lat, lon], [lat, lon], ...]
+export default function MapComponent({ 
+    locations = [], 
+    routes = {}, 
+    routePath = [],
+    selectedDay = null 
+}) {
+  const defaultCenter = [16.0544, 108.2022];
 
-  // Tính toán vùng hiển thị (bounds)
-  let bounds = [];
-  if (routePath && routePath.length > 0) {
-      bounds = routePath;
-  } else if (locations && locations.length > 0) {
-      bounds = locations.map(loc => [loc.lat, loc.lon]);
-  }
-  
-  const defaultCenter = [16.0544, 108.2022]; // Đà Nẵng
+  // --- HELPER: LẤY MÀU THEO NGÀY ---
+  const getColorForDay = (dayNum) => {
+      if (!dayNum) return 'blue';
+      const index = (dayNum - 1) % COLOR_PALETTE.length;
+      return COLOR_PALETTE[index];
+  };
+
+  // --- LỌC DỮ LIỆU HIỂN THỊ ---
+  const { filteredLocations, filteredRoutes, bounds } = useMemo(() => {
+      let fLocations = locations;
+      let fRoutes = routes;
+
+      // Nếu người dùng chọn 1 ngày cụ thể
+      if (selectedDay) {
+          fLocations = locations.filter(loc => loc.type === 'START' || loc.day === selectedDay);
+          
+          fRoutes = {};
+          if (routes[selectedDay]) {
+              fRoutes[selectedDay] = routes[selectedDay];
+          }
+      }
+
+      let pointsForBounds = [];
+
+      if (selectedDay && fRoutes[selectedDay]) {
+          fRoutes[selectedDay].forEach(segment => {
+              const path = segment.path || segment;
+              if (Array.isArray(path)) pointsForBounds.push(...path);
+          });
+      } else if (selectedDay === null && routePath.length > 0) {
+          pointsForBounds = routePath;
+      }
+      
+      // Fallback: Nếu không có đường đi, dùng tọa độ marker
+      if (pointsForBounds.length === 0 && fLocations.length > 0) {
+          pointsForBounds = fLocations.map(loc => [loc.lat, loc.lon]);
+      }
+
+      // Xử lý bounds
+      let newBounds = pointsForBounds;
+      // Fix lỗi nếu chỉ có 1 điểm (không thể fitBounds) -> Tạo padding ảo
+      if (newBounds.length === 1) {
+          const [lat, lon] = newBounds[0];
+          newBounds.push([lat + 0.01, lon + 0.01]);
+      }
+
+      return { filteredLocations: fLocations, filteredRoutes: fRoutes, bounds: newBounds };
+  }, [locations, routes, routePath, selectedDay]);
+
 
   return (
-    <div style={{ height: "100%", width: "100%", borderRadius: "15px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", position: "relative", zIndex: 0 }}>
+    <div style={{ height: "100%", width: "100%", borderRadius: "0", overflow: "hidden", position: "relative", zIndex: 0 }}>
       <MapContainer 
         center={defaultCenter} 
-        zoom={13} 
+        zoom={6} 
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom={true}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {/* Tự động Zoom */}
         {bounds.length > 0 && <ChangeView bounds={bounds} />}
 
-        {routePath && routePath.length > 0 && (
-          <Polyline 
-            positions={routePath} 
-            color="#c4b30a" 
-            weight={5} 
-            opacity={0.8} 
-          />
-        )}
+        {/* --- 1. VẼ TUYẾN ĐƯỜNG --- */}
+        {filteredRoutes && Object.keys(filteredRoutes).sort().map((dayStr) => {
+            const dayNum = parseInt(dayStr);
+            const segments = filteredRoutes[dayStr];
+            
+            const dayColor = getColorForDay(dayNum);
 
-        {locations.map((loc, index) => (
-          <Marker key={index} position={[loc.lat, loc.lon]}>
-            <Popup>
-              <div style={{ textAlign: "center", minWidth: "150px" }}>
-                <strong style={{ color: "#1a2e05", display: "block", marginBottom: "5px" }}>{loc.name}</strong>
-                {loc.imageUrl && (
-                  <img 
-                    src={loc.imageUrl} 
-                    alt={loc.name} 
-                    style={{ width: "100%", height: "80px", objectFit: "cover", borderRadius: "4px" }} 
-                    onError={(e) => {e.target.onerror = null; e.target.src="https://via.placeholder.com/150?text=No+Image"}}
-                  />
-                )}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+            return segments.map((segment, idx) => {
+                const path = segment.path || segment; 
+                const isFlight = segment.type === 'flight' || (typeof segment.type === 'string' && segment.type.startsWith('plane'));
+                const isReturn = segment.is_return === true;
+
+                if (!path || path.length === 0) return null;
+
+                // Cấu hình Style
+                // Nếu là đường về -> Màu đen. Nếu không -> Màu theo ngày
+                const segmentColor = isReturn ? 'black' : dayColor;
+                const dashArray = (isReturn || isFlight) ? '10, 15' : null;
+                const weight = (isReturn || isFlight) ? 3 : 5;
+                const opacity = isReturn ? 0.6 : 0.8;
+
+                return (
+                    <Polyline 
+                        key={`route-${dayNum}-${idx}`}
+                        positions={path}
+                        pathOptions={{
+                            color: segmentColor,
+                            weight: weight,
+                            opacity: opacity,
+                            dashArray: dashArray
+                        }}
+                    >
+                         <Popup>
+                            {isReturn 
+                              ? "Đường về điểm xuất phát" 
+                              : `Ngày ${dayNum}: ${isFlight ? "Đường bay" : "Di chuyển"}`
+                            }
+                        </Popup>
+                    </Polyline>
+                );
+            });
+        })}
+
+        {/* --- 2. VẼ MARKER --- */}
+        {filteredLocations.map((loc, index) => {
+            let iconColor = 'blue';
+
+            if (loc.type === 'START') {
+                iconColor = 'black'; // Điểm xuất phát luôn màu đen
+            } else {
+                // Điểm đến lấy màu theo ngày -> Khớp hoàn toàn với đường đi
+                iconColor = getColorForDay(loc.day);
+            }
+
+            return (
+                <Marker 
+                    key={`loc-${index}`} 
+                    position={[loc.lat, loc.lon]}
+                    icon={createColorIcon(iconColor)}
+                >
+                    <Popup>
+                        <div style={{ textAlign: "center", minWidth: "150px" }}>
+                            <strong style={{ color: iconColor, display: "block", marginBottom: "5px" }}>
+                                {loc.type === 'START' ? 'ĐIỂM XUẤT PHÁT' : `NGÀY ${loc.day}`}
+                            </strong>
+                            <div style={{fontWeight: 'bold', marginBottom: '5px'}}>{loc.name}</div>
+                            
+                            {loc.imageUrl && (
+                                <img 
+                                    src={loc.imageUrl} 
+                                    alt={loc.name} 
+                                    style={{ width: "100%", height: "80px", objectFit: "cover", borderRadius: "4px" }} 
+                                />
+                            )}
+                            {loc.detail && <p style={{margin: "5px 0 0", fontSize: "0.85rem", color: "#666"}}>{loc.detail}</p>}
+                        </div>
+                    </Popup>
+                </Marker>
+            );
+        })}
       </MapContainer>
     </div>
   );

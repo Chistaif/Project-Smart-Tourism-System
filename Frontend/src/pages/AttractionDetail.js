@@ -98,9 +98,8 @@ export default function AttractionDetail({ currentUser, openLogin }) {
         });
       }
     }
-  }, [userId]); // Dependency là userId
-
-  // Thêm syncStateFromDetail vào dependency array
+  }, [userId]); 
+  
   const loadDetail = useCallback(async (isBackground = false) => {
     if (!isBackground) setLoading(true);
     setError('');
@@ -164,13 +163,14 @@ export default function AttractionDetail({ currentUser, openLogin }) {
     } catch (err) { showPopup("error", err.message); } finally { setFavoriteSubmitting(false); }
   };
 
+  // --- HANDLER: THÊM VÀO LỊCH TRÌNH ---
   const handleAddToItinerary = () => {
     if (!info || !info.id) {
       showPopup("error", "Dữ liệu chưa sẵn sàng.");
       return;
     }
     try {
-      const savedState = localStorage.getItem('service_page_draft');
+      const savedState = sessionStorage.getItem('service_page_draft');
       const currentState = savedState ? JSON.parse(savedState) : {};
       const currentSelectedAttractions = currentState.selectedAttractions || [];
 
@@ -178,7 +178,7 @@ export default function AttractionDetail({ currentUser, openLogin }) {
       if (exists) {
         if (window.confirm(`"${info.name}" đã có trong lịch trình. Xóa khỏi danh sách?`)) {
           const updatedSelectedAttractions = currentSelectedAttractions.filter(item => item.id !== info.id);
-          localStorage.setItem('service_page_draft', JSON.stringify({ ...currentState, selectedAttractions: updatedSelectedAttractions }));
+          sessionStorage.setItem('service_page_draft', JSON.stringify({ ...currentState, selectedAttractions: updatedSelectedAttractions }));
           showPopup("success", "Đã xóa khỏi lịch trình.");
         }
         return;
@@ -197,7 +197,7 @@ export default function AttractionDetail({ currentUser, openLogin }) {
       };
 
       const updatedSelectedAttractions = [...currentSelectedAttractions, attractionToAdd];
-      localStorage.setItem('service_page_draft', JSON.stringify({ ...currentState, selectedAttractions: updatedSelectedAttractions }));
+      sessionStorage.setItem('service_page_draft', JSON.stringify({ ...currentState, selectedAttractions: updatedSelectedAttractions }));
       showPopup("success", "Đã thêm vào lịch trình!");
       
       setTimeout(() => {
@@ -256,9 +256,9 @@ export default function AttractionDetail({ currentUser, openLogin }) {
             </div>
 
             <div className="card-meta-list">
-              <p>🗓 <strong>Thời gian:</strong> {formatAttractionTime(info)}</p>
-              <p>📍 <strong>Địa điểm:</strong> {info?.location}</p>
-              <p>🎟 <strong>Vào cửa:</strong> {info?.ticketPrice ? `${info.ticketPrice.toLocaleString()}đ` : "Miễn phí"}</p>
+              <p><strong>Thời gian:</strong> {formatAttractionTime(info)}</p>
+              <p><strong>Địa điểm:</strong> {info?.location}</p>
+              <p><strong>Vào cửa:</strong> {info?.ticketPrice ? `${info.ticketPrice.toLocaleString()}đ` : "Miễn phí"}</p>
             </div>
 
             <div className="star-position">

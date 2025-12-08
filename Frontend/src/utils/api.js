@@ -170,6 +170,9 @@ export const userAPI = {
   
   // Lấy lịch sử đánh giá
   getReviews: (userId) => apiRequest(`/user/${userId}/reviews`),
+
+  // Lấy danh sách tour đã lưu
+  getSavedTours: (userId) => apiRequest(`/saved-tours?userId=${userId}`),
 };
 
 // API functions for blogs
@@ -247,9 +250,9 @@ export const tourAPI = {
   }),
 
   // Hủy lưu tour
-  unsaveTour: (payload) => apiRequest('/save-tour', {
+  unsaveTour: (tourId) => apiRequest('/save-tour', {
       method: 'PATCH',
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ tourId })
   }),
 
   // Lấy danh sách tour đã lưu
@@ -261,7 +264,7 @@ export default {
   attractionsAPI,
   authAPI,
   blogsAPI,
-  userAPI,
-  tourAPI, // <--- Nhớ thêm dòng này
+  userAPI, 
+  tourAPI, 
   healthCheck,
-};
+}
