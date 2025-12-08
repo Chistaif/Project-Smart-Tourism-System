@@ -27,11 +27,12 @@ html, body, #root {
   color: #fff;
   position: relative;
   transition: background-image 0.8s ease-in-out, filter 0.5s ease;
-  min-height: 100vh;
+  min-height: auto;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  padding-top: 60px;
 }
 
 .overlay {
@@ -42,7 +43,7 @@ html, body, #root {
   z-index: 0;
 }
 
-header {
+.navbar-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -55,6 +56,22 @@ header {
   justify-content: space-between;
   background: var(--nav-bg);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+  transition: transform 0.35s ease-in-out;
+  z-index: 2000 !important;
+  will-change: transform;
+  transform: translateY(0);
+}
+
+.navbar-container.show {
+  transform: translateY(0) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.navbar-container.hide {
+  transform: translateY(-100%) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 nav {
@@ -349,7 +366,7 @@ footer {
 }
 
 @media (max-width: 768px) {
-  header {
+  .navbar-container {
     padding: 14px 20px;
     flex-direction: column;
     gap: 15px;
@@ -1039,3 +1056,4 @@ footer {
   color: #f8fafc;
   max-width: 700px;
 }
+
