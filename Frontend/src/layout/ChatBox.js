@@ -8,6 +8,7 @@ import chatLogo from '../asset/chatbox.png';
 export default function ChatAssistant({ user, openLogin }) {
   const location = useLocation();
   const isBlogRoute = location.pathname.startsWith('/blogs');
+  const isDetailRoute = location.pathname.startsWith('/attractions/');
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -93,7 +94,7 @@ export default function ChatAssistant({ user, openLogin }) {
   };
 
   return (
-    <div className="chat-widget">
+    <div className={`chat-widget ${isDetailRoute ? 'detail-page' : ''}`}>
       {/* Nút tròn góc màn hình */}
       <button className="chat-toggle" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? (

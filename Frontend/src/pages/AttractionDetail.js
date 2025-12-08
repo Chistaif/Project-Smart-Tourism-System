@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { attractionsAPI } from '../utils/api';
 import './AttractionDetail.css';
@@ -9,25 +9,21 @@ const createDefaultReviewForm = () => ({
   reviewId: null,
 });
 
-export default function AttractionDetail({currentUser, openLogin }) {
+export default function AttractionDetail({ currentUser, openLogin }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const userId = currentUser?.user_id;
 
-  // State kiểm soát chế độ xem (Tóm tắt vs Chi tiết)
-  const [showFullDetail, setShowFullDetail] = useState(false);
-
+  // --- STATE ---
   const [info, setInfo] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [favorite, setFavorite] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
-  // State cho review & favorite
+
   const [reviewForm, setReviewForm] = useState(() => createDefaultReviewForm());
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [favoriteSubmitting, setFavoriteSubmitting] = useState(false);
-
   const [popupMessage, setPopupMessage] = useState({ type: "", text: "" });
 
   const showPopup = (type, text) => {
@@ -37,190 +33,180 @@ export default function AttractionDetail({currentUser, openLogin }) {
     }, 3000);
   };
 
-
-  // Hàm logic xếp hạng
+  // --- HELPER FUNCTIONS ---
   const getRatingLabel = (score, count) => {
     if (!count || count === 0) return "Chưa có đánh giá";
     if (score >= 4.5) return "Tuyệt vời";
     if (score >= 3.5) return "Khá tốt";
     if (score >= 2.5) return "Ổn";
-    if (score >= 1.5) return "Trung bình";
-    return "Tệ";
+    return "Trung bình";
   };
 
   const renderStars = (score) => {
-    // Làm tròn số sao
     const rounded = Math.round(score || 0);
-    // Tạo chuỗi sao: ★ (đầy) và ☆ (rỗng)
     return '★'.repeat(rounded) + '☆'.repeat(5 - rounded);
   };
 
-  // --- HÀM XỬ LÝ TEXT IN ĐẬM ---
   const renderFormattedText = (text) => {
     if (!text) return "";
-    // Tách chuỗi dựa trên ký tự **text**
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, index) => {
-      // Nếu là phần nằm trong **...**
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={index} style={{ color: '#c4b30a' }}>{part.slice(2, -2)}</strong>;
+        return <strong key={index} style={{ color: '#a16207' }}>{part.slice(2, -2)}</strong>;
       }
       return part;
     });
   };
 
   const formatAttractionTime = (info) => {
-    // 1. Cultural Spot: hiển thị opening hours
     if (info.type === 'cultural_spot') {
-        return info.openingHours || "Mở cửa cả ngày";
+      return info.openingHours || "Mở cửa cả ngày";
     }
-    
-    // 2. Festival
     if (info.type === 'festival') {
-        // Festival âm lịch: hiển thị chuỗi gốc
-        if (info.isLunar) {
-            return `${info.originalStart} - ${info.originalEnd}`;
-        }
-        
-        // Festival dương lịch: format dd/mm - dd/mm
-        if (info.timeStart && info.timeEnd) {
-            const startDate = new Date(info.timeStart);
-            const endDate = new Date(info.timeEnd);
-            
-            const formatDate = (date) => {
-                const day = date.getDate().toString().padStart(2, '0');
-                const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                return `${day}/${month}`;
-            };
-            
-            return `${formatDate(startDate)} - ${formatDate(endDate)}`;
-        }
-        
-        // Fallback
-        return "Thời gian chưa cập nhật";
-    }
-    
-    // 3. Default
-    return "Mở cửa cả ngày";
-};
-
-const loadDetail = async (isBackground = false) => {
-    if (!isBackground) {
-        setLoading(true);
-    }
-    
-    setError('');
-    try {
-      const response = await attractionsAPI.getDetail(id, userId);
-      if (!response.success) {
-        throw new Error(response.error || 'Không thể tải dữ liệu địa điểm.');
+      if (info.isLunar) {
+        return `${info.originalStart} - ${info.originalEnd}`;
       }
-      syncStateFromDetail(response.data);
-    } catch (err) {
-      console.error(err);
-      setError(err.message || 'Không thể tải dữ liệu địa điểm.');
-    } finally {
-      setLoading(false);
+      if (info.timeStart && info.timeEnd) {
+        const startDate = new Date(info.timeStart);
+        const endDate = new Date(info.timeEnd);
+        const formatDate = (date) => {
+          const day = date.getDate().toString().padStart(2, '0');
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          return `${day}/${month}`;
+        };
+        return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+      }
+      return "Thời gian chưa cập nhật";
     }
+    return "Mở cửa cả ngày";
   };
 
-  const syncStateFromDetail = (dataPayload) => {
+  // Bọc hàm này trong useCallback để nó không bị tạo lại mỗi lần render
+  const syncStateFromDetail = useCallback((dataPayload) => {
     const data = dataPayload || {};
-    const infoData = data.infomation || {};
-    const reviewsData = data.reviews || [];
-
-    setInfo(infoData);
-    setReviews(reviewsData);
+    setInfo(data.infomation || {});
+    setReviews(data.reviews || []);
     setFavorite(data.favorite || null);
 
     if (userId) {
-      const existingReview = reviewsData.find((review) => review.userId === userId);
+      const existingReview = (data.reviews || []).find((review) => review.userId === userId);
       if (existingReview) {
         setReviewForm({
           content: existingReview.content || '',
           ratingScore: existingReview.rating || 5,
           reviewId: existingReview.reviewId,
         });
-      } else {
-        setReviewForm(createDefaultReviewForm());
       }
     }
-  };
+  }, [userId]); // Dependency là userId
 
-  useEffect(() => {
-    loadDetail();
-    setShowFullDetail(false); // Reset về tóm tắt khi đổi ID
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, userId]);
+  // Thêm syncStateFromDetail vào dependency array
+  const loadDetail = useCallback(async (isBackground = false) => {
+    if (!isBackground) setLoading(true);
+    setError('');
+    try {
+      const response = await attractionsAPI.getDetail(id, userId);
+      if (!response.success) throw new Error(response.error || 'Lỗi tải dữ liệu.');
+      syncStateFromDetail(response.data);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [id, userId, syncStateFromDetail]);
 
-  // Các hàm xử lý Review & Favorite
-  const handleReviewChange = (field, value) => {
-    setReviewForm((prev) => ({ ...prev, [field]: value }));
-  };
+  useEffect(() => { 
+    loadDetail(); 
+  }, [loadDetail]);
 
+  // --- HANDLERS ---
   const handleSubmitReview = async (event) => {
     event.preventDefault();
-
-    if (!userId) { 
-      showPopup("error", "Bạn cần đăng nhập để gửi đánh giá."); 
-      return; 
-    }
-
-    if (!reviewForm.content.trim()) { 
-      showPopup("error", "Nội dung đánh giá không được để trống."); 
-      return;
-    }
+    if (!userId) { showPopup("error", "Vui lòng đăng nhập."); return; }
     setReviewSubmitting(true);
     try {
       const payload = { userId, content: reviewForm.content.trim(), ratingScore: Number(reviewForm.ratingScore) || 5 };
       if (reviewForm.reviewId) {
         payload.reviewId = reviewForm.reviewId;
         await attractionsAPI.updateReview(id, payload);
+        showPopup("success", "Cập nhật đánh giá thành công!");
       } else {
         await attractionsAPI.createReview(id, payload);
+        showPopup("success", "Gửi đánh giá thành công!");
       }
       await loadDetail(true);
-    } catch (err) { showPopup("error", err.message); }  finally { setReviewSubmitting(false); }
+    } catch (err) { showPopup("error", err.message); } finally { setReviewSubmitting(false); }
   };
 
-const handleDeleteReview = async (reviewId) => {
-    if (!userId || !window.confirm('Bạn chắc chắn muốn xóa?')) return;
+  const handleDeleteReview = async (reviewId) => {
+    if (!userId || !window.confirm('Xóa đánh giá này?')) return;
     setReviewSubmitting(true);
     try {
       await attractionsAPI.deleteReview(id, { userId, reviewId });
-      
-      // Reset form về mặc định nếu lỡ đang sửa cái review bị xóa
       setReviewForm(createDefaultReviewForm());
-      
-      await loadDetail(true); // Tải lại dữ liệu để cập nhật danh sách
-      showPopup("success", "Đã xóa đánh giá thành công!");
-      
-    } catch (err) { 
-        console.error(err);
-        showPopup("error", "Lỗi khi xóa đánh giá: " + err.message);
-    } finally { 
-        setReviewSubmitting(false); 
-    }
+      await loadDetail(true);
+      showPopup("success", "Đã xóa đánh giá.");
+    } catch (err) { showPopup("error", err.message); } finally { setReviewSubmitting(false); }
   };
 
   const handleToggleFavorite = async () => {
-    if (!userId) { 
-      showPopup("error", "Bạn cần đăng nhập để lưu địa điểm yêu thích.");
-      return; 
-    }
+    if (!userId) { showPopup("error", "Vui lòng đăng nhập."); return; }
     setFavoriteSubmitting(true);
     try {
       const nextState = !(favorite?.isFavorite);
       const response = await attractionsAPI.toggleFavorite(id, { userId, isFavorite: nextState });
       if (response.success) {
-          setFavorite(response.favorite);
-          showPopup(
-            "success",
-            nextState ? "Đã thêm vào yêu thích!" : "Đã bỏ khỏi yêu thích!"
-          );
-          if (response.data) syncStateFromDetail(response.data);
+        setFavorite(response.favorite);
+        showPopup("success", nextState ? "Đã lưu vào yêu thích!" : "Đã bỏ khỏi yêu thích!");
+        if (response.data) syncStateFromDetail(response.data);
       }
     } catch (err) { showPopup("error", err.message); } finally { setFavoriteSubmitting(false); }
+  };
+
+  const handleAddToItinerary = () => {
+    if (!info || !info.id) {
+      showPopup("error", "Dữ liệu chưa sẵn sàng.");
+      return;
+    }
+    try {
+      const savedState = localStorage.getItem('service_page_draft');
+      const currentState = savedState ? JSON.parse(savedState) : {};
+      const currentSelectedAttractions = currentState.selectedAttractions || [];
+
+      const exists = currentSelectedAttractions.find(item => item.id === info.id);
+      if (exists) {
+        if (window.confirm(`"${info.name}" đã có trong lịch trình. Xóa khỏi danh sách?`)) {
+          const updatedSelectedAttractions = currentSelectedAttractions.filter(item => item.id !== info.id);
+          localStorage.setItem('service_page_draft', JSON.stringify({ ...currentState, selectedAttractions: updatedSelectedAttractions }));
+          showPopup("success", "Đã xóa khỏi lịch trình.");
+        }
+        return;
+      }
+
+      const attractionToAdd = {
+        id: info.id,
+        name: info.name,
+        imageUrl: info.imageUrl || info.image_url,
+        location: info.location,
+        lat: info.lat,
+        lon: info.lon,
+        averageRating: info.averageRating || 0,
+        type: info.type,
+        tags: info.tags || []
+      };
+
+      const updatedSelectedAttractions = [...currentSelectedAttractions, attractionToAdd];
+      localStorage.setItem('service_page_draft', JSON.stringify({ ...currentState, selectedAttractions: updatedSelectedAttractions }));
+      showPopup("success", "Đã thêm vào lịch trình!");
+      
+      setTimeout(() => {
+        if (window.confirm("Chuyển đến trang tạo lịch trình ngay?")) navigate('/service');
+      }, 500);
+    } catch (err) {
+      console.error(err);
+      showPopup("error", "Lỗi lưu lịch trình.");
+    }
   };
 
   const descriptionSections = useMemo(() => {
@@ -228,238 +214,182 @@ const handleDeleteReview = async (reviewId) => {
     return Array.isArray(info.detailDescription.sections) ? info.detailDescription.sections : [];
   }, [info]);
 
-  if (loading) return <div className="attraction-loading">Đang tải thông tin...</div>;
-
-  // VIEW 1: GIAO DIỆN TÓM TẮT (Summary Card)
-  if (!showFullDetail) {
-    return (
-      <div className="summary-page-container">
-        <div className="summary-card">
-          {/* Cột Trái: Ảnh */}
-          <div className="summary-left">
-             <img src={info?.imageUrl} alt={info?.name} className="summary-hero-img" />
-          </div>
-
-          {/* Cột Phải: Nội dung & Nút */}
-          <div className="summary-right">
-            <h1 className="summary-title">{info?.name}</h1>
-            <span className="summary-id-badge">ID: {info?.id || "DT00"}</span> 
-
-            <div className="summary-tags">
-               <span className="tag-label">🏷 Tag:</span>
-               {info?.tags?.map((t, i) => <span key={i} className="tag-pill">{t}</span>)}
-            </div>
-
-            <div className="summary-section">
-                <p>📖 <strong>Mô tả:</strong> {info?.briefDescription}</p>
-            </div>
-
-            <div className="summary-info-list">
-            <p>🗓 <strong>Thời gian:</strong> {formatAttractionTime(info)}</p>
-                <p>📍 <strong>Địa điểm:</strong> {info?.location}</p>
-                <p>🎟 <strong>Vé vào cửa:</strong> {info?.ticketPrice ? `${info.ticketPrice.toLocaleString()}đ` : "Miễn phí"}</p>
-            </div>
-
-            <button className="view-detail-link" onClick={() => setShowFullDetail(true)}>
-                &lt;Xem chi tiết&gt;
-            </button>
-
-            {/* Khối nút hành động (Nằm trong summary-right) */}
-            <div className="summary-footer-actions">
-                 <button className="back-link-btn" onClick={() => navigate(-1)}>
-                    Trở lại
-                 </button>
-                 <button className="add-schedule-btn">
-                    Thêm vào lịch trình
-                 </button>
-            </div>
-
-            {/* Nút yêu thích góc dưới cùng phải */}
-            <div className="summary-fav-pos">
-                 <button 
-                    className={`fav-icon-btn ${favorite?.isFavorite ? 'active' : ''}`}
-                    onClick={handleToggleFavorite}
-                 >
-                    {favorite?.isFavorite ? '★' : '☆'}
-                 </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // VIEW 2: GIAO DIỆN CHI TIẾT (Full Detail)
-  return (
-    <div className="attraction-detail-page full-view">
-      <div className="attraction-detail-inner">
-
-        <header className="detail-view-header">
-            <h2 className="section-heading">Các hoạt động chính</h2>
-        </header>
-
-        {/* Nội dung chi tiết (đã fix lỗi in đậm) */}
-        <section className="attraction-description">
-            {descriptionSections.map((section, index) => (
-                <article 
-                    key={index} 
-                    className={`description-block ${section.type === 'list' ? 'description-block-list' : ''}`}
-                >
-                    {section.title && <h3 className="content-title">{section.title}</h3>}
-                    
-                    {section.imageUrl && (
-                        <div className="content-image-wrapper">
-                            <img src={section.imageUrl} alt="minh hoa" />
-                        </div>
-                    )}
-
-                    <div className="content-text">
-                        {section.type === 'list' && Array.isArray(section.items) ? (
-                            <ul>
-                                {section.items.map((it, i) => (
-                                    <li key={i}>{renderFormattedText(it)}</li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>{renderFormattedText(section.content)}</p>
-                        )}
-                    </div>
-                </article>
-            ))}
-        </section>
-
-        {/* Gợi ý cho du khách */}
-        <section className="tourist-tips">
-            <h3>Gợi ý cho Du khách</h3>
-            <ul>
-                <li>Phải mặc trang phục gọn gàng, lịch sự.</li>
-                <li>Giữ trật tự, không gây ồn ào, không tổ chức hoạt động trái phép.</li>
-                <li>Tuyệt đối không sờ, leo trèo, hoặc ngồi lên bục trưng bày hiện vật.</li>
-                <li>Không ăn uống, hút thuốc trong khu vực tham quan.</li>
-            </ul>
-        </section>
-
-        <div className="detail-footer-actions">
-            <button className="back-button" onClick={() => setShowFullDetail(false)}>
-              Quay lại tóm tắt
-            </button>
-            <button className="add-schedule-btn-small">
-              Thêm vào lịch trình
-            </button>
-        </div>
-
-        {/* --- PHẦN ĐÁNH GIÁ --- */}
-        <section className="attraction-reviews">
-            <div className="reviews-header-modern">
-               <div className="header-left">
-                   <h3>Đánh giá từ du khách</h3>
-                   <p className="review-count">
-                       ({reviews.length > 0 ? `${reviews.length} nhận xét` : "Chưa có nhận xét"})
-                   </p>
-               </div>
-               
-               <div className="header-right-score">
-                   {/* Hiển thị điểm số thực tế */}
-                   <div className="score-big">{info?.averageRating || 0}</div>
-                   <div className="score-details">
-                       {/* Hiển thị sao động */}
-                       <div className="stars" style={{color: '#facc15', letterSpacing: '2px'}}>
-                           {renderStars(info?.averageRating)}
-                       </div>
-                       {/* Hiển thị chữ động (Tuyệt vời/Ổn...) */}
-                       <span className="rating-text">
-                           {getRatingLabel(info?.averageRating, reviews.length)}
-                       </span>
-                   </div>
-               </div>
-            </div>
-
-            {/* Form viết đánh giá, Thông báo đăng nhập */}
-            <div className="review-input-container">
-                {currentUser ? (
-                    <form className="review-form-modern" onSubmit={handleSubmitReview}>
-                      <div className="form-top">
-                        <div className="user-label">
-                            <span className="user-avatar-small">
-                                {currentUser.avatar_url ? <img src={currentUser.avatar_url} alt="avt" /> : currentUser.username.charAt(0)}
-                            </span>
-                            <span>{currentUser.username}</span>
-                        </div>
-                        <div className="rating-select">
-                            <span>Bạn chấm mấy sao?</span>
-                            <select value={reviewForm.ratingScore} onChange={(e) => handleReviewChange('ratingScore', e.target.value)}>
-                              {[5,4,3,2,1].map(s => <option key={s} value={s}>{s} ⭐</option>)}
-                            </select>
-                        </div>
-                      </div>
-                      
-                      <textarea 
-                        className="review-textarea"
-                        value={reviewForm.content} 
-                        onChange={(e) => handleReviewChange('content', e.target.value)}
-                        placeholder="Chia sẻ trải nghiệm thực tế của bạn tại đây..."
-                        rows="3"
-                      />
-                      <div className="form-actions">
-                          <button type="submit" className="submit-review-btn" disabled={reviewSubmitting}>
-                             {reviewSubmitting ? 'Đang gửi...' : 'Gửi đánh giá'}
-                          </button>
-                      </div>
-                    </form>
-                ) : (
-                    <div className="login-prompt-banner">
-                        <div className="prompt-icon">✍️</div>
-                        <div className="prompt-text">
-                            <strong>Bạn đã đến đây chưa?</strong>
-                            <p>Hãy đăng nhập để chia sẻ cảm nhận nhé!</p>
-                        </div>
-                        <div 
-                            className="prompt-action" 
-                            onClick={openLogin}
-                            style={{cursor: 'pointer'}}
-                        >
-                            Đăng nhập để viết
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            <div className="reviews-list-modern">
-                {reviews.length > 0 ? reviews.map(r => (
-                    <div key={r.reviewId} className="review-card">
-                        <div className="review-card-header">
-                            <div className="reviewer-avatar">
-                                {r.user?.avatar_url ? (
-                                    <img src={r.user.avatar_url} alt="user" />
-                                ) : (
-                                    r.user?.username?.charAt(0).toUpperCase() || "U"
-                                )}
-                            </div>
-                            <div className="reviewer-meta">
-                                <span className="reviewer-name">{r.user?.username || "Ẩn danh"}</span>
-                                <span className="review-date">{r.createdAt ? new Date(r.createdAt).toLocaleDateString('vi-VN') : 'Gần đây'}</span>
-                            </div>
-                            <div className="review-rating-badge">
-                                {r.rating} <span className="star-icon">★</span>
-                            </div>
-                        </div>
-                        
-                        <div className="review-card-body">
-                            <p>{r.content}</p>
-                        </div>
-
-                        {r.userId == userId && (
-                            <button className="delete-review-link" onClick={() => handleDeleteReview(r.reviewId)}>
-                                Xóa đánh giá này
-                            </button>
-                        )}
-                    </div>
-                )) : (
-                    <p className="no-reviews">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
-                )}
-            </div>
-        </section>
-      </div>
+  if (loading) return <div className="attraction-loading-screen">Loading...</div>;
+  
+  if (error) return (
+    <div className="attraction-error-screen">
+      <h2>⚠️ Đã xảy ra lỗi</h2>
+      <p>{error}</p>
+      <button onClick={() => navigate(-1)}>Quay lại</button>
     </div>
+  );
+
+  return (
+    <div className="attraction-page-wrapper">
+      
+      {popupMessage.text && (
+        <div className={`detail-popup ${popupMessage.type}`}>
+          {popupMessage.text}
+        </div>
+      )}
+
+      <div className="attraction-container">
+
+        <div className="beige-card">
+          <div className="card-image-col">
+            <img src={info?.imageUrl} alt={info?.name} className="card-main-image" />
+          </div>
+
+          <div className="card-content-col">
+            <div className="card-header-row">
+              <h1 className="card-title">{info?.name}</h1>
+              <span className="card-id-badge">ID: {info?.id || "DT00"}</span>
+            </div>
+
+            <div className="card-tags-row">
+              <span className="tag-icon">🏷️ Tag:</span>
+              {info?.tags?.map((t, i) => <span key={i} className="brown-tag">{t}</span>)}
+            </div>
+
+            <div className="card-description">
+              📖 <strong>Mô tả:</strong> {info?.briefDescription}
+            </div>
+
+            <div className="card-meta-list">
+              <p>🗓 <strong>Thời gian:</strong> {formatAttractionTime(info)}</p>
+              <p>📍 <strong>Địa điểm:</strong> {info?.location}</p>
+              <p>🎟 <strong>Vào cửa:</strong> {info?.ticketPrice ? `${info.ticketPrice.toLocaleString()}đ` : "Miễn phí"}</p>
+            </div>
+
+            <div className="star-position">
+              <button
+                className={`heart-btn ${favorite?.isFavorite ? 'active' : ''}`}
+                onClick={handleToggleFavorite}
+                disabled={favoriteSubmitting}
+                title={favorite?.isFavorite ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+              >
+                {favorite?.isFavorite ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="page-actions-row">
+          <button className="action-link-btn" onClick={() => navigate(-1)}>Trở lại</button>
+          <button className="action-primary-btn" onClick={handleAddToItinerary}>Thêm vào lịch trình</button>
+        </div>
+
+        <div className="detail-sections-wrapper">
+          {descriptionSections.length > 0 && (
+            <div className="content-section full-width">
+              <h2 className="section-title-line">Thông tin chi tiết</h2>
+              {descriptionSections.map((section, index) => (
+                <div key={index} className="content-block">
+                  {section.title && <h3>{section.title}</h3>}
+                  {section.imageUrl && <img src={section.imageUrl} alt="" className="content-img" />}
+                  <div className="content-text">
+                    {section.type === 'list' && Array.isArray(section.items) ? (
+                      <ul>{section.items.map((it, i) => <li key={i}>{renderFormattedText(it)}</li>)}</ul>
+                    ) : (
+                      <p>{renderFormattedText(section.content)}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="reviews-section-wrapper">
+            <h2 className="section-title-line">Đánh giá từ cộng đồng</h2>
+            <div className="reviews-section">
+              <div className="reviews-header">
+                <div className="rating-box">
+                  <span className="rating-num">{info?.averageRating || 0}</span>
+                  <div style={{display:'flex', flexDirection:'column', marginLeft:'10px'}}>
+                    <span className="rating-stars" style={{ color: '#facc15', fontSize: '1.2rem' }}>
+                        {renderStars(info?.averageRating)}
+                    </span>
+                    <span style={{ fontSize: '0.9rem', color: '#2563eb', fontWeight: '600' }}>
+                        {getRatingLabel(info?.averageRating, reviews.length)}
+                    </span>
+                  </div>
+                  <span className="rating-count" style={{marginLeft:'5px'}}>({reviews.length} đánh giá)</span>
+                </div>
+              </div>
+
+              <div className="write-review-box">
+                {currentUser ? (
+                  <form onSubmit={handleSubmitReview}>
+                    <textarea
+                      placeholder="Chia sẻ trải nghiệm thực tế của bạn tại đây..."
+                      value={reviewForm.content}
+                      onChange={(e) => setReviewForm({ ...reviewForm, content: e.target.value })}
+                      rows={4}
+                      disabled={reviewSubmitting}
+                    />
+                    <div className="form-bottom">
+                      <div className="rating-select-group">
+                        <span>Bạn chấm mấy sao?</span>
+                        <select
+                          value={reviewForm.ratingScore}
+                          onChange={(e) => setReviewForm({ ...reviewForm, ratingScore: e.target.value })}
+                          disabled={reviewSubmitting}
+                        >
+                          {[5, 4, 3, 2, 1].map(s => <option key={s} value={s}>{s} Sao</option>)}
+                        </select>
+                      </div>
+                      <button type="submit" disabled={reviewSubmitting}>
+                        {reviewSubmitting ? 'Đang gửi...' : 'Gửi đánh giá'}
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="login-alert" onClick={openLogin}>
+                    👋 Đăng nhập để viết đánh giá
+                  </div>
+                )}
+              </div>
+
+              <div className="reviews-list">
+                {reviews.map(r => (
+                  <div key={r.reviewId} className="review-item">
+                    <div className="review-user">
+                      <div className="user-info">
+                        <div className="avatar-placeholder">{r.user?.username?.charAt(0)}</div>
+                        <div>
+                          <strong>{r.user?.username || "Người dùng"}</strong>
+                          <div className="review-time">{new Date(r.createdAt).toLocaleDateString('vi-VN')}</div>
+                        </div>
+                      </div>
+                      {r.userId === userId && (
+                        <button 
+                            className="del-review" 
+                            onClick={() => handleDeleteReview(r.reviewId)}
+                            disabled={reviewSubmitting}
+                        >
+                            Xóa
+                        </button>
+                      )}
+                    </div>
+                    <div className="review-content">
+                      <div className="user-rating-star">{'★'.repeat(r.rating)}</div>
+                      <p>{r.content}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div> 
+    </div> 
   );
 }

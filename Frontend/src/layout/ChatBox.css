@@ -4,6 +4,44 @@
   right: 30px;
   z-index: 1000;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Khi ở trang detail, chatbox dịch lên trên để nhường chỗ cho các nút lơ lửng */
+.chat-widget.detail-page {
+  bottom: 150px; /* Dịch lên để nhường chỗ cho 2 nút lơ lửng (khoảng 170px từ bottom) */
+}
+
+/* Animation khi vào trang detail - chatbox dịch lên từ dưới lên */
+.chat-widget.detail-page {
+  animation: slideUpForDetail 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUpForDetail {
+  from {
+    bottom: 30px;
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+  to {
+    bottom: 150px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation khi rời khỏi trang detail - chatbox trở về vị trí ban đầu */
+.chat-widget:not(.detail-page) {
+  animation: slideDownFromDetail 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDownFromDetail {
+  from {
+    bottom: 200px;
+  }
+  to {
+    bottom: 30px;
+  }
 }
 
 .chat-toggle {

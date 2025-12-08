@@ -303,34 +303,35 @@
   color: #f8fafc;
 }
 
-.reviews-list {
+/* Scope các class review chỉ trong user-page để không ảnh hưởng đến AttractionDetail */
+.user-page .reviews-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.review-item {
+.user-page .review-item {
   background: rgba(15, 23, 42, 0.6);
   border-radius: 12px;
   padding: 24px;
   border: 1px solid rgba(148, 163, 184, 0.1);
 }
 
-.review-header {
+.user-page .review-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 16px;
 }
 
-.review-attraction {
+.user-page .review-attraction {
   display: flex;
   gap: 16px;
   align-items: center;
   flex: 1;
 }
 
-.review-attraction-image {
+.user-page .review-attraction-image {
   width: 80px;
   height: 80px;
   border-radius: 8px;
@@ -338,7 +339,7 @@
   background: rgba(30, 41, 59, 0.5);
 }
 
-.review-attraction-name {
+.user-page .review-attraction-name {
   margin: 0 0 4px 0;
   font-size: 18px;
   color: #f8fafc;
@@ -346,22 +347,22 @@
   transition: color 0.2s;
 }
 
-.review-attraction-name:hover {
+.user-page .review-attraction-name:hover {
   color: #60a5fa;
 }
 
-.review-location {
+.user-page .review-location {
   margin: 0;
   color: #94a3b8;
   font-size: 14px;
 }
 
-.review-rating {
+.user-page .review-rating {
   font-size: 18px;
   color: #fbbf24;
 }
 
-.review-content {
+.user-page .review-content {
   margin: 0 0 16px 0;
   color: #cbd5e1;
   line-height: 1.6;
@@ -371,18 +372,18 @@
   border-left: 3px solid rgba(96, 165, 250, 0.5);
 }
 
-.review-footer {
+.user-page .review-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.review-footer time {
+.user-page .review-footer time {
   color: #94a3b8;
   font-size: 13px;
 }
 
-.review-actions {
+.user-page .review-actions {
   display: flex;
   gap: 8px;
 }
@@ -474,12 +475,12 @@
     grid-template-columns: 1fr;
   }
 
-  .review-header {
+  .user-page .review-header {
     flex-direction: column;
     gap: 12px;
   }
 
-  .review-footer {
+  .user-page .review-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
