@@ -200,7 +200,7 @@ export default function Blogs({ currentUser }) {
 
       {loading && <div className="loading">Đang tải blogs...</div>}
 
-      {isLoggedIn && !showForm && (
+      {!showForm && (
         <button 
           className="add-blog-btn"
           onClick={() => setShowForm(true)}
