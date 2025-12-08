@@ -19,6 +19,8 @@ export default function Blogs({ currentUser }) {
 
   const [popupMessage, setPopupMessage] = useState({ type: "", text: "" });
 
+  const [confirmDelete, setConfirmDelete] = useState({ show: false, blogId: null });
+
   const showPopup = (type, text) => {
     setPopupMessage({ type, text });
     setTimeout(() => {
@@ -198,6 +200,16 @@ export default function Blogs({ currentUser }) {
 
       {loading && <div className="loading">Đang tải blogs...</div>}
 
+      {isLoggedIn && !showForm && (
+        <button 
+          className="add-blog-btn"
+          onClick={() => setShowForm(true)}
+        >
+          + Thêm bài viết
+        </button>
+      )}
+
+
       <div className="blogs-list">
         {blogs.length > 0 ? (
           blogs.map(blog => (
@@ -206,15 +218,31 @@ export default function Blogs({ currentUser }) {
               className="blog-card"
               onClick={() => navigate(`/blogs/${blog.blog_id}`)}
             >
+
+              {currentUser?.user_id === blog.user_id && (
+                <button 
+                  className="delete-blog-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setConfirmDelete({ show: true, blogId: blog.blog_id });
+                  }}
+                >
+                  ✖
+                </button>
+              )}
+
               {blog.image_url && (
                 <div className="blog-image">
-                  <img src={`http://localhost:5000${blog.image_url}`} alt={blog.title} />
+                  <img src={blog.image_url} alt={blog.title} />
                 </div>
               )}
               <div className="blog-content">
                 <h2>{blog.title}</h2>
                 <p className="blog-meta">
-                  Bởi {blog.user?.username || 'Người dùng'} • {new Date(blog.created_at).toLocaleDateString('vi-VN')}
+                  Bởi {blog.user?.username || 'Người dùng'} • {new Date(blog.created_at).toLocaleDateString('vi-VN', {
+                    timeZone: 'Asia/Ho_Chi_Minh'
+                  })}
+
                 </p>
                 <p className="blog-text">{blog.content}</p>
                 <button 
@@ -249,6 +277,38 @@ export default function Blogs({ currentUser }) {
           )
         )}
       </div>
+    
+      {confirmDelete.show && (
+        <div className="delete-popup-overlay">
+          <div className="delete-popup">
+            <h3>Bạn có chắc muốn xóa bài viết này?</h3>
+            <p>Hành động này không thể hoàn tác.</p>
+
+            <div className="delete-popup-buttons">
+               <button 
+                  className="cancel-btn"
+                  onClick={() => setConfirmDelete({ show: false, blogId: null })}
+              >
+                Hủy
+              </button>
+
+              <button
+                className="confirm-delete-btn"
+                onClick={async () => {
+                  const res = await blogsAPI.delete(confirmDelete.blogId);
+                  if (res.success) {
+                    fetchBlogs();
+                  }
+                  setConfirmDelete({ show: false, blogId: null });
+                }}
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

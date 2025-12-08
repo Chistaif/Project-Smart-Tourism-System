@@ -1,5 +1,5 @@
 // API configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = "http://127.0.0.1:5000/api";
 
 const buildSearchQuery = ({ searchTerm, typeList, userId } = {}) => {
   const params = new URLSearchParams();
@@ -182,7 +182,7 @@ export const blogsAPI = {
   
   // Tạo blog mới (với FormData để upload hình ảnh)
   create: (formData) => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("access_token");
     const url = `${API_BASE_URL}/blogs`;
 
     return fetch(url, {
@@ -211,6 +211,16 @@ export const blogsAPI = {
       throw error;
     });
   },
+
+  delete: (blogId) => {
+    const token = localStorage.getItem("access_token");
+    return fetch(`http://127.0.0.1:5000/api/blogs/${blogId}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then(res => res.json());
+  }
 };
 
 export const tourAPI = {

@@ -63,7 +63,7 @@ export default function BlogDetail() {
       <article className="blog-detail">
         {blog.image_url && (
           <div className="blog-detail-image">
-            <img src={`http://localhost:5000${blog.image_url}`} alt={blog.title} />
+            <img src={blog.image_url} alt={blog.title} />
           </div>
         )}
 
@@ -85,7 +85,8 @@ export default function BlogDetail() {
               <div>
                 <p className="author-name">{blog.user?.username || 'Người dùng'}</p>
                 <p className="blog-date">
-                  {new Date(blog.created_at).toLocaleDateString('vi-VN', {
+                  {new Date(blog.created_at).toLocaleString('vi-VN', {
+                    timeZone: 'Asia/Ho_Chi_Minh',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -93,6 +94,7 @@ export default function BlogDetail() {
                     minute: '2-digit'
                   })}
                 </p>
+
               </div>
             </div>
           </div>

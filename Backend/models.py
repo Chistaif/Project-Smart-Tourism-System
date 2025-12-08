@@ -304,6 +304,7 @@ class Blog(db.Model):
             "title": self.title,
             "content": self.content,
             "image_url": self.image_url,
+            "user_id": self.user_id,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
             "user": {

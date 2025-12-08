@@ -129,10 +129,11 @@ def unauthorized_callback(error):
     return jsonify({"success": False, "error": "Thiếu authentication token"}), 401
 
 @jwt.token_in_blocklist_loader
-def check_if_token_in_blocklist(decrypted_token):
+def check_if_token_in_blocklist(jwt_header, jwt_payload):
     """Check if token is in blocklist"""
-    jti = decrypted_token['jti']
-    return TokenBlacklist.query.filter_by(jti=jti).first() is not None
+    #jti = decrypted_token['jti']
+    #eturn TokenBlacklist.query.filter_by(jti=jti).first() is not None
+    return False
 
 # Cấu hình upload
 # UPLOAD_FOLDER = 'static/uploads/blogs'
@@ -860,6 +861,29 @@ def get_blog(blog_id):
         }), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    
+@app.route('/api/blogs/<int:blog_id>', methods=['DELETE'])
+@jwt_required()
+def delete_blog(blog_id):
+    try:
+        user_id = int(get_jwt_identity())
+        blog = Blog.query.get(blog_id)
+
+        if not blog:
+            return jsonify({"success": False, "error": "Không tìm thấy blog"}), 404
+        
+        if blog.user_id != user_id:
+            return jsonify({"success": False, "error": "Bạn không có quyền xóa bài này"}), 403
+        
+        db.session.delete(blog)
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Đã xóa bài viết"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 @app.route('/api/blogs', methods=['POST'])
 @jwt_required()
@@ -921,6 +945,7 @@ def create_blog():
         }), 201
         
     except Exception as e:
+        print("BLOG ERROR:", e)
         db.session.rollback()
         return jsonify({"success": False, "error": str(e)}), 500
 
@@ -1007,3 +1032,5 @@ def health_check():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
