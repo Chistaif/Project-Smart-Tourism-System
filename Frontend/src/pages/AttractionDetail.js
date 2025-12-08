@@ -1,4 +1,3 @@
-/* src/pages/AttractionDetail.js */
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { attractionsAPI } from '../utils/api';
@@ -82,7 +81,6 @@ export default function AttractionDetail({ currentUser, openLogin }) {
     return "Mở cửa cả ngày";
   };
 
-  // --- [SỬA LỖI TẠI ĐÂY] ---
   // Bọc hàm này trong useCallback để nó không bị tạo lại mỗi lần render
   const syncStateFromDetail = useCallback((dataPayload) => {
     const data = dataPayload || {};
@@ -116,7 +114,7 @@ export default function AttractionDetail({ currentUser, openLogin }) {
     } finally {
       setLoading(false);
     }
-  }, [id, userId, syncStateFromDetail]); // Đã thêm syncStateFromDetail
+  }, [id, userId, syncStateFromDetail]);
 
   useEffect(() => { 
     loadDetail(); 
