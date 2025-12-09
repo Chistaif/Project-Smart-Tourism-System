@@ -15,8 +15,8 @@
 .blogs-header h1 {
   font-size: 36px;
   font-weight: 800;
-  background: linear-gradient(to right, #f8fafc, var(--accent));
-  -webkit-background-clip: text;
+  background: #f2f203;
+  -webkit-background-clip: text;  
   -webkit-text-fill-color: transparent;
 }
 
@@ -622,23 +622,27 @@
 
 .add-blog-btn {
   position: fixed;
-  top: 130px;
+  top: 90px;
   right: 60px;
-  padding: 12px 22px;
+  padding: 14px 24px;
   background-color: #f1c40f;
   color: #000;
   font-weight: 600;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0px 5px 14px rgba(0,0,0,0.2);
   transition: all 0.2s ease-in-out;
   z-index: 9999;
 }
 
 .add-blog-btn:hover {
   background-color: #ffd700;
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0px 6px 18px rgba(0,0,0,0.25);
 }
 
 .delete-blog-btn {
@@ -741,27 +745,3 @@
   background: #dc2626;
 }
 
-.add-blog-btn {
-  position: fixed;
-  top: 90px;              /* 🔥 dịch lên trên (từ 130px → 90px) */
-  right: 60px;
-
-  padding: 14px 24px;     /* 🔥 to hơn */
-  font-size: 15px;        /* 🔥 chữ lớn hơn */
-  font-weight: 800;       /* 🔥 chữ in đậm hơn */
-
-  background-color: #f1c40f;
-  color: #000;
-
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0px 5px 14px rgba(0,0,0,0.2);
-  transition: all 0.2s ease-in-out;
-  z-index: 9999;
-}
-
-.add-blog-btn:hover {
-  background-color: #ffd700;
-  transform: translateY(-3px) scale(1.03);  /* hover đẹp hơn */
-}

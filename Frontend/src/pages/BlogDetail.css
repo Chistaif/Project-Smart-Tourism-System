@@ -492,7 +492,7 @@ input[type="file"]::-webkit-file-upload-button:active {
   font-weight: 800;
   margin-bottom: 20px;
   line-height: 1.2;
-  background: linear-gradient(to right, #f8fafc, var(--accent));
+  background: #f2f203;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
