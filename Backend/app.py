@@ -917,21 +917,31 @@ def create_blog():
 
         # Xử lý ảnh Blog
         image_url = None
-        if 'image' in request.files:
-            file = request.files['image']
-            if file and file.filename != '' and allowed_file(file.filename):
-                # Upload lên folder blogs
-                image_url = upload_image_to_cloud(file, folder="smart_tourism/blogs")
-            elif file.filename != '':
-                # Nếu có file nhưng đuôi không hợp lệ
-                return jsonify({"success": False, "error": "Định dạng file không hợp lệ (chỉ nhận ảnh)"}), 400
+        print("kiem tra nhan anh")
+        image_urls = []
+        if 'images' in request.files:
+            files = request.files.getlist('images')  # Lấy list files
+            print(f"nhan {len(files)} anh")
+            for i, file in enumerate(files):
+                if file and file.filename != '' and allowed_file(file.filename):
+                    print(f"upload anh {i+1}")
+                    image_url = upload_image_to_cloud(file, folder="smart_tourism/blogs")
+                    if image_url:
+                        image_urls.append(image_url)
+                elif file.filename != '':
+                    # Nếu có file nhưng đuôi không hợp lệ
+                    return jsonify({"success": False, "error": f"File {file.filename} không hợp lệ (chỉ nhận ảnh)"}), 400
         
         
+        # Convert image_urls list thành JSON string
+        import json
+        image_urls_json = json.dumps(image_urls) if image_urls else None
+
         # Tạo blog mới
         new_blog = Blog(
             title=title,
             content=content,
-            image_url=image_url, # Lưu link cloud vào DB
+            image_urls=image_urls_json, # Lưu JSON string vào DB
             user_id=user_id
         )
         

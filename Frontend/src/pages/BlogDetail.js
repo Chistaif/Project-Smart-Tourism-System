@@ -54,6 +54,8 @@ export default function BlogDetail() {
       ? `http://localhost:5000/static/images/${avatarUrl}`
       : null;
 
+  const heroImage = (blog.image_urls && blog.image_urls[0]) || blog.image_url || null;
+
   return (
     
     <div className="blog-detail-container">
@@ -70,9 +72,9 @@ export default function BlogDetail() {
       </div>
 
       <article className="blog-detail">
-        {blog.image_url && (
+        {heroImage && (
           <div className="blog-detail-image">
-            <img src={blog.image_url} alt={blog.title} />
+            <img src={heroImage} alt={blog.title} />
           </div>
         )}
 

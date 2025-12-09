@@ -281,6 +281,9 @@ export default function Blogs({ currentUser }) {
       <div className="blogs-list">
         {blogs.length > 0 ? (
           blogs.map(blog => (
+            (() => {
+              const coverImage = (blog.image_urls && blog.image_urls[0]) || blog.image_url || null;
+              return (
             <div 
               key={blog.blog_id} 
               className="blog-card"
@@ -299,9 +302,9 @@ export default function Blogs({ currentUser }) {
                 </button>
               )}
 
-              {blog.image_url && (
+              {coverImage && (
                 <div className="blog-image">
-                  <img src={blog.image_url} alt={blog.title} />
+                  <img src={coverImage} alt={blog.title} />
                 </div>
               )}
               <div className="blog-content">
@@ -324,6 +327,8 @@ export default function Blogs({ currentUser }) {
                 </button>
               </div>
             </div>
+              );
+            })()
           ))
         ) : (
           !loading && !showForm && (

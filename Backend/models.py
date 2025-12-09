@@ -290,20 +290,29 @@ class Blog(db.Model):
     blog_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    image_url = db.Column(db.String(500), nullable=True)
+    image_urls = db.Column(db.Text, nullable=True)  # JSON string chứa array URLs
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Foreign key to User
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     user = db.relationship('User', backref='blogs')
 
     def to_json(self):
+        import json
+        image_urls_list = []
+        if self.image_urls:
+            try:
+                image_urls_list = json.loads(self.image_urls)
+            except:
+                image_urls_list = []
+
         return {
             "blog_id": self.blog_id,
             "title": self.title,
             "content": self.content,
-            "image_url": self.image_url,
+            "image_urls": image_urls_list,  # array URLs cho FE mới
+            "image_url": image_urls_list[0] if image_urls_list else None,  # fallback cho FE cũ
             "user_id": self.user_id,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
