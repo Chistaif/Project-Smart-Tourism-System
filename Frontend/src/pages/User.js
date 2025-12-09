@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { authAPI, attractionsAPI, userAPI } from "../utils/api";
+import { authAPI, attractionsAPI, userAPI, tourAPI } from "../utils/api";
 import "./User.css";
 
 export default function UserPage({ currentUser, onLogout }) {
@@ -9,6 +9,7 @@ export default function UserPage({ currentUser, onLogout }) {
   const [userInfo, setUserInfo] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [savedTours, setSavedTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -41,10 +42,15 @@ export default function UserPage({ currentUser, onLogout }) {
 
       const reviewData = await userAPI.getReviews(currentUser.user_id);
       if (reviewData.success) setReviews(reviewData.data || []);
+
+      // Load saved tours
+      const tourData = await userAPI.getSavedTours(currentUser.user_id);
+      if (tourData.success) setSavedTours(tourData.data || []);
     } catch (err) {
       setError(err.message || "Không thể tải dữ liệu người dùng");
       setFavorites([]);
       setReviews([]);
+      setSavedTours([]);
     } finally {
       setLoading(false);
     }
@@ -161,6 +167,13 @@ export default function UserPage({ currentUser, onLogout }) {
           </button>
 
           <button
+            className={`tab-btn ${activeTab === "tourHistory" ? "active" : ""}`}
+            onClick={() => setActiveTab("tourHistory")}
+          >
+            Lịch sử tạo tour ({savedTours.length})
+          </button>
+
+          <button
             className={`tab-btn ${activeTab === "history" ? "active" : ""}`}
             onClick={() => setActiveTab("history")}
           >
@@ -270,6 +283,100 @@ export default function UserPage({ currentUser, onLogout }) {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TOUR HISTORY */}
+          {activeTab === "tourHistory" && (
+            <div className="tour-history-section">
+              <h2>Lịch sử tạo tour của bạn</h2>
+
+              {savedTours.length === 0 ? (
+                <div className="empty-state">
+                  <p>Bạn chưa tạo tour nào. Hãy tạo một tour mới!</p>
+                  <button onClick={() => navigate("/service")}>
+                    Tạo tour ngay
+                  </button>
+                </div>
+              ) : (
+                <div className="tour-history-timeline">
+                  {savedTours.map((tour) => {
+                    const createdDate = tour.created_at ? new Date(tour.created_at) : null;
+                    const formattedDate = createdDate 
+                      ? createdDate.toLocaleDateString('vi-VN', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })
+                      : 'Ngày không xác định';
+                    
+                    return (
+                      <div key={tour.tourId} className="tour-history-item">
+                        <div className="history-timeline-marker"></div>
+                        <div className="history-item-content">
+                          <div className="history-item-header">
+                            <h4 className="history-tour-name">
+                              {tour.tourName || `Hành trình ${tour.totalDays || 'N'} Ngày`}
+                            </h4>
+                            <time className="history-date">{formattedDate}</time>
+                          </div>
+                          <div className="history-item-details">
+                            <p className="history-summary">
+                              📍 {tour.attraction_count || tour.attractions?.length || 0} điểm đến
+                              {tour.totalDays && ` • 🚶 ${tour.totalDays} ngày`}
+                              {tour.totalDistanceKm && ` • 🛣️ ${Math.round(tour.totalDistanceKm)} km`}
+                            </p>
+                            {tour.attractions && tour.attractions.length > 0 && (
+                              <div className="history-attractions">
+                                <span className="history-label">Điểm đến:</span>
+                                <div className="attractions-list">
+                                  {tour.attractions.slice(0, 5).map((attr, idx) => (
+                                    <span key={attr.id || idx} className="attraction-tag">
+                                      {attr.name}
+                                    </span>
+                                  ))}
+                                  {tour.attractions.length > 5 && (
+                                    <span className="attraction-tag more">
+                                      +{tour.attractions.length - 5} điểm khác
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="history-item-actions">
+                            <button 
+                              className="view-btn" 
+                              onClick={() => alert(`Đang mở chi tiết Tour ID: ${tour.tourId}`)}
+                            >
+                              Xem chi tiết
+                            </button>
+                            <button 
+                              className="delete-btn" 
+                              onClick={async () => {
+                                if (!window.confirm('Bạn có chắc muốn xóa hành trình này không?')) return;
+                                try {
+                                  const response = await tourAPI.unsaveTour(tour.tourId);
+                                  if (response.success) {
+                                    setSavedTours(prev => prev.filter(t => t.tourId !== tour.tourId));
+                                    alert('Đã xóa hành trình thành công!');
+                                  }
+                                } catch (e) {
+                                  alert('Lỗi khi xóa hành trình.');
+                                }
+                              }}
+                            >
+                              Xóa
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
