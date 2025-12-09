@@ -113,10 +113,11 @@ export default function Blogs({ currentUser }) {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('content', formData.content);
       formDataToSend.append('user_id', formData.user_id);
-      // Append multiple images
-      formData.images.forEach((image, index) => {
-        formDataToSend.append(`images`, image);
-      });
+      
+      // Backend expects a single file field named "image"
+      if (formData.images.length > 0) {
+        formDataToSend.append('image', formData.images[0]);
+      }
 
       const response = await blogsAPI.create(formDataToSend);
       if (response.success) {

@@ -851,7 +851,8 @@ def get_blogs():
 def get_blog(blog_id):
     """Lấy thông tin chi tiết một blog"""
     try:
-        blog = Blog.query.get(blog_id)
+        # SQLAlchemy 2.0 compatible get
+        blog = db.session.get(Blog, blog_id)
         if not blog:
             return jsonify({"success": False, "error": "Không tìm thấy blog"}), 404
         
@@ -867,7 +868,7 @@ def get_blog(blog_id):
 def delete_blog(blog_id):
     try:
         user_id = int(get_jwt_identity())
-        blog = Blog.query.get(blog_id)
+        blog = db.session.get(Blog, blog_id)
 
         if not blog:
             return jsonify({"success": False, "error": "Không tìm thấy blog"}), 404
