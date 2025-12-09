@@ -1041,6 +1041,64 @@ def ai_generate_caption():
 def health_check():
     return jsonify({"success": True, "message": "API is running"}), 200
 
+def seed_blog_data():
+    """Tạo 2 bài blog mẫu nếu database chưa có blog nào"""
+    import json
+
+    try:
+        count = Blog.query.count()
+        if count > 0:
+            print("✔ Blog đã có dữ liệu, không tạo mẫu.")
+            return
+
+        default_blogs = [
+            {
+                "title": "Khám phá Hội An – Phố cổ giữa lòng thời gian",
+                "content": (
+                    "Hội An là một trong những điểm đến văn hóa nổi bật nhất Việt Nam, "
+                    "mang vẻ đẹp vừa cổ kính vừa nên thơ. Dạo bước dưới những ánh đèn lồng "
+                    "lung linh, thưởng thức cao lầu hay ngồi thuyền trên sông Hoài là trải nghiệm "
+                    "không thể bỏ qua."
+                ),
+                "image_urls": json.dumps([
+                    "/static/hoian.png",
+                ]),
+                "user_id": 1  # Gán cho admin/user mẫu
+            },
+            {
+                "title": "Sapa – Thiên đường săn mây giữa đại ngàn",
+                "content": (
+                    "Sapa nổi tiếng với khí hậu mát lạnh quanh năm, ruộng bậc thang hùng vĩ "
+                    "và những đám mây bồng bềnh vào sáng sớm. Núi Hàm Rồng, Fansipan hay bản Cát Cát "
+                    "là những địa điểm không thể bỏ lỡ."
+                ),
+                "image_urls": json.dumps([
+                    "./static/sapa.png"
+                ]),
+                "user_id": 1
+            }
+        ]
+
+        for b in default_blogs:
+            blog = Blog(
+                title=b["title"],
+                content=b["content"],
+                image_urls=b["image_urls"],
+                user_id=b["user_id"]
+            )
+            db.session.add(blog)
+
+        db.session.commit()
+        print("✔ Đã tạo 2 blog mẫu thành công!")
+
+    except Exception as e:
+        print("❌ Lỗi seed blog:", e)
+        db.session.rollback()
+
+with app.app_context():
+    seed_blog_data()
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
