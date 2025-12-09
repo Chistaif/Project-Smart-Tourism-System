@@ -51,38 +51,32 @@ export default function ItineraryPage() {
       try {
           console.log("💾 Đang lưu lịch trình...", tourResult);
           
-          // Prefer using stored JWT for authentication; fallback to userId only if token missing
+          // Prefer JWT for auth, but also include userId in the payload (if available)
+          // This handles cases where the token is stale/invalid on the server and
+          // the backend falls back to the provided userId.
           const token = localStorage.getItem('access_token');
-          let includeUserId = false;
           let userId = null;
-          if (!token) {
+          try {
               const userStr = localStorage.getItem('currentUser');
               if (userStr) {
-                  try {
-                      const user = JSON.parse(userStr);
-                      userId = user.user_id || user.id;
-                  } catch (e) {
-                      console.error("Error parsing user:", e);
-                  }
+                  const user = JSON.parse(userStr);
+                  userId = user.user_id || user.id;
               }
-
-              if (!userId) {
-                  alert("Không có token xác thực hoặc thông tin user. Vui lòng đăng nhập lại.");
-                  return;
-              }
-
-              includeUserId = true;
+          } catch (e) {
+              console.error('Error parsing currentUser from localStorage', e);
           }
 
-          // Backend expects: tourName and attractionIds; include userId only if no JWT
+          // Backend expects: tourName and attractionIds. Include userId when available
+          // so the server can use it if JWT is absent or invalid.
           const payload = {
               tourName: `Lịch trình ${tourResult.totalDays || 'N'} ngày`,
               attractionIds: selectedAttractions ? selectedAttractions.map(attr => attr.id) : []
           };
 
-          if (includeUserId) payload.userId = userId;
+          if (userId) payload.userId = userId;
 
           // Gọi API
+          console.debug('Saving tour payload:', payload, 'tokenPresent:', !!token);
           const response = await tourAPI.saveTour(payload);
 
           if (response.success) {
