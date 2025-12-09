@@ -33,6 +33,20 @@ async function apiRequest(endpoint, options = {}) {
     ...options,
   };
 
+  // Attach Authorization header automatically when access_token is present
+  try {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      // Don't override if Authorization already provided in options
+      if (!config.headers) config.headers = {};
+      if (!config.headers.Authorization && !config.headers.authorization) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+  } catch (e) {
+    // localStorage might not be available in some contexts; ignore
+  }
+
   try {
     const response = await fetch(url, config);
     

@@ -27,6 +27,27 @@ export default function UserPage({ currentUser, onLogout }) {
     }
   }, [currentUser]);
 
+  // Listen for tourSaved events (dispatched after saving a tour) so the UI updates live
+  useEffect(() => {
+    function handleTourSaved(e) {
+      const tour = e && e.detail ? e.detail : null;
+      if (!tour || !currentUser) return;
+      // Only add if the tour belongs to current user
+      if (tour.user_id && tour.user_id !== currentUser.user_id) return;
+
+      setSavedTours(prev => {
+        // Avoid duplicates if the tour already exists
+        if (!prev) return [tour];
+        const exists = prev.some(t => t.tour_id === tour.tour_id);
+        if (exists) return prev;
+        return [tour, ...prev];
+      });
+    }
+
+    window.addEventListener('tourSaved', handleTourSaved);
+    return () => window.removeEventListener('tourSaved', handleTourSaved);
+  }, [currentUser]);
+
   const loadUserData = async () => {
     setLoading(true);
     setError("");

@@ -51,34 +51,67 @@ export default function ItineraryPage() {
       try {
           console.log("💾 Đang lưu lịch trình...", tourResult);
           
-          // Extract userId from localStorage
-          const userStr = localStorage.getItem('currentUser');
+          // Prefer using stored JWT for authentication; fallback to userId only if token missing
+          const token = localStorage.getItem('access_token');
+          let includeUserId = false;
           let userId = null;
-          if (userStr) {
-              try {
-                  const user = JSON.parse(userStr);
-                  userId = user.user_id || user.id;
-              } catch (e) {
-                  console.error("Error parsing user:", e);
+          if (!token) {
+              const userStr = localStorage.getItem('currentUser');
+              if (userStr) {
+                  try {
+                      const user = JSON.parse(userStr);
+                      userId = user.user_id || user.id;
+                  } catch (e) {
+                      console.error("Error parsing user:", e);
+                  }
               }
+
+              if (!userId) {
+                  alert("Không có token xác thực hoặc thông tin user. Vui lòng đăng nhập lại.");
+                  return;
+              }
+
+              includeUserId = true;
           }
-          
-          if (!userId) {
-              alert("Không thể lấy thông tin người dùng. Vui lòng đăng nhập lại.");
-              return;
-          }
-          
-          // Backend expects: tourName and attractionIds
+
+          // Backend expects: tourName and attractionIds; include userId only if no JWT
           const payload = {
               tourName: `Lịch trình ${tourResult.totalDays || 'N'} ngày`,
               attractionIds: selectedAttractions ? selectedAttractions.map(attr => attr.id) : []
           };
 
+          if (includeUserId) payload.userId = userId;
+
           // Gọi API
           const response = await tourAPI.saveTour(payload);
-          
+
           if (response.success) {
-              alert("Đã lưu hành trình thành công vào tài khoản!");
+              alert(response.message || "Đã lưu hành trình thành công vào tài khoản!");
+
+              // If backend returned created tour, dispatch event so User page can update live
+              if (response.tour) {
+                  // Build a richer tour object that includes attractions (so User page can render immediately)
+                  const created = response.tour;
+                  const attractions = (selectedAttractions || []).map(a => ({
+                      id: a.id,
+                      name: a.name,
+                      lat: a.lat || a.latitude || null,
+                      lon: a.lon || a.longitude || null,
+                      image_url: a.imageUrl || a.image_url || null
+                  }));
+
+                  const createdTour = {
+                      ...created,
+                      attractions,
+                      attraction_count: created.attraction_count || attractions.length
+                  };
+
+                  try {
+                      window.dispatchEvent(new CustomEvent('tourSaved', { detail: createdTour }));
+                  } catch (e) {
+                      console.warn('Could not dispatch tourSaved event', e);
+                  }
+              }
           } else {
               alert(response.error || "Lỗi khi lưu hành trình.");
           }
