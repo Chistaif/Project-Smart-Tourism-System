@@ -5,7 +5,20 @@ import MapComponent from '../layout/MapComponent';
 import { tourAPI } from '../utils/api'; 
 import './ItineraryPage.css';
 
+import Popup from '../components/Popup';
+
 export default function ItineraryPage() {
+
+  const [popup, setPopup] = useState({ show: false, message: "" });
+  
+  const showPopup = (msg) => {
+    setPopup({ show: true, message: msg });
+  };
+  
+  const closePopup = () => {
+    setPopup({ show: false, message: "" });
+  };  
+
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -40,10 +53,9 @@ export default function ItineraryPage() {
       const isLoggedIn = localStorage.getItem('currentUser') || localStorage.getItem('access_token'); 
       
       if (!isLoggedIn) {
-          const confirmLogin = window.confirm("Bạn cần đăng nhập để lưu hành trình này vào tài khoản. Đăng nhập ngay?");
-          if (confirmLogin) {
-              window.dispatchEvent(new Event("openLoginPopup"));
-          }
+          showPopup("Bạn cần đăng nhập để lưu hành trình vào tài khoản. Vui lòng đăng nhập.");
+
+          window.dispatchEvent(new Event("openLoginPopup"));
           return;
       }
 
@@ -80,7 +92,7 @@ export default function ItineraryPage() {
           const response = await tourAPI.saveTour(payload);
 
           if (response.success) {
-              alert(response.message || "Đã lưu hành trình thành công vào tài khoản!");
+              showPopup(response.message || "Đã lưu hành trình thành công vào tài khoản!");
 
               // If backend returned created tour, dispatch event so User page can update live
               if (response.tour) {
@@ -107,18 +119,18 @@ export default function ItineraryPage() {
                   }
               }
           } else {
-              alert(response.error || "Lỗi khi lưu hành trình.");
+              showPopup(response.error || "Lỗi khi lưu hành trình.");
           }
       } catch (e) {
           console.error("Lỗi khi lưu:", e);
-          alert(e.message || "Lỗi khi lưu hành trình. Vui lòng thử lại.");
+          showPopup(e.message || "Lỗi khi lưu hành trình. Vui lòng thử lại.");
       }
   };
 
   // Xuất hành trình ra PDF (dùng print-to-PDF của trình duyệt)
   const handleExportPDF = () => {
       if (!tourResult) {
-          alert("Chưa có dữ liệu tour để xuất PDF.");
+          showPopup("Chưa có dữ liệu tour để xuất PDF.");
           return;
       }
 
@@ -163,7 +175,7 @@ export default function ItineraryPage() {
 
       const printWindow = window.open('', '_blank', 'width=900,height=1000');
       if (!printWindow) {
-          alert("Trình duyệt chặn cửa sổ mới. Vui lòng cho phép popup để xuất PDF.");
+          showPopup("Trình duyệt chặn cửa sổ mới.\nVui lòng cho phép mở cửa sổ để xuất PDF.");
           return;
       }
       printWindow.document.open();
@@ -570,6 +582,13 @@ export default function ItineraryPage() {
             selectedDay={selectedDay}
          />
       </div>
+
+      <Popup 
+        show={popup.show} 
+        message={popup.message} 
+        onClose={closePopup}
+      />
+
     </div>
   );
 }
