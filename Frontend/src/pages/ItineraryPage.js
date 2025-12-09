@@ -61,7 +61,7 @@ export default function ItineraryPage() {
 
       // 2. Nếu đã đăng nhập -> Gọi API lưu
       try {
-          console.log("💾 Đang lưu lịch trình...", tourResult);
+          console.log("Đang lưu lịch trình...", tourResult);
           
           // Prefer JWT for auth, but also include userId in the payload (if available)
           // This handles cases where the token is stale/invalid on the server and
@@ -81,9 +81,15 @@ export default function ItineraryPage() {
           // Backend expects: tourName and attractionIds. Include userId when available
           // so the server can use it if JWT is absent or invalid.
           const payload = {
-              tourName: `Lịch trình ${tourResult.totalDays || 'N'} ngày`,
-              attractionIds: selectedAttractions ? selectedAttractions.map(attr => attr.id) : []
-          };
+            tourName: `Lịch trình ${tourResult.totalDays || 'N'} ngày`,
+            attractionIds: selectedAttractions.map(a => a.id),
+            startDate: startDate, 
+            endDate: endDate,
+            startLat: startPoint?.lat,
+            startLon: startPoint?.lon,
+            startPointName: startPoint?.name || 'Vị trí khởi hành',
+            "userId": userId 
+          }
 
           if (userId) payload.userId = userId;
 
