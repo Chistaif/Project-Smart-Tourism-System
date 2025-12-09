@@ -11,7 +11,9 @@ from flask_jwt_extended import (
     create_refresh_token,
     jwt_required, 
     get_jwt_identity,
-    verify_jwt_in_request
+    verify_jwt_in_request,
+    get_jwt, 
+    decode_token
 )
 from dotenv import load_dotenv
 
@@ -118,22 +120,24 @@ limiter = Limiter(app)
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
+    print(f"=== TOKEN EXPIRED: {jwt_payload} ===")
     return jsonify({"success": False, "error": "Token đã hết hạn"}), 401
 
 @jwt.invalid_token_loader
 def invalid_token_callback(error):
+    print(f"=== INVALID TOKEN ERROR: {error} ===")
     return jsonify({"success": False, "error": "Token không hợp lệ"}), 401
 
 @jwt.unauthorized_loader
 def unauthorized_callback(error):
+    print(f"=== UNAUTHORIZED ERROR: {error} ===")
     return jsonify({"success": False, "error": "Thiếu authentication token"}), 401
 
 @jwt.token_in_blocklist_loader
 def check_if_token_in_blocklist(jwt_header, jwt_payload):
     """Check if token is in blocklist"""
-    #jti = decrypted_token['jti']
-    #eturn TokenBlacklist.query.filter_by(jti=jti).first() is not None
-    return False
+    jti = jwt_payload.get("jti")
+    return TokenBlacklist.query.filter_by(jti=jti).first() is not None
 
 # Cấu hình upload
 # UPLOAD_FOLDER = 'static/uploads/blogs'
@@ -761,7 +765,22 @@ def reset_password():
 def refresh_token():
     """Refresh access token"""
     try:
-        current_user_id = get_jwt_identity()
+        # --- FIX: Logic lấy identity an toàn ---
+        current_user_id = int(get_jwt_identity())
+        
+        # Nếu thư viện không tự lấy được, ta tự lấy từ claims (giống hàm search)
+        if current_user_id is None:
+            claims = get_jwt()
+            # Thử lấy 'sub' hoặc 'identity'
+            current_user_id = claims.get("sub") or claims.get("identity")
+
+        # Ép kiểu sang int
+        if current_user_id:
+            current_user_id = int(current_user_id)
+        else:
+            raise ValueError("Không tìm thấy user identity trong token")
+        # ---------------------------------------
+
         new_access_token = create_access_token(identity=str(current_user_id))
 
         return jsonify({
@@ -771,64 +790,50 @@ def refresh_token():
         }), 200
 
     except Exception as e:
+        print(f"REFRESH ERROR: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/auth/logout', methods=['POST'])
 @jwt_required()
 def logout():
     """Logout user by blacklisting both access and refresh tokens"""
+    print("\n=== BẮT ĐẦU LOGOUT ===")
     try:
         current_user_id = get_jwt_identity()
+        jti = get_jwt().get("jti")
+        print(f"1. Access Token JTI: {jti} | User ID: {current_user_id}")
 
-        # Get JTI (JWT ID) from current access token
-        from flask_jwt_extended import get_raw_jwt
-        raw_jwt = get_raw_jwt()
-        access_jti = raw_jwt.get('jti')
+        acc_token = TokenBlacklist(jti=jti, token_type="access", user_id=int(current_user_id))
+        db.session.add(acc_token)
+        print("-> Đã add Access Token vào session")
 
-        if not access_jti:
-            return jsonify({"success": False, "error": "Không thể xác định token"}), 400
-
-        # For refresh token, we need to check if it's provided in the request body
-        refresh_token = request.json.get('refresh_token') if request.json else None
-
-        # Blacklist access token
-        access_blacklist = TokenBlacklist(
-            jti=access_jti,
-            token_type='access',
-            user_id=current_user_id
-        )
-        db.session.add(access_blacklist)
-
-        # Blacklist refresh token if provided
+        json_data = request.get_json(silent=True) or {}
+        refresh_token = json_data.get("refresh_token")
         if refresh_token:
+            print(f"2. Tìm thấy Refresh Token gửi lên: {refresh_token[:20]}...")
             try:
-                # Decode refresh token to get its JTI
-                from flask_jwt_extended import decode_token
                 refresh_decoded = decode_token(refresh_token, allow_expired=False)
-                refresh_jti = refresh_decoded.get('jti')
+                refresh_jti = refresh_decoded.get("jti")
+                print(f"2. Tìm thấy Refresh Token gửi lên: {refresh_token[:20]}...")
 
                 if refresh_jti:
-                    refresh_blacklist = TokenBlacklist(
-                        jti=refresh_jti,
-                        token_type='refresh',
-                        user_id=current_user_id
-                    )
-                    db.session.add(refresh_blacklist)
-            except Exception as e:
-                # If refresh token is invalid, just continue with access token
-                print(f"Warning: Could not decode refresh token: {e}")
-                pass
+                    ref_token = TokenBlacklist(jti=refresh_jti, token_type="refresh", user_id=int(current_user_id))
+                    db.session.add(ref_token)
+                    print("-> Đã add Refresh Token vào session")
+            except Exception:
+                print(f"-> LỖI giải mã Refresh Token: {str(e)}")
+        else:
+            print("2. KHÔNG tìm thấy refresh_token trong body request")
 
         db.session.commit()
-
-        return jsonify({
-            "success": True,
-            "message": "Đăng xuất thành công"
-        }), 200
+        print("3. COMMIT THÀNH CÔNG! Kiểm tra DB ngay.")
+        return jsonify({"success": True, "message": "Đăng xuất thành công"}), 200
 
     except Exception as e:
         db.session.rollback()
         print(f"Error in logout: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"success": False, "error": "Lỗi hệ thống khi đăng xuất"}), 500
 # ===========================================================================
 # ===                                                                     ===
