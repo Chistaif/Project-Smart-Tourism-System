@@ -1062,6 +1062,7 @@ def seed_blog_data():
                 ),
                 "image_urls": json.dumps([
                     "/static/hoian.png",
+                    "/static/hoian.png"
                 ]),
                 "user_id": 1  # Gán cho admin/user mẫu
             },
@@ -1073,7 +1074,8 @@ def seed_blog_data():
                     "là những địa điểm không thể bỏ lỡ."
                 ),
                 "image_urls": json.dumps([
-                    "./static/sapa.png"
+                    "/static/sapa.png",
+                    "/static/sapa.png"
                 ]),
                 "user_id": 1
             }
