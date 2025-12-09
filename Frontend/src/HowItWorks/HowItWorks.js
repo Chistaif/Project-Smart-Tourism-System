@@ -4,6 +4,8 @@ import trip from "./Trip.png";
 import place from "./Place.png";
 import chat from "./Chat.png";
 import acc from "./Account.png";
+import blog from "./Blogs.png";
+import user from "./User.png";
 
 const defaultItems = [
   {
@@ -45,13 +47,13 @@ const defaultItems = [
     alt: 'Trợ lý AI',
   },
   {
-    title: 'Quản Lý & Lưu Trữ Đa Nền Tảng',
+    title: 'Quản Lý & Lưu Trữ Tiện Lợi',
     subtext: 'Kiểm soát mọi thứ một cách trực quan.',
     text: [
       'Dễ dàng lưu hành trình yêu thích và chỉnh sửa linh hoạt bất cứ lúc nào bạn muốn. Toàn bộ dữ liệu của bạn, bao gồm các địa điểm đã lưu và lịch sử tạo tour, được đồng bộ hóa tức thì và an toàn trên mọi thiết bị (điện thoại, máy tính bảng).',
       'Điều này mang lại sự tiện lợi và trực quan tối đa, cho phép bạn tiếp tục lên kế hoạch dù đang ở đâu.',
     ],
-    img: '/path/to/img-save.jpg',
+    img: user,
     alt: 'Lưu hành trình',
   },
   {
@@ -61,7 +63,7 @@ const defaultItems = [
       'BLOGS - Culture Compass là nơi giao lưu của những người yêu văn hóa. Mỗi câu chuyện bạn kể, mỗi nơi bạn đi qua, mỗi khoảnh khắc bạn mang về — đều góp phần tạo nên một bản đồ văn hoá đầy màu sắc. Hãy để những trải nghiệm của bạn trở thành cảm hứng cho những người yêu văn hoá Việt trên khắp mọi miền.',
       'Tính năng blog mạnh mẽ giúp bạn dễ dàng chia sẻ và kết nối.',
     ],
-    img: '/path/to/img-blog.jpg',
+    img: blog,
     alt: 'Viết blog du lịch',
     button: true,
   },
