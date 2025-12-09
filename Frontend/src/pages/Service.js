@@ -5,6 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; 
 import './Service.css';
 
+import Popup from '../components/Popup';
+
 const TYPE_OPTIONS = [
   { label: 'Lễ hội', value: 'Lễ hội' },
   { label: 'Di tích', value: 'Di tích' },
@@ -17,6 +19,17 @@ const TYPE_OPTIONS = [
 const initialSelectedTypes = [];
 
 export default function Service({ currentUser }) {
+  
+    const [popup, setPopup] = useState({ show: false, message: "" });
+
+    const showPopup = (msg) => {
+        setPopup({ show: true, message: msg });
+    };
+
+    const closePopup = () => {
+        setPopup({ show: false, message: "" });
+    };
+  
   const navigate = useNavigate();
 
   // --- KHÔI PHỤC DỮ LIỆU TỪ SESSION STORAGE ---
@@ -129,7 +142,7 @@ export default function Service({ currentUser }) {
   // --- LOCATION LOGIC ---
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert("Trình duyệt của bạn không hỗ trợ định vị.");
+      showPopup("Trình duyệt của bạn không hỗ trợ định vị.");
       return;
     }
 
@@ -168,10 +181,10 @@ export default function Service({ currentUser }) {
       console.error(err);
       setIsLocating(false);
       switch(err.code) {
-          case err.PERMISSION_DENIED: alert("Bạn đã từ chối quyền truy cập vị trí."); break;
-          case err.POSITION_UNAVAILABLE: alert("Không thể xác định vị trí hiện tại."); break;
-          case err.TIMEOUT: alert("Quá thời gian chờ lấy vị trí."); break;
-          default: alert("Lỗi định vị không xác định.");
+          case err.PERMISSION_DENIED: showPopup("Bạn đã từ chối quyền truy cập vị trí."); break;
+          case err.POSITION_UNAVAILABLE: showPopup("Không thể xác định vị trí hiện tại."); break;
+          case err.TIMEOUT: showPopup("Quá thời gian chờ lấy vị trí."); break;
+          default: showPopup("Lỗi định vị không xác định.");
       }
     };
 
@@ -203,7 +216,7 @@ export default function Service({ currentUser }) {
                 lon: parseFloat(result.lon) 
             });
         } else {
-            alert("Không tìm thấy địa điểm này. Vui lòng nhập cụ thể hơn.");
+            showPopup("Không tìm thấy địa điểm này. Vui lòng nhập cụ thể hơn.");
             setStartPoint({ name: customInput, lat: null, lon: null });
         }
     } catch (error) {
@@ -243,7 +256,7 @@ export default function Service({ currentUser }) {
 
     // 1. Ngày đi <= Ngày về
     if (startDateObj && endDateObj && startDateObj > endDateObj) {
-        alert("Thời gian đi phải sớm hơn hoặc bằng thời gian về!");
+        showPopup("Thời gian đi phải sớm hơn hoặc bằng thời gian về!");
         return false;
     }
 
@@ -276,13 +289,19 @@ export default function Service({ currentUser }) {
 
         // Kiểm tra 1: Ngày đi có trễ hơn ngày kết thúc lễ hội (của đợt phù hợp nhất) không?
         if (startDateObj && startDateObj > festivalEnd) {
-            alert(`Lỗi: Bạn chọn khởi hành ngày ${formatDateLocal(startDateObj)}, nhưng ${attr.name} đã kết thúc vào ${formatDateLocal(festivalEnd)}.`);
+           showPopup(
+            `Lỗi:\nBạn chọn khởi hành ngày ${formatDateLocal(startDateObj)}, nhưng ${attr.name} đã kết thúc vào ${formatDateLocal(festivalEnd)}.`
+            );
+
             return false;
         }
 
         // Kiểm tra 2: Ngày về có sớm hơn ngày bắt đầu lễ hội không?
         if (endDateObj && endDateObj < festivalStart) {
-            alert(`Lưu ý: Bạn chọn về ngày ${formatDateLocal(endDateObj)}, nhưng ${attr.name} tới ngày ${formatDateLocal(festivalStart)} mới bắt đầu. Nếu bạn muốn tham gia lễ hội, hãy chọn ngày trong khoảng thời gian đó.`);
+            showPopup(
+                `Lưu ý:\nBạn chọn về ngày ${formatDateLocal(endDateObj)}, nhưng ${attr.name} đến ngày ${formatDateLocal(festivalStart)} mới bắt đầu.\nNếu bạn muốn tham gia lễ hội, hãy chọn ngày trong khoảng thời gian đó.`
+            );
+
             return false;
         }
     }
@@ -389,8 +408,8 @@ export default function Service({ currentUser }) {
   };
   
   const handleCreateTour = () => {
-     if(selectedAttractions.length === 0) return alert("Vui lòng chọn ít nhất 1 địa điểm!");
-     if(!startPoint.lat || !startPoint.lon) return alert("Vui lòng chọn điểm xuất phát hợp lệ!");
+     if(selectedAttractions.length === 0) return showPopup("Vui lòng chọn ít nhất 1 địa điểm!");
+     if(!startPoint.lat || !startPoint.lon) return showPopup("Vui lòng chọn điểm xuất phát hợp lệ!");
 
      if (!validateDateConstraints(startDate, endDate, selectedAttractions)) {
          return;
@@ -658,6 +677,13 @@ export default function Service({ currentUser }) {
             )}
         </main>
       </div>
+
+    <Popup 
+        show={popup.show} 
+        message={popup.message} 
+        onClose={closePopup}
+    />
+
     </div>
   );
 }
