@@ -20,8 +20,64 @@ const buildSearchQuery = ({ searchTerm, typeList, userId } = {}) => {
   return queryString ? `?${queryString}` : '';
 };
 
+const getToken = (key) => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const setAccessToken = (token) => {
+  try {
+    localStorage.setItem('access_token', token);
+  } catch {
+    /* ignore */
+  }
+};
+
+const clearTokens = () => {
+  try {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  } catch {
+    /* ignore */
+  }
+};
+
 /**
- * Generic API request function
+ * Refresh access token using stored refresh_token
+ */
+async function refreshAccessToken() {
+  const refreshToken = getToken('refresh_token');
+  if (!refreshToken) {
+    throw new Error('Không có refresh token');
+  }
+
+  // Sửa đoạn gọi fetch: Thêm Content-Type và body rỗng
+  const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', // Thêm dòng này
+      'Authorization': `Bearer ${refreshToken}`,
+    },
+    body: JSON.stringify({}) // Thêm body rỗng cho đúng chuẩn POST
+  });
+
+  const contentType = response.headers.get("content-type") || "";
+  const data = contentType.includes("application/json") ? await response.json() : null;
+
+  if (!response.ok || !data?.success || !data?.access_token) {
+    // Nếu refresh thất bại, xóa token để user đăng nhập lại từ đầu
+    clearTokens(); 
+    throw new Error(data?.error || 'Không thể làm mới phiên đăng nhập');
+  }
+
+  setAccessToken(data.access_token);
+  return data.access_token;
+}
+/**
+ * Generic API request function with auto-refresh + retry once on 401
  */
 async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -34,37 +90,44 @@ async function apiRequest(endpoint, options = {}) {
   };
 
   // Attach Authorization header automatically when access_token is present
-  try {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      // Don't override if Authorization already provided in options
-      if (!config.headers) config.headers = {};
-      if (!config.headers.Authorization && !config.headers.authorization) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+  const token = getToken('access_token');
+  if (token) {
+    if (!config.headers) config.headers = {};
+    if (!config.headers.Authorization && !config.headers.authorization) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  } catch (e) {
-    // localStorage might not be available in some contexts; ignore
   }
 
   try {
     const response = await fetch(url, config);
-    
-    // Check if response is JSON
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error(`Expected JSON response, got ${contentType}`);
+    const contentType = response.headers.get("content-type") || "";
+    const isJson = contentType.includes("application/json");
+    const data = isJson ? await response.json() : null;
+
+    // Handle expired/invalid access token by attempting refresh once
+    if (response.status === 401 && !options._retry) {
+      try {
+        const newAccess = await refreshAccessToken();
+        return apiRequest(endpoint, {
+          ...options,
+          headers: {
+            ...options.headers,
+            Authorization: `Bearer ${newAccess}`,
+          },
+          _retry: true,
+        });
+      } catch (refreshError) {
+        clearTokens();
+        throw refreshError;
+      }
     }
-    
-    const data = await response.json();
-    
+
     if (!response.ok) {
-      throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      throw new Error(data?.error || `HTTP error! status: ${response.status}`);
     }
-    
+
     return data;
   } catch (error) {
-    // More detailed error logging
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       console.error('Lỗi kết nối - Máy chủ backend có đang chạy không?', error);
       throw new Error('Không thể kết nối đến máy chủ. Vui lòng đảm bảo backend đang chạy trên http://localhost:5000');
@@ -135,12 +198,15 @@ export const authAPI = {
 
   // Đăng xuất (server-side logout)
   logout: () => {
-    const accessToken = localStorage.getItem('access_token');
+    const accessToken = getToken('access_token');
+    const refreshToken = getToken('refresh_token');
     return apiRequest('/auth/logout', {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       },
+      body: JSON.stringify(refreshToken ? { refresh_token: refreshToken } : {}),
     });
   },
 
@@ -199,44 +265,64 @@ export const blogsAPI = {
   
   // Tạo blog mới (với FormData để upload hình ảnh)
   create: (formData) => {
-    const token = localStorage.getItem("access_token");
     const url = `${API_BASE_URL}/blogs`;
+    const token = getToken("access_token");
 
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        "Authorization": `Bearer ${token}`
-        //  KHÔNG thêm Content-Type vì FormData tự tạo boundary
-      },
-      body: formData, // FormData không cần Content-Type header
-    })
-    .then(response => {
+    const makeRequest = async (retry = true, overrideToken = token) => {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          "Authorization": `Bearer ${overrideToken}`
+          //  KHÔNG thêm Content-Type vì FormData tự tạo boundary
+        },
+        body: formData,
+      });
+
+      // Attempt refresh on 401 once
+      if (response.status === 401 && retry) {
+        const newAccess = await refreshAccessToken();
+        return makeRequest(false, newAccess);
+      }
+
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         throw new Error(`Expected JSON response, got ${contentType}`);
       }
-      return response.json();
-    })
-    .then(data => {
-      if (!data.success) {
+      const data = await response.json();
+      if (!response.ok || !data.success) {
         throw new Error(data.error || 'Failed to create blog');
       }
       return data;
-    })
-    .catch(error => {
-      console.error('API request failed:', error);
-      throw error;
-    });
+    };
+
+    return makeRequest();
   },
 
   delete: (blogId) => {
-    const token = localStorage.getItem("access_token");
-    return fetch(`http://127.0.0.1:5000/api/blogs/${blogId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`
+    const token = getToken("access_token");
+    const url = `${API_BASE_URL}/blogs/${blogId}`;
+
+    const makeRequest = async (retry = true, overrideToken = token) => {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${overrideToken}`
+        }
+      });
+
+      if (response.status === 401 && retry) {
+        const newAccess = await refreshAccessToken();
+        return makeRequest(false, newAccess);
       }
-    }).then(res => res.json());
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to delete blog');
+      }
+      return data;
+    };
+
+    return makeRequest();
   }
 };
 

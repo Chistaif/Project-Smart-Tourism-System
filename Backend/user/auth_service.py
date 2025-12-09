@@ -91,7 +91,7 @@ def login_service(data):
     user.last_login_at = datetime.utcnow()
     db.session.commit()
 
-    # Tạo token
+    # Tạo token (dùng int để thống nhất loại dữ liệu identity)
     access_token = create_access_token(identity=str(user.user_id))
     refresh_token = create_refresh_token(identity=str(user.user_id))
     

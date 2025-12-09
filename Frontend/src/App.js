@@ -80,6 +80,7 @@ function App() {
     setUser(null);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     setSuccess("Đăng xuất thành công!");
     setTimeout(() => {
       setSuccess("");
@@ -219,6 +220,7 @@ function App() {
                           setUser(response.user);
                           localStorage.setItem('currentUser', JSON.stringify(response.user));
                           localStorage.setItem('access_token', response.access_token); 
+                          localStorage.setItem('refresh_token', response.refresh_token); 
                           
                           setSuccess("Đăng nhập thành công!");
                           setTimeout(() => {
