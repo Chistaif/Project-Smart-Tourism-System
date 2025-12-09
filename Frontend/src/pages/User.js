@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { authAPI, attractionsAPI, userAPI, tourAPI } from "../utils/api";
 import "./User.css";
@@ -13,42 +13,26 @@ export default function UserPage({ currentUser, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Helper function
+  const formatDayMonth = (dateString) => {
+    if (!dateString) return "N/A";
+    // dateString có dạng YYYY-MM-DD (từ isoformat của Backend)
+    try {
+      const parts = dateString.split('-');
+      if (parts.length === 3) {
+        const [year, month, day] = parts;
+        return `${day}/${month}/${year}`;
+      }
+    } catch (e) {
+      return "Lỗi ngày";
+    }
+    return dateString;
+  };
+
   // ---------------------------
   // LOAD DATA WHEN USER LOGGED IN
   // ---------------------------
-  useEffect(() => {
-    if (!currentUser) {
-      setLoading(false);
-      return;
-    }
-
-    if (currentUser?.user_id) {
-      loadUserData();
-    }
-  }, [currentUser]);
-
-  // Listen for tourSaved events (dispatched after saving a tour) so the UI updates live
-  useEffect(() => {
-    function handleTourSaved(e) {
-      const tour = e && e.detail ? e.detail : null;
-      if (!tour || !currentUser) return;
-      // Only add if the tour belongs to current user
-      if (tour.user_id && tour.user_id !== currentUser.user_id) return;
-
-      setSavedTours(prev => {
-        // Avoid duplicates if the tour already exists
-        if (!prev) return [tour];
-        const exists = prev.some(t => t.tour_id === tour.tour_id);
-        if (exists) return prev;
-        return [tour, ...prev];
-      });
-    }
-
-    window.addEventListener('tourSaved', handleTourSaved);
-    return () => window.removeEventListener('tourSaved', handleTourSaved);
-  }, [currentUser]);
-
-  const loadUserData = async () => {
+  const loadUserData = useCallback(async () => {
     setLoading(true);
     setError("");
 
@@ -75,7 +59,39 @@ export default function UserPage({ currentUser, onLogout }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      setLoading(false);
+      return;
+    }
+
+    if (currentUser?.user_id) {
+      loadUserData();
+    }
+  }, [currentUser, loadUserData]);
+
+  // Listen for tourSaved events (dispatched after saving a tour) so the UI updates live
+  useEffect(() => {
+    function handleTourSaved(e) {
+      const tour = e && e.detail ? e.detail : null;
+      if (!tour || !currentUser) return;
+      // Only add if the tour belongs to current user
+      if (tour.user_id && tour.user_id !== currentUser.user_id) return;
+
+      setSavedTours(prev => {
+        // Avoid duplicates if the tour already exists
+        if (!prev) return [tour];
+        const exists = prev.some(t => t.tour_id === tour.tour_id);
+        if (exists) return prev;
+        return [tour, ...prev];
+      });
+    }
+
+    window.addEventListener('tourSaved', handleTourSaved);
+    return () => window.removeEventListener('tourSaved', handleTourSaved);
+  }, [currentUser]);
 
   const handleRemoveFavorite = async (id) => {
     try {
@@ -109,31 +125,31 @@ export default function UserPage({ currentUser, onLogout }) {
 
   const handleViewTour = (tour) => {
     // Dữ liệu cần thiết để tạo lại tour
-    const attractions = tour.attractions; 
-    const startDate = tour.startDate; 
-    const endDate = tour.endDate;   
-    
+    const attractions = tour.attractions;
+    const startDate = tour.startDate;
+    const endDate = tour.endDate;
+
     const savedStartPoint = tour.startPoint;
     const startPoint = (savedStartPoint && savedStartPoint.lat)
-        ? savedStartPoint
-        : (attractions.length > 0 
-            ? { lat: attractions[0].lat, lon: attractions[0].lon, name: attractions[0].name } 
-            : null);
-            
+      ? savedStartPoint
+      : (attractions.length > 0
+        ? { lat: attractions[0].lat, lon: attractions[0].lon, name: attractions[0].name }
+        : null);
+
     if (!attractions || attractions.length === 0) {
-        alert("Tour không có địa điểm nào.");
-        return;
+      alert("Tour không có địa điểm nào.");
+      return;
     }
 
-    navigate('/itinerary', { 
-        state: { 
-            selectedAttractions: attractions,
-            startPoint: startPoint, // Dùng startPoint đã xác định
-            startDate: startDate,
-            endDate: endDate
-        }
+    navigate('/itinerary', {
+      state: {
+        selectedAttractions: attractions,
+        startPoint: startPoint, // Dùng startPoint đã xác định
+        startDate: startDate,
+        endDate: endDate
+      }
     });
-};
+  };
 
   // ---------------------------
   // UI KHI CHƯA ĐĂNG NHẬP
@@ -353,20 +369,23 @@ export default function UserPage({ currentUser, onLogout }) {
                 <div className="tour-history-timeline">
                   {savedTours.map((tour) => {
                     const createdDate = tour.created_at ? new Date(tour.created_at) : null;
-                    const formattedDate = createdDate 
+                    const formattedDate = createdDate
                       ? createdDate.toLocaleDateString('vi-VN', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })
                       : 'Ngày không xác định';
-                    
+
+                    const displayStartDate = formatDayMonth(tour.startDate);
+                    const displayEndDate = formatDayMonth(tour.endDate);
+
                     // Estimate days based on attraction count (roughly 3-4 per day)
                     const attractionCount = tour.attraction_count || tour.attractions?.length || 0;
                     const estimatedDays = attractionCount > 0 ? Math.max(1, Math.ceil(attractionCount / 3)) : null;
-                    
+
                     return (
                       <div key={tour.tour_id} className="tour-history-item">
                         <div className="history-timeline-marker"></div>
@@ -375,6 +394,12 @@ export default function UserPage({ currentUser, onLogout }) {
                             <h4 className="history-tour-name">
                               {tour.tour_name || `Hành trình ${estimatedDays || 'N'} Ngày`}
                             </h4>
+                            <p className="tour-dates">
+                              Ngày khởi hành:
+                              <span style={{ fontWeight: 'bold', marginLeft: '5px' }}>{displayStartDate}</span>
+                              {' -> '}
+                              <span style={{ fontWeight: 'bold' }}>{displayEndDate}</span>
+                            </p>
                             <time className="history-date">{formattedDate}</time>
                           </div>
                           <div className="history-item-details">
@@ -401,14 +426,14 @@ export default function UserPage({ currentUser, onLogout }) {
                             )}
                           </div>
                           <div className="history-item-actions">
-                            <button 
-                              className="view-btn" 
+                            <button
+                              className="view-btn"
                               onClick={() => handleViewTour(tour)}
                             >
                               Xem chi tiết
                             </button>
-                            <button 
-                              className="delete-btn" 
+                            <button
+                              className="delete-btn"
                               onClick={async () => {
                                 if (!window.confirm('Bạn có chắc muốn xóa hành trình này không?')) return;
                                 try {

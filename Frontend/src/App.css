@@ -1108,3 +1108,8 @@ footer {
   font-weight: 600;              /* đậm hơn để nổi */
   line-height: 1.5;
 }
+
+body.hide-footer-on-itinerary footer,
+body.hide-footer-on-itinerary .footer-component { 
+    display: none !important;
+}

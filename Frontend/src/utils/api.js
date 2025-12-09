@@ -339,6 +339,7 @@ export const tourAPI = {
     if (params.startLon) queryParams.append('startLon', params.startLon);
     if (params.startTime) queryParams.append('startTime', params.startTime);
     if (params.endTime) queryParams.append('endTime', params.endTime);
+    if (params.startPointName) queryParams.append('startPointName', params.startPointName); 
 
     return apiRequest(`/quick-tour-creator?${queryParams.toString()}`);
   },

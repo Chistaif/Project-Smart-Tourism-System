@@ -395,6 +395,7 @@ def creator():
         start_lon = request.args.get('startLon')
         start_time_str = request.args.get('startTime') # Format: dd/mm/yyyy HH:MM
         end_time_str = request.args.get('endTime')     # Format: dd/mm/yyyy HH:MM (MỚI)
+        start_point_name = request.args.get('startPointName')
 
         # 3. Validation
         if not attraction_ids:
@@ -431,10 +432,11 @@ def creator():
         # 4. Gọi Service (Logic giữ nguyên)
         result = generate_smart_tour(
             attraction_ids, 
-            start_lat_float, 
-            start_lon_float, 
+            float(start_lat), 
+            float(start_lon), 
             start_time_str,
-            end_time_str
+            end_time_str,
+            start_point_name=start_point_name
         )
 
         return jsonify({
@@ -471,11 +473,35 @@ def save_tour():
             
             if not user_id:
                 user_id = data.get('userId')
+            
             tour_name = data.get('tourName', '').strip()
             attraction_ids = data.get('attractionIds', [])
             
+            def parse_date(d_str):
+                if not d_str: return None
+                for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
+                    try:
+                        return datetime.strptime(d_str, fmt).date()
+                    except ValueError:
+                        continue
+                return None
+
+            start_date = parse_date(data.get('startDate'))
+            end_date = parse_date(data.get('endDate'))
+            start_lat = data.get('startLat')
+            start_lon = data.get('startLon')
+            start_point_name = data.get('startPointName') 
             try:
-                tour_data = save_tour_service(user_id, tour_name, attraction_ids)
+                tour_data = save_tour_service(
+                    user_id, 
+                    tour_name, 
+                    attraction_ids,
+                    start_date=start_date,
+                    end_date=end_date,
+                    start_lat=start_lat,
+                    start_lon=start_lon,
+                    start_point_name=start_point_name
+                )
                 return jsonify({
                     "success": True,
                     "message": f"Đã lưu tour '{tour_name}' thành công",
