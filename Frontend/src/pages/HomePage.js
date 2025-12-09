@@ -2,17 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { destinationsAPI } from '../utils/api';
-
 import test1 from '../asset/test1.png';
 import test2 from '../asset/test2.png';
 import test3 from '../asset/test3.png';
-
+import HowItWorks from '../HowItWorks/HowItWorks';
 export default function HomePage({ handleCardClick, currentUser, images, swapImage}) {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+
+    const FeatureCard = ({ title, desc }) => (
+    <div className="feature-card">
+      <h4 className="feature-title">{title}</h4>
+      <p className="feature-desc">{desc}</p>
+    </div>
+  );
 
   useEffect(() => {
     // Fetch destinations from Flask API
@@ -86,9 +92,15 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
 
     </main>
 
-    
+    <section className="howitworks-section">
+      <div className="howitworks-box">
+        <HowItWorks />
+      </div>
+    </section>
+
     {/*FRAME 2 */}
     
+    {/*
     <section className="blogs-preview">
       <div className="blogs-box">
 
@@ -111,7 +123,7 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
         </button>
 
       </div>
-    </section>
+    </section>  */}
 
     {/*FRAME 3*/}
 
@@ -173,6 +185,32 @@ export default function HomePage({ handleCardClick, currentUser, images, swapIma
       </div>
     </section>
     
+        <section className="why-choose-us" style={{ padding: '60px 0', textAlign: 'center' }}>
+      <div className="container">
+        <div className="eyebrow">VÌ SAO CHỌN CULTURE COMPASS</div>
+        <h2 className="why-title">
+          Trải nghiệm du lịch thông minh, đậm chất văn hóa Việt
+        </h2>
+        <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px' }}>
+                <FeatureCard 
+                    title="Hành Trình Độc Nhất AI" 
+                    desc="Hệ thống AI cá nhân hóa tour theo sở thích, tối ưu hóa lộ trình tức thì." 
+                />
+                <FeatureCard 
+                    title="Thấu Hiểu Văn Hóa" 
+                    desc="Thông tin chi tiết, hình ảnh chất lượng cao và đánh giá chân thực về điểm đến." 
+                />
+                <FeatureCard 
+                    title="Trợ Lý Thông Minh" 
+                    desc="Trò chuyện với AI để nhận gợi ý, giải đáp và điều chỉnh kế hoạch 24/7." 
+                />
+                <FeatureCard 
+                    title="Cộng Đồng Sẻ Chia" 
+                    desc="Gắn kết, viết blog, và nhận cảm hứng từ những câu chuyện du lịch thực tế." 
+                />
+            </div>
+        </div>
+      </section>
   </>
   );
 }

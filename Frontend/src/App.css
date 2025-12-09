@@ -1057,3 +1057,54 @@ footer {
   max-width: 700px;
 }
 
+/*HOW IT WORKS*/
+
+/* --- 1. Eyebrow: VÌ SAO CHỌN CULTURE COMPASS --- */
+.why-choose-us .eyebrow {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(
+    180deg,
+    #FFF7D6 0%,
+    #F5E9A8 40%,
+    #E8D977 70%,
+    #D8C446 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  letter-spacing: 1px;
+}
+
+
+/* --- 2. Title lớn “Trải nghiệm du lịch…” --- */
+.why-choose-us h2 {
+  font-size: 34px !important;
+  font-weight: 900;
+  background: linear-gradient(
+    180deg,
+    #FFF7D6 0%,
+    #F5E9A8 40%,
+    #E8D977 70%,
+    #D8C446 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+
+/* --- 3. Title nhỏ trong FeatureCard (“Hành Trình Độc Nhất AI”… ) --- */
+.features-grid .feature-title {
+  color: #D8C446 !important;     /* vàng đậm */
+  font-weight: 800;
+  font-size: 20px;
+}
+
+
+/* --- 4. Text mô tả nhỏ trong FeatureCard --- */
+.features-grid .feature-desc {
+  color: #ffffff !important;     /* trắng */
+  font-weight: 600;              /* đậm hơn để nổi */
+  line-height: 1.5;
+}
