@@ -314,21 +314,24 @@ export default function UserPage({ currentUser, onLogout }) {
                         })
                       : 'Ngày không xác định';
                     
+                    // Estimate days based on attraction count (roughly 3-4 per day)
+                    const attractionCount = tour.attraction_count || tour.attractions?.length || 0;
+                    const estimatedDays = attractionCount > 0 ? Math.max(1, Math.ceil(attractionCount / 3)) : null;
+                    
                     return (
-                      <div key={tour.tourId} className="tour-history-item">
+                      <div key={tour.tour_id} className="tour-history-item">
                         <div className="history-timeline-marker"></div>
                         <div className="history-item-content">
                           <div className="history-item-header">
                             <h4 className="history-tour-name">
-                              {tour.tourName || `Hành trình ${tour.totalDays || 'N'} Ngày`}
+                              {tour.tour_name || `Hành trình ${estimatedDays || 'N'} Ngày`}
                             </h4>
                             <time className="history-date">{formattedDate}</time>
                           </div>
                           <div className="history-item-details">
                             <p className="history-summary">
-                              📍 {tour.attraction_count || tour.attractions?.length || 0} điểm đến
-                              {tour.totalDays && ` • 🚶 ${tour.totalDays} ngày`}
-                              {tour.totalDistanceKm && ` • 🛣️ ${Math.round(tour.totalDistanceKm)} km`}
+                              📍 {attractionCount} điểm đến
+                              {estimatedDays && ` • 🚶 ${estimatedDays} ngày`}
                             </p>
                             {tour.attractions && tour.attractions.length > 0 && (
                               <div className="history-attractions">
@@ -351,7 +354,7 @@ export default function UserPage({ currentUser, onLogout }) {
                           <div className="history-item-actions">
                             <button 
                               className="view-btn" 
-                              onClick={() => alert(`Đang mở chi tiết Tour ID: ${tour.tourId}`)}
+                              onClick={() => alert(`Đang mở chi tiết Tour ID: ${tour.tour_id}`)}
                             >
                               Xem chi tiết
                             </button>
@@ -360,9 +363,9 @@ export default function UserPage({ currentUser, onLogout }) {
                               onClick={async () => {
                                 if (!window.confirm('Bạn có chắc muốn xóa hành trình này không?')) return;
                                 try {
-                                  const response = await tourAPI.unsaveTour(tour.tourId);
+                                  const response = await tourAPI.unsaveTour(tour.tour_id, currentUser.user_id);
                                   if (response.success) {
-                                    setSavedTours(prev => prev.filter(t => t.tourId !== tour.tourId));
+                                    setSavedTours(prev => prev.filter(t => t.tour_id !== tour.tour_id));
                                     alert('Đã xóa hành trình thành công!');
                                   }
                                 } catch (e) {

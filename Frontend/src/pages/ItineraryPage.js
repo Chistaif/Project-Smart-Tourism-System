@@ -50,23 +50,41 @@ export default function ItineraryPage() {
       // 2. Nếu đã đăng nhập -> Gọi API lưu
       try {
           console.log("💾 Đang lưu lịch trình...", tourResult);
+          
+          // Extract userId from localStorage
+          const userStr = localStorage.getItem('user');
+          let userId = null;
+          if (userStr) {
+              try {
+                  const user = JSON.parse(userStr);
+                  userId = user.user_id || user.id;
+              } catch (e) {
+                  console.error("Error parsing user:", e);
+              }
+          }
+          
+          if (!userId) {
+              alert("Không thể lấy thông tin người dùng. Vui lòng đăng nhập lại.");
+              return;
+          }
+          
+          // Backend expects: tourName and attractionIds
           const payload = {
-              tourName: `Lịch trình ${tourResult.totalDays} ngày`,
-              startDate: startDate,
-              endDate: endDate,
-              totalDistance: tourResult.totalDistanceKm,
-              timeline: tourResult.timeline,
-              routes: tourResult.routes
+              tourName: `Lịch trình ${tourResult.totalDays || 'N'} ngày`,
+              attractionIds: selectedAttractions ? selectedAttractions.map(attr => attr.id) : []
           };
 
-          // Gọi API (đảm bảo hàm saveTour đã được định nghĩa trong api.js)
-          await tourAPI.saveTour(payload);
+          // Gọi API
+          const response = await tourAPI.saveTour(payload);
           
-          alert("Đã lưu hành trình thành công vào tài khoản!");
+          if (response.success) {
+              alert("Đã lưu hành trình thành công vào tài khoản!");
+          } else {
+              alert(response.error || "Lỗi khi lưu hành trình.");
+          }
       } catch (e) {
           console.error("Lỗi khi lưu:", e);
-          // Fallback alert nếu API chưa sẵn sàng
-          alert("Đã gửi yêu cầu lưu. Vui lòng kiểm tra lại API backend.");
+          alert(e.message || "Lỗi khi lưu hành trình. Vui lòng thử lại.");
       }
   };
 

@@ -250,9 +250,9 @@ export const tourAPI = {
   }),
 
   // Hủy lưu tour
-  unsaveTour: (tourId) => apiRequest('/save-tour', {
+  unsaveTour: (tourId, userId) => apiRequest('/save-tour', {
       method: 'PATCH',
-      body: JSON.stringify({ tourId })
+      body: JSON.stringify({ tourId, userId })
   }),
 
   // Lấy danh sách tour đã lưu
