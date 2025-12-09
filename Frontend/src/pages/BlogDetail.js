@@ -11,19 +11,10 @@ export default function BlogDetail() {
   const [error, setError] = useState(null);
 
   const [popupMessage, setPopupMessage] = useState({ type: "", text: "" });
-  const [selectedFile, setSelectedFile] = useState(null);
 
   const showPopup = (type, text) => {
     setPopupMessage({ type, text });
     setTimeout(() => setPopupMessage({ type: "", text: "" }), 3000);
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      // Handle file upload logic here
-    }
   };
 
 
@@ -76,18 +67,6 @@ export default function BlogDetail() {
         <button className="btn-back" onClick={() => navigate('/blogs')}>
           ← Quay lại
         </button>
-        
-        <label htmlFor="select-image" className="btn-select-image">
-          <span className="select-image-icon">🖼️</span>
-          <span className="select-image-text">Chọn ảnh</span>
-          <input
-            type="file"
-            id="select-image"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-          />
-        </label>
       </div>
 
       <article className="blog-detail">
@@ -142,27 +121,6 @@ export default function BlogDetail() {
               Cập nhật lần cuối: {new Date(blog.updated_at).toLocaleDateString('vi-VN')}
             </p>
           )}
-
-          <div className="file-upload-section">
-            <label htmlFor="blog-image-upload" className="file-upload-label">
-              Hình ảnh (tùy chọn)
-            </label>
-            <input
-              type="file"
-              id="blog-image-upload"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="styled-file-input"
-            />
-            {selectedFile && (
-              <div className="file-selected-info">
-                <span className="file-name">✓ {selectedFile.name}</span>
-                <span className="file-size">
-                  ({(selectedFile.size / 1024).toFixed(2)} KB)
-                </span>
-              </div>
-            )}
-          </div>
         </div>
       </article>
     </div>

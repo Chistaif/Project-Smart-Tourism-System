@@ -12,7 +12,7 @@ export default function Blogs({ currentUser }) {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    image: null,
+    images: [],
     user_id: currentUser?.user_id || ''
   });
   const [submitting, setSubmitting] = useState(false);
@@ -67,13 +67,34 @@ export default function Blogs({ currentUser }) {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData(prev => ({
-        ...prev,
-        image: file
-      }));
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      // Validate file types
+      const validFiles = files.filter(file => file.type.startsWith('image/'));
+      if (validFiles.length !== files.length) {
+        showPopup("error", "Một số file không phải là hình ảnh đã bị bỏ qua");
+      }
+      if (validFiles.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, ...validFiles]
+        }));
+      }
     }
+  };
+
+  const removeImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
+
+  const clearAllImages = () => {
+    setFormData(prev => ({
+      ...prev,
+      images: []
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -92,9 +113,10 @@ export default function Blogs({ currentUser }) {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('content', formData.content);
       formDataToSend.append('user_id', formData.user_id);
-      if (formData.image) {
-        formDataToSend.append('image', formData.image);
-      }
+      // Append multiple images
+      formData.images.forEach((image, index) => {
+        formDataToSend.append(`images`, image);
+      });
 
       const response = await blogsAPI.create(formDataToSend);
       if (response.success) {
@@ -102,7 +124,7 @@ export default function Blogs({ currentUser }) {
         setFormData({
           title: '',
           content: '',
-          image: null,
+          images: [],
           user_id: formData.user_id
         });
         setShowForm(false);
@@ -168,18 +190,64 @@ export default function Blogs({ currentUser }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="image">Hình ảnh (tùy chọn)</label>
+              <div className="file-upload-header">
+                <label htmlFor="images">Hình ảnh (tùy chọn - có thể chọn nhiều)</label>
+                {formData.images.length > 0 && (
+                  <button 
+                    type="button"
+                    onClick={clearAllImages}
+                    className="btn-clear-all"
+                  >
+                    Xóa tất cả
+                  </button>
+                )}
+              </div>
               <input
                 type="file"
-                id="image"
-                name="image"
+                id="images"
+                name="images"
                 accept="image/*"
+                multiple
                 onChange={handleImageChange}
+                className="styled-file-input"
               />
-              {formData.image && (
-                <div className="image-preview">
-                  <img src={URL.createObjectURL(formData.image)} alt="Preview" />
-                  <p>{formData.image.name}</p>
+              
+              {formData.images.length > 0 && (
+                <div className="images-preview-container">
+                  <div className="images-preview-grid">
+                    {formData.images.map((image, index) => (
+                      <div key={index} className="image-preview-item">
+                        <div className="image-preview-wrapper">
+                          <img 
+                            src={URL.createObjectURL(image)} 
+                            alt={`Preview ${index + 1}`}
+                            className="image-preview-img"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index)}
+                            className="btn-remove-image"
+                            aria-label="Xóa ảnh"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <div className="image-preview-info">
+                          <span className="image-preview-name" title={image.name}>
+                            {image.name.length > 20 
+                              ? image.name.substring(0, 20) + '...' 
+                              : image.name}
+                          </span>
+                          <span className="image-preview-size">
+                            {(image.size / 1024).toFixed(2)} KB
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="images-count-info">
+                    Đã chọn {formData.images.length} {formData.images.length === 1 ? 'ảnh' : 'ảnh'}
+                  </div>
                 </div>
               )}
             </div>
