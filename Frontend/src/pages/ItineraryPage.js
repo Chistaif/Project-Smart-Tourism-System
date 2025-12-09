@@ -49,7 +49,7 @@ export default function ItineraryPage() {
 
       // 2. Nếu đã đăng nhập -> Gọi API lưu
       try {
-          console.log("💾 Đang lưu lịch trình...", tourResult);
+          console.log("Đang lưu lịch trình...", tourResult);
           
           // Extract userId from localStorage
           const userStr = localStorage.getItem('currentUser');
@@ -70,9 +70,15 @@ export default function ItineraryPage() {
           
           // Backend expects: tourName and attractionIds
           const payload = {
-              tourName: `Lịch trình ${tourResult.totalDays || 'N'} ngày`,
-              attractionIds: selectedAttractions ? selectedAttractions.map(attr => attr.id) : []
-          };
+            tourName: `Lịch trình ${tourResult.totalDays || 'N'} ngày`,
+            attractionIds: selectedAttractions.map(a => a.id),
+            startDate: startDate, 
+            endDate: endDate,
+            startLat: startPoint?.lat,
+            startLon: startPoint?.lon,
+            startPointName: startPoint?.name || 'Vị trí khởi hành',
+            "userId": userId 
+          }
 
           // Gọi API
           const response = await tourAPI.saveTour(payload);

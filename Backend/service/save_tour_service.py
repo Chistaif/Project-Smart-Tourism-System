@@ -1,6 +1,6 @@
 from models import db, SavedTour, Attraction, User
 
-def save_tour_service(user_id, tour_name, attraction_ids):
+def save_tour_service(user_id, tour_name, attraction_ids, start_date=None, end_date=None, start_lat=None, start_lon=None, start_point_name=None):
     """
     Service để lưu tour mới
     """
@@ -33,14 +33,20 @@ def save_tour_service(user_id, tour_name, attraction_ids):
     if len(attractions) != len(unique_attraction_ids):
         raise ValueError("Một số attraction không tồn tại")
     
-    # Tạo tour mới
     new_tour = SavedTour(
+        user_id=user_id, 
         tour_name=tour_name.strip(),
-        user_id=user_id,
-        attractions=attractions  # SQLAlchemy sẽ tự động thêm vào bảng tour_attractions
+        start_date=start_date,
+        end_date=end_date,
+        start_lat=start_lat,
+        start_lon=start_lon,
+        start_point_name=start_point_name 
     )
-    
     db.session.add(new_tour)
+    
+    for attr in attractions:
+        new_tour.attractions.append(attr)
+
     db.session.commit()
     
     return {
@@ -104,7 +110,14 @@ def get_saved_tours_service(user_id):
             "created_at": tour.created_at.isoformat(),
             "user_id": tour.user_id,
             "attractions": attractions,
-            "attraction_count": len(attractions)
+            "attraction_count": len(attractions),
+            "startDate": tour.start_date.isoformat() if tour.start_date else None,
+            "endDate": tour.end_date.isoformat() if tour.end_date else None,
+            "startPoint": {
+                "name": getattr(tour, 'start_point_name', None), # Dùng getattr để tương thích ngược
+                "lat": getattr(tour, 'start_lat', None),
+                "lon": getattr(tour, 'start_lon', None),
+            }
         })
     
     return tours_data
