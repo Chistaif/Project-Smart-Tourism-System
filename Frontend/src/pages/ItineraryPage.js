@@ -36,8 +36,8 @@ export default function ItineraryPage() {
   }, []);
 
   const handleSaveTour = async () => {
-      // 1. Kiểm tra đăng nhập
-      const isLoggedIn = localStorage.getItem('user') || localStorage.getItem('access_token'); 
+      // 1. Kiểm tra đăng nhập (dùng khóa 'currentUser' giống App.js)
+      const isLoggedIn = localStorage.getItem('currentUser') || localStorage.getItem('access_token'); 
       
       if (!isLoggedIn) {
           const confirmLogin = window.confirm("Bạn cần đăng nhập để lưu hành trình này vào tài khoản. Đăng nhập ngay?");
@@ -52,7 +52,7 @@ export default function ItineraryPage() {
           console.log("💾 Đang lưu lịch trình...", tourResult);
           
           // Extract userId from localStorage
-          const userStr = localStorage.getItem('user');
+          const userStr = localStorage.getItem('currentUser');
           let userId = null;
           if (userStr) {
               try {
@@ -86,6 +86,64 @@ export default function ItineraryPage() {
           console.error("Lỗi khi lưu:", e);
           alert(e.message || "Lỗi khi lưu hành trình. Vui lòng thử lại.");
       }
+  };
+
+  // Xuất hành trình ra PDF (dùng print-to-PDF của trình duyệt)
+  const handleExportPDF = () => {
+      if (!tourResult) {
+          alert("Chưa có dữ liệu tour để xuất PDF.");
+          return;
+      }
+
+      const tripTitle = `Hành trình ${tourResult.totalDays || 1} ngày`;
+      const summary = `
+        <div style="margin-bottom:16px;">
+          <h2 style="margin:0 0 8px 0;">${tripTitle}</h2>
+          <div>Điểm đến: ${tourResult.totalDestinations || 0}</div>
+          <div>Quãng đường: ${Math.round(tourResult.totalDistanceKm || 0)} km</div>
+        </div>
+      `;
+
+      const timelineHtml = (tourResult.timeline || [])
+        .map(item => `
+          <div style="margin-bottom:12px;">
+            <strong>${item.time || ''} ${item.type === 'DAY_START' ? `(Ngày ${item.day || ''})` : ''}</strong><br/>
+            <div>${item.name || ''}</div>
+            <div style="color:#666;">${item.detail || ''}</div>
+          </div>
+        `).join('');
+
+      const html = `
+        <html>
+          <head>
+            <title>${tripTitle}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 24px; }
+              h1, h2, h3 { margin: 0 0 12px 0; }
+              .section { margin-bottom: 18px; }
+              .timeline-item { margin-bottom: 12px; }
+            </style>
+          </head>
+          <body>
+            ${summary}
+            <div class="section">
+              <h3>Chi tiết lịch trình</h3>
+              ${timelineHtml || '<div>Không có hoạt động.</div>'}
+            </div>
+          </body>
+        </html>
+      `;
+
+      const printWindow = window.open('', '_blank', 'width=900,height=1000');
+      if (!printWindow) {
+          alert("Trình duyệt chặn cửa sổ mới. Vui lòng cho phép popup để xuất PDF.");
+          return;
+      }
+      printWindow.document.open();
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
   };
 
   // Tạo Key Cache duy nhất dựa trên input đầu vào
@@ -311,6 +369,22 @@ export default function ItineraryPage() {
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                         <polyline points="17 21 17 13 7 13 7 21"></polyline>
                         <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                </button>
+                
+                {/* NÚT XUẤT PDF */}
+                <button 
+                    className="save-btn-icon" 
+                    onClick={handleExportPDF} 
+                    title="Xuất PDF"
+                    style={{ marginLeft: 8 }}
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <line x1="10" y1="9" x2="8" y2="9"></line>
                     </svg>
                 </button>
             </div>
