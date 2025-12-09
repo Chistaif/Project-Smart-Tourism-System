@@ -107,6 +107,34 @@ export default function UserPage({ currentUser, onLogout }) {
     }
   };
 
+  const handleViewTour = (tour) => {
+    // Dữ liệu cần thiết để tạo lại tour
+    const attractions = tour.attractions; 
+    const startDate = tour.startDate; 
+    const endDate = tour.endDate;   
+    
+    const savedStartPoint = tour.startPoint;
+    const startPoint = (savedStartPoint && savedStartPoint.lat)
+        ? savedStartPoint
+        : (attractions.length > 0 
+            ? { lat: attractions[0].lat, lon: attractions[0].lon, name: attractions[0].name } 
+            : null);
+            
+    if (!attractions || attractions.length === 0) {
+        alert("Tour không có địa điểm nào.");
+        return;
+    }
+
+    navigate('/itinerary', { 
+        state: { 
+            selectedAttractions: attractions,
+            startPoint: startPoint, // Dùng startPoint đã xác định
+            startDate: startDate,
+            endDate: endDate
+        }
+    });
+};
+
   // ---------------------------
   // UI KHI CHƯA ĐĂNG NHẬP
   // ---------------------------
@@ -375,7 +403,7 @@ export default function UserPage({ currentUser, onLogout }) {
                           <div className="history-item-actions">
                             <button 
                               className="view-btn" 
-                              onClick={() => alert(`Đang mở chi tiết Tour ID: ${tour.tour_id}`)}
+                              onClick={() => handleViewTour(tour)}
                             >
                               Xem chi tiết
                             </button>

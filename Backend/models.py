@@ -244,6 +244,12 @@ class SavedTour(db.Model):
     tour_id = db.Column(db.Integer, primary_key=True)
     tour_name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    start_lat = db.Column(db.Float, nullable=True) 
+    start_lon = db.Column(db.Float, nullable=True)
+    start_point_name = db.Column(db.String(255), nullable=True)
+    start_date = db.Column(db.Date, nullable=True) # Ngày bắt đầu tour
+    end_date = db.Column(db.Date, nullable=True) # Ngày kết thúc tour
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     user = db.relationship('User', back_populates='saved_tours')
