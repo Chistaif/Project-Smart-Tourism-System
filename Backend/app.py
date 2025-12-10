@@ -1016,8 +1016,9 @@ def create_blog():
         image_url = None
         print("kiem tra nhan anh")
         image_urls = []
-        if 'images' in request.files:
-            files = request.files.getlist('images')  # Lấy list files
+        if 'images' in request.files or 'image' in request.files:
+            # Hỗ trợ cả nhiều ảnh ("images") và 1 ảnh ("image")
+            files = request.files.getlist('images') if 'images' in request.files else [request.files.get('image')]
             print(f"nhan {len(files)} anh")
             for i, file in enumerate(files):
                 if file and file.filename != '' and allowed_file(file.filename):
@@ -1025,7 +1026,7 @@ def create_blog():
                     image_url = upload_image_to_cloud(file, folder="smart_tourism/blogs")
                     if image_url:
                         image_urls.append(image_url)
-                elif file.filename != '':
+                elif file and file.filename != '':
                     # Nếu có file nhưng đuôi không hợp lệ
                     return jsonify({"success": False, "error": f"File {file.filename} không hợp lệ (chỉ nhận ảnh)"}), 400
         

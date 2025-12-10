@@ -3,12 +3,25 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { blogsAPI } from '../utils/api';
 import './BlogDetail.css';
 
+// Parse image_urls which can be an array or a JSON string
+const parseImageUrls = (imageUrls) => {
+  if (!imageUrls) return [];
+  if (Array.isArray(imageUrls)) return imageUrls;
+  try {
+    const parsed = JSON.parse(imageUrls);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
 export default function BlogDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentImage, setCurrentImage] = useState(0);
 
   const [popupMessage, setPopupMessage] = useState({ type: "", text: "" });
 
@@ -28,6 +41,7 @@ export default function BlogDetail() {
       const response = await blogsAPI.getById(id);
       if (response.success) {
         setBlog(response.data);
+        setCurrentImage(0);
       } else {
         showPopup("error", "Không tìm thấy bài viết");
       }
@@ -54,7 +68,19 @@ export default function BlogDetail() {
       ? `http://localhost:5000/static/images/${avatarUrl}`
       : null;
 
-  const heroImage = (blog.image_urls && blog.image_urls[0]) || blog.image_url || null;
+  const images = parseImageUrls(blog.image_urls);
+  const allImages = images.length > 0 ? images : (blog.image_url ? [blog.image_url] : []);
+  const heroImage = allImages[0] || null;
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    setCurrentImage((prev) => (prev - 1 + allImages.length) % allImages.length);
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setCurrentImage((prev) => (prev + 1) % allImages.length);
+  };
 
   return (
     
@@ -73,8 +99,26 @@ export default function BlogDetail() {
 
       <article className="blog-detail">
         {heroImage && (
-          <div className="blog-detail-image">
-            <img src={heroImage} alt={blog.title} />
+          <div className="blog-image-slider">
+            <img src={allImages[currentImage]} alt={`${blog.title} ${currentImage + 1}`} />
+            {allImages.length > 1 && (
+              <>
+                <button className="slider-btn prev" onClick={handlePrev}>‹</button>
+                <button className="slider-btn next" onClick={handleNext}>›</button>
+                <div className="slider-dots">
+                  {allImages.map((_, idx) => (
+                    <span
+                      key={idx}
+                      className={`dot ${idx === currentImage ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentImage(idx);
+                      }}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         )}
 
