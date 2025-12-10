@@ -1,7 +1,7 @@
 // API configuration
 const API_BASE_URL = "http://127.0.0.1:5000/api";
 
-const buildSearchQuery = ({ searchTerm, typeList, userId } = {}) => {
+const buildSearchQuery = ({ searchTerm, typeList, userId, attractionIds } = {}) => {
   const params = new URLSearchParams();
   if (searchTerm) {
     params.append('searchTerm', searchTerm.trim());
@@ -15,6 +15,9 @@ const buildSearchQuery = ({ searchTerm, typeList, userId } = {}) => {
   }
   if (userId) {
     params.append('userId', userId);
+  }
+  if (attractionIds) {
+    params.append('attractionIds', attractionIds);
   }
   const queryString = params.toString();
   return queryString ? `?${queryString}` : '';
@@ -69,7 +72,7 @@ async function refreshAccessToken() {
 
   if (!response.ok || !data?.success || !data?.access_token) {
     // Nếu refresh thất bại, xóa token để user đăng nhập lại từ đầu
-    clearTokens(); 
+    clearTokens();
     throw new Error(data?.error || 'Không thể làm mới phiên đăng nhập');
   }
 
@@ -141,7 +144,7 @@ async function apiRequest(endpoint, options = {}) {
 export const destinationsAPI = {
   // Get all destinations (optionally filtered)
   getAll: (params = {}) => apiRequest(`/search${buildSearchQuery(params)}`),
-  
+
   // Get a single destination by ID
   getById: (id, userId) => apiRequest(`/attraction/${id}${userId ? `?userId=${userId}` : ''}`),
 };
@@ -247,7 +250,7 @@ export const authAPI = {
 export const userAPI = {
   // Lấy danh sách địa điểm yêu thích
   getFavorites: (userId) => apiRequest(`/user/${userId}/favorites`),
-  
+
   // Lấy lịch sử đánh giá
   getReviews: (userId) => apiRequest(`/user/${userId}/reviews`),
 
@@ -259,10 +262,10 @@ export const userAPI = {
 export const blogsAPI = {
   // Lấy tất cả blogs
   getAll: () => apiRequest('/blogs'),
-  
+
   // Lấy blog theo ID
   getById: (blogId) => apiRequest(`/blogs/${blogId}`),
-  
+
   // Tạo blog mới (với FormData để upload hình ảnh)
   create: (formData) => {
     const url = `${API_BASE_URL}/blogs`;
@@ -326,19 +329,27 @@ export const blogsAPI = {
   }
 };
 
+// API functions cho Tour Packages
+export const tourPackageAPI = {
+  getAll: () => apiRequest('/tour-packages'),
+
+  getById: (packageId) => apiRequest(`/tour-packages/${packageId}`),
+};
+
 export const tourAPI = {
   // Tạo lịch trình nhanh
   createQuickTour: (params) => {
     // params là object { attractionIds, startLat, startLon, startTime, endTime }
     const queryParams = new URLSearchParams();
-    
+
     if (params.attractionIds) {
-        params.attractionIds.forEach(id => queryParams.append('attractionIds', id));
+      params.attractionIds.forEach(id => queryParams.append('attractionIds', id));
     }
     if (params.startLat) queryParams.append('startLat', params.startLat);
     if (params.startLon) queryParams.append('startLon', params.startLon);
     if (params.startTime) queryParams.append('startTime', params.startTime);
     if (params.endTime) queryParams.append('endTime', params.endTime);
+    if (params.startPointName) queryParams.append('startPointName', params.startPointName);
 
     return apiRequest(`/quick-tour-creator?${queryParams.toString()}`);
   },
@@ -351,8 +362,8 @@ export const tourAPI = {
 
   // Hủy lưu tour
   unsaveTour: (tourId, userId) => apiRequest('/save-tour', {
-      method: 'PATCH',
-      body: JSON.stringify({ tourId, userId })
+    method: 'PATCH',
+    body: JSON.stringify({ tourId, userId })
   }),
 
   // Lấy danh sách tour đã lưu
@@ -364,7 +375,8 @@ export default {
   attractionsAPI,
   authAPI,
   blogsAPI,
-  userAPI, 
-  tourAPI, 
+  userAPI,
+  tourAPI,
+  tourPackageAPI,
   healthCheck,
 }

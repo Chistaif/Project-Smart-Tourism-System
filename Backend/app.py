@@ -11,9 +11,7 @@ from flask_jwt_extended import (
     create_refresh_token,
     jwt_required, 
     get_jwt_identity,
-    verify_jwt_in_request,
-    get_jwt, 
-    decode_token
+    verify_jwt_in_request
 )
 from dotenv import load_dotenv
 
@@ -48,6 +46,10 @@ from service.save_tour_service import (
 from service.user_service import (
     get_user_favorites_service,
     get_user_reviews_service
+)
+from service.tour_package_service import (
+    get_all_packages_service,
+    get_package_detail_service
 )
 from user.email_utils import init_mail
 from user.auth_service import (
@@ -120,24 +122,22 @@ limiter = Limiter(app)
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
-    print(f"=== TOKEN EXPIRED: {jwt_payload} ===")
     return jsonify({"success": False, "error": "Token đã hết hạn"}), 401
 
 @jwt.invalid_token_loader
 def invalid_token_callback(error):
-    print(f"=== INVALID TOKEN ERROR: {error} ===")
     return jsonify({"success": False, "error": "Token không hợp lệ"}), 401
 
 @jwt.unauthorized_loader
 def unauthorized_callback(error):
-    print(f"=== UNAUTHORIZED ERROR: {error} ===")
     return jsonify({"success": False, "error": "Thiếu authentication token"}), 401
 
 @jwt.token_in_blocklist_loader
 def check_if_token_in_blocklist(jwt_header, jwt_payload):
     """Check if token is in blocklist"""
-    jti = jwt_payload.get("jti")
-    return TokenBlacklist.query.filter_by(jti=jti).first() is not None
+    #jti = decrypted_token['jti']
+    #eturn TokenBlacklist.query.filter_by(jti=jti).first() is not None
+    return False
 
 # Cấu hình upload
 # UPLOAD_FOLDER = 'static/uploads/blogs'
@@ -199,6 +199,21 @@ def search():
 
         except Exception as e:
             pass
+
+    attraction_ids_str = request.args.get("attractionIds")
+    if attraction_ids_str:
+        try:
+            # Chuyển chuỗi "1,2,3" thành list [1, 2, 3]
+            ids = [int(x) for x in attraction_ids_str.split(',') if x.strip().isdigit()]
+            
+            if ids:
+                # Query trực tiếp các Attraction theo ID
+                attractions = Attraction.query.filter(Attraction.id.in_(ids)).all()
+                # Trả về dữ liệu chi tiết (để Frontend có lat, lon, image...)
+                data = [a.to_json() for a in attractions] 
+                return jsonify({"success": True, "data": data}), 200
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 400
 
     type_list_str = request.args.get("typeList", "")
     if type_list_str:
@@ -399,6 +414,7 @@ def creator():
         start_lon = request.args.get('startLon')
         start_time_str = request.args.get('startTime') # Format: dd/mm/yyyy HH:MM
         end_time_str = request.args.get('endTime')     # Format: dd/mm/yyyy HH:MM (MỚI)
+        start_point_name = request.args.get('startPointName')
 
         # 3. Validation
         if not attraction_ids:
@@ -435,10 +451,11 @@ def creator():
         # 4. Gọi Service (Logic giữ nguyên)
         result = generate_smart_tour(
             attraction_ids, 
-            start_lat_float, 
-            start_lon_float, 
+            float(start_lat), 
+            float(start_lon), 
             start_time_str,
-            end_time_str
+            end_time_str,
+            start_point_name=start_point_name
         )
 
         return jsonify({
@@ -475,11 +492,35 @@ def save_tour():
             
             if not user_id:
                 user_id = data.get('userId')
+            
             tour_name = data.get('tourName', '').strip()
             attraction_ids = data.get('attractionIds', [])
             
+            def parse_date(d_str):
+                if not d_str: return None
+                for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
+                    try:
+                        return datetime.strptime(d_str, fmt).date()
+                    except ValueError:
+                        continue
+                return None
+
+            start_date = parse_date(data.get('startDate'))
+            end_date = parse_date(data.get('endDate'))
+            start_lat = data.get('startLat')
+            start_lon = data.get('startLon')
+            start_point_name = data.get('startPointName') 
             try:
-                tour_data = save_tour_service(user_id, tour_name, attraction_ids)
+                tour_data = save_tour_service(
+                    user_id, 
+                    tour_name, 
+                    attraction_ids,
+                    start_date=start_date,
+                    end_date=end_date,
+                    start_lat=start_lat,
+                    start_lon=start_lon,
+                    start_point_name=start_point_name
+                )
                 return jsonify({
                     "success": True,
                     "message": f"Đã lưu tour '{tour_name}' thành công",
@@ -516,6 +557,57 @@ def save_tour():
         db.session.rollback()
         print(f"Error in save_tour: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
+
+# Tour Package API Routes
+@app.route('/api/tour-packages', methods=['GET'])
+@limiter.limit("500 per day")
+def get_all_tour_packages():
+    """
+    GET /api/tour-packages: Lấy danh sách tóm tắt tất cả các gói tour
+    """
+    try:
+        packages = get_all_packages_service()
+        return jsonify({
+            'success': True,
+            'data': packages
+        }), 200
+    except Exception as e:
+        print(f"Error in get_all_tour_packages: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Lỗi máy chủ khi tải danh sách gói tour'
+        }), 500
+
+@app.route('/api/tour-packages/<int:package_id>', methods=['GET'])
+@limiter.limit("100 per hour")
+def get_tour_package_detail(package_id):
+    """
+    GET /api/tour-packages/<id>: Lấy chi tiết một gói tour cụ thể
+    """
+    try:
+        package_detail = get_package_detail_service(package_id)
+        return jsonify({
+            'success': True,
+            'data': package_detail
+        }), 200
+    except LookupError as e:
+        # Xử lý trường hợp không tìm thấy (404 Not Found)
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 404
+    except ValueError as e:
+        # Xử lý input không hợp lệ (400 Bad Request)
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 400
+    except Exception as e:
+        print(f"Error in get_tour_package_detail for ID {package_id}: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Lỗi máy chủ khi tải chi tiết gói tour'
+        }), 500
 
 # ===========================================================================
 # ===                                                                     ===
@@ -765,22 +857,7 @@ def reset_password():
 def refresh_token():
     """Refresh access token"""
     try:
-        # --- FIX: Logic lấy identity an toàn ---
-        current_user_id = int(get_jwt_identity())
-        
-        # Nếu thư viện không tự lấy được, ta tự lấy từ claims (giống hàm search)
-        if current_user_id is None:
-            claims = get_jwt()
-            # Thử lấy 'sub' hoặc 'identity'
-            current_user_id = claims.get("sub") or claims.get("identity")
-
-        # Ép kiểu sang int
-        if current_user_id:
-            current_user_id = int(current_user_id)
-        else:
-            raise ValueError("Không tìm thấy user identity trong token")
-        # ---------------------------------------
-
+        current_user_id = get_jwt_identity()
         new_access_token = create_access_token(identity=str(current_user_id))
 
         return jsonify({
@@ -790,50 +867,64 @@ def refresh_token():
         }), 200
 
     except Exception as e:
-        print(f"REFRESH ERROR: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/auth/logout', methods=['POST'])
 @jwt_required()
 def logout():
     """Logout user by blacklisting both access and refresh tokens"""
-    print("\n=== BẮT ĐẦU LOGOUT ===")
     try:
         current_user_id = get_jwt_identity()
-        jti = get_jwt().get("jti")
-        print(f"1. Access Token JTI: {jti} | User ID: {current_user_id}")
 
-        acc_token = TokenBlacklist(jti=jti, token_type="access", user_id=int(current_user_id))
-        db.session.add(acc_token)
-        print("-> Đã add Access Token vào session")
+        # Get JTI (JWT ID) from current access token
+        from flask_jwt_extended import get_raw_jwt
+        raw_jwt = get_raw_jwt()
+        access_jti = raw_jwt.get('jti')
 
-        json_data = request.get_json(silent=True) or {}
-        refresh_token = json_data.get("refresh_token")
+        if not access_jti:
+            return jsonify({"success": False, "error": "Không thể xác định token"}), 400
+
+        # For refresh token, we need to check if it's provided in the request body
+        refresh_token = request.json.get('refresh_token') if request.json else None
+
+        # Blacklist access token
+        access_blacklist = TokenBlacklist(
+            jti=access_jti,
+            token_type='access',
+            user_id=current_user_id
+        )
+        db.session.add(access_blacklist)
+
+        # Blacklist refresh token if provided
         if refresh_token:
-            print(f"2. Tìm thấy Refresh Token gửi lên: {refresh_token[:20]}...")
             try:
+                # Decode refresh token to get its JTI
+                from flask_jwt_extended import decode_token
                 refresh_decoded = decode_token(refresh_token, allow_expired=False)
-                refresh_jti = refresh_decoded.get("jti")
-                print(f"2. Tìm thấy Refresh Token gửi lên: {refresh_token[:20]}...")
+                refresh_jti = refresh_decoded.get('jti')
 
                 if refresh_jti:
-                    ref_token = TokenBlacklist(jti=refresh_jti, token_type="refresh", user_id=int(current_user_id))
-                    db.session.add(ref_token)
-                    print("-> Đã add Refresh Token vào session")
-            except Exception:
-                print(f"-> LỖI giải mã Refresh Token: {str(e)}")
-        else:
-            print("2. KHÔNG tìm thấy refresh_token trong body request")
+                    refresh_blacklist = TokenBlacklist(
+                        jti=refresh_jti,
+                        token_type='refresh',
+                        user_id=current_user_id
+                    )
+                    db.session.add(refresh_blacklist)
+            except Exception as e:
+                # If refresh token is invalid, just continue with access token
+                print(f"Warning: Could not decode refresh token: {e}")
+                pass
 
         db.session.commit()
-        print("3. COMMIT THÀNH CÔNG! Kiểm tra DB ngay.")
-        return jsonify({"success": True, "message": "Đăng xuất thành công"}), 200
+
+        return jsonify({
+            "success": True,
+            "message": "Đăng xuất thành công"
+        }), 200
 
     except Exception as e:
         db.session.rollback()
         print(f"Error in logout: {e}")
-        import traceback
-        traceback.print_exc()
         return jsonify({"success": False, "error": "Lỗi hệ thống khi đăng xuất"}), 500
 # ===========================================================================
 # ===                                                                     ===
@@ -1053,6 +1144,7 @@ def seed_blog_data():
                 ),
                 "image_urls": json.dumps([
                     "/static/hoian.png",
+                    "/static/hoian.png"
                 ]),
                 "user_id": 1  # Gán cho admin/user mẫu
             },
@@ -1064,7 +1156,8 @@ def seed_blog_data():
                     "là những địa điểm không thể bỏ lỡ."
                 ),
                 "image_urls": json.dumps([
-                    "./static/sapa.png"
+                    "/static/sapa.png",
+                    "/static/sapa.png"
                 ]),
                 "user_id": 1
             }
@@ -1092,5 +1185,3 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-

@@ -256,9 +256,9 @@ export default function AttractionDetail({ currentUser, openLogin }) {
             </div>
 
             <div className="card-meta-list">
-              <p><strong>Thời gian:</strong> {formatAttractionTime(info)}</p>
-              <p><strong>Địa điểm:</strong> {info?.location}</p>
-              <p><strong>Vào cửa:</strong> {info?.ticketPrice ? `${info.ticketPrice.toLocaleString()}đ` : "Miễn phí"}</p>
+              <p><strong>⏰ Thời gian:</strong> {formatAttractionTime(info)}</p>
+              <p><strong>📌 Địa điểm:</strong> {info?.location}</p>
+              <p><strong>💰 Vào cửa:</strong> {info?.ticketPrice ? `${info.ticketPrice.toLocaleString()}đ` : "Miễn phí"}</p>
             </div>
 
             <div className="star-position">

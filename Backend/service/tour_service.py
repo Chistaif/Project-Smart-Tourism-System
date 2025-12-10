@@ -835,8 +835,8 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         # ============================================================
         current_hour = current_time.hour + current_time.minute / 60.0
         
-        # Ăn trưa (Ưu tiên số 1 nếu đã quá 11:30)
-        if not has_lunch and current_hour >= 11.5:
+        # Chỉ ăn trưa nếu trong khung giờ 11h - 15h
+        if not has_lunch and 11.0 <= current_hour < 15.0:
             lunch_duration = 90
             day_events.append({
                 "day": day_number, "date": current_time.strftime("%d/%m/%Y"),
@@ -849,13 +849,16 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
             has_lunch = True
             continue
 
-        # Ăn tối (Nếu quá 18:00)
-        if not has_dinner and current_hour >= 18.0:
+        # Ăn tối từ 17h30 trở đi
+        if not has_dinner and current_hour >= 17.5:
             dinner_duration = 90
+            # Nếu ăn quá muộn (> 20h30) thì đổi tên thành Ăn khuya
+            meal_name = "Ăn tối" if current_hour < 20.5 else "Ăn khuya / Ăn nhẹ"
+            
             day_events.append({
                 "day": day_number, "date": current_time.strftime("%d/%m/%Y"),
                 "time": format_time_vn(current_time), "type": "INFO",
-                "name": "Ăn tối & Tự do",
+                "name": meal_name,
                 "detail": f"Thưởng thức ẩm thực địa phương ({dinner_duration} phút)",
                 "duration": dinner_duration
             })
@@ -877,7 +880,7 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         is_open, open_info = is_attraction_available(best_candidate, arrival_time)
         final_target = best_candidate
         
-        # --- Logic Gap Filling (Nếu đến quá sớm) ---
+        # Gap filling logic
         if not is_open and isinstance(open_info, (int, float)):
             open_dt = arrival_time.replace(hour=int(open_info), minute=int((open_info-int(open_info))*60))
             if (open_dt - arrival_time).total_seconds()/60 > 45 and len(candidates) > 1:
@@ -890,31 +893,73 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
                         if arr_alt + timedelta(minutes=vis_alt + t_back) >= open_dt:
                             final_target = alt; break
         
-        # --- Thực hiện di chuyển đến điểm chốt ---
+        # Thực hiện di chuyển đến điểm chốt
         target_coord = (final_target.lat, final_target.lon)
         dist, t_min, geometry, mode = get_route_with_cache(current_loc, target_coord, cache)
         arrival_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=t_min))
         
-        # Check chờ mở cửa (lần cuối)
-        ok, val = is_attraction_available(final_target, arrival_time)
-        if not ok and isinstance(val, (int, float)):
-            opens_at = arrival_time.replace(hour=int(val), minute=int((val-int(val))*60))
-            wait = (opens_at - arrival_time).total_seconds()/60
-            if wait > 15:
-                day_events.append({"day": day_number, "date": arrival_time.strftime("%d/%m"), "time": format_time_vn(arrival_time), "type": "INFO", "name": "Nghỉ ngơi chờ mở cửa", "detail": f"Thư giãn {int(wait)} phút"})
-                current_time = opens_at; arrival_time = opens_at
-
         # [ADD EVENT] Travel
         if dist > 0.01:
             nm = f"Bay tới {final_target.name}" if "plane" in str(mode) else f"Di chuyển tới {final_target.name}"
             day_events.append({
-                "day": day_number, "date": current_time.strftime("%d/%m/%Y"),
-                "time": format_time_vn(current_time), "type": "TRAVEL",
-                "name": nm, "detail": f"{dist} km / ~{t_min} phút"
+                "day": day_number, 
+                "date": current_time.strftime("%d/%m"), 
+                "time": format_time_vn(current_time), 
+                "type": "TRAVEL", 
+                "name": nm, 
+                "detail": f"{dist} km / ~{t_min} phút"
             })
-            path = [[p[1], p[0]] for p in geometry['coordinates']] if geometry else [[current_loc[0], current_loc[1]], [target_coord[0], target_coord[1]]]
+            path = [[p[1], p[0]] for p in geometry['coordinates']] if geometry else []
             routes.append({"path": path, "type": "flight" if "plane" in str(mode) else "road"})
-            day_distance += dist; day_travel_minutes += t_min
+            day_distance += dist
+            day_travel_minutes += t_min
+
+        # Tính giờ đến nơi
+        arrival_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=t_min))
+
+        ok, val = is_attraction_available(final_target, arrival_time)
+        if not ok and isinstance(val, (int, float)):
+            # Tính thời điểm mở cửa chính xác
+            opens_at = arrival_time.replace(hour=int(val), minute=int((val-int(val))*60))
+            
+            # Tính thời gian phải chờ (phút)
+            wait_minutes = (opens_at - arrival_time).total_seconds() / 60
+            
+            if wait_minutes > 15:
+                # Logic đặt tên sự kiện dựa trên giờ
+                arrival_hour = arrival_time.hour + arrival_time.minute/60.0
+                
+                event_name = "Nghỉ ngơi chờ mở cửa"
+                event_detail = f"Thư giãn {int(wait_minutes)} phút tại khu vực gần đó"
+                
+                # Nếu là buổi sáng trước 9h30 -> Gợi ý Ăn sáng
+                if arrival_hour < 9.5:
+                    event_name = "Ăn sáng & Cafe sáng"
+                    event_detail = f"Thưởng thức bữa sáng trong lúc chờ mở cửa ({int(wait_minutes)} phút)"
+                
+                # Nếu là buổi trưa trong khoảng 11h30 - 13h30 -> Gợi ý Ăn trưa
+                elif 11.5 <= arrival_hour <= 13.5 and not has_lunch:
+                    event_name = "Ăn trưa chờ mở cửa"
+                    event_detail = f"Dùng bữa trưa trước khi vào tham quan ({int(wait_minutes)} phút)"
+                    has_lunch = True 
+
+                day_events.append({
+                    "day": day_number, 
+                    "date": arrival_time.strftime("%d/%m"), 
+                    "time": format_time_vn(arrival_time), 
+                    "type": "INFO", 
+                    "name": event_name, 
+                    "detail": event_detail
+                })
+                
+                # Cập nhật thời gian nhảy đến giờ mở cửa
+                current_time = opens_at
+                arrival_time = opens_at
+            else:
+                # Nếu chờ ít (< 15p) thì coi như đến nơi là vào luôn
+                current_time = arrival_time
+        else:
+            current_time = arrival_time
 
         # [ADD EVENT] Visit
         vis_dur = approximate_visit_duration(final_target)
@@ -936,8 +981,8 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         # =========================
         current_hour_decimal = leave_A_time.hour + leave_A_time.minute / 60.0
         
-        # Nếu thăm xong mà đã quá 11h00 -> Cho ăn luôn
-        if not has_lunch and current_hour_decimal >= 11.0:
+        # Chỉ ăn trưa nếu 11h <= giờ <= 15h
+        if not has_lunch and 11.0 <= current_hour_decimal < 15.0:
             lunch_dur = 90
             day_events.append({
                 "day": day_number, "date": leave_A_time.strftime("%d/%m/%Y"), 
@@ -949,12 +994,13 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
             leave_A_time = round_to_nearest_10_minutes(leave_A_time + timedelta(minutes=lunch_dur))
             has_lunch = True
             
-        elif not has_dinner and current_hour_decimal >= 18.0:
+        elif not has_dinner and current_hour_decimal >= 17.5:
             dinner_dur = 90
+            meal_name = "Ăn tối" if current_hour_decimal < 20.5 else "Ăn khuya / Ăn nhẹ"
             day_events.append({
                 "day": day_number, "date": leave_A_time.strftime("%d/%m/%Y"), 
                 "time": format_time_vn(leave_A_time), "type": "INFO", 
-                "name": "Ăn tối", "detail": "Thưởng thức bữa tối", "duration": dinner_dur
+                "name": meal_name, "detail": "Thưởng thức ẩm thực", "duration": dinner_dur
             })
             leave_A_time = round_to_nearest_10_minutes(leave_A_time + timedelta(minutes=dinner_dur))
             has_dinner = True
@@ -964,9 +1010,13 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         # =========================================================================
         inserted_bonus = False
         time_left = (day_end_limit - leave_A_time).total_seconds() / 60
+
+        # Điều kiện an toàn để chèn: Đã ăn trưa RỒI, hoặc giờ hiện tại chưa tới giờ trưa
+        cur_h = leave_A_time.hour + leave_A_time.minute/60.0
+        is_safe_time = has_lunch or (cur_h < 11.0)
         
-        # Nếu còn dư > 90 phút (lúc này đã tính giờ ăn rồi nên yên tâm chèn)
-        if time_left > 90:
+        # Nếu còn dư > 90 phút
+        if time_left > 90 and is_safe_time:
             supp = find_supplementary_attraction(
                 current_loc=(final_target.lat, final_target.lon),
                 current_time=leave_A_time,
@@ -1029,7 +1079,7 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
 
     return day_events, stats, routes, current_loc, current_time
 
-def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str, end_datetime_str):
+def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str, end_datetime_str, start_point_name=None):
     """
     Hàm tạo lịch trình thông minh V3 (Final).
     Tính năng:
@@ -1125,7 +1175,7 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
     # --- KHỞI TẠO BIẾN CHO SMART TRANSIT ---
     curr_date = start_dt
     curr_loc = start_location
-    overnight_place_name = "vị trí xuất phát" 
+    overnight_place_name = start_point_name if start_point_name else "xuất phát điểm"
     
     # Đếm số ngày thực tế (Logical Day)
     logical_day_number = 0
@@ -1133,7 +1183,34 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
     for idx, cluster_info in enumerate(day_clusters):
         logical_day_number += 1
         
-        # Reset giờ xuất phát: 6h sáng
+        # 1. Tìm xem trong cụm ngày hôm nay có Lễ hội nào cần 'nhảy cóc' thời gian không
+        target_jump_date = None
+        for attr in cluster_info['attractions']:
+            if attr.type == 'festival':
+                fes = Festival.query.get(attr.id)
+                if fes and fes.time_start:
+                    # Tìm năm phù hợp
+                    check_years = range(start_dt.year, end_dt.year + 1)
+                    for y in check_years:
+                        try:
+                            fs = fes.time_start.replace(year=y)
+                            # Nếu lễ hội nằm trong khoảng thời gian tour
+                            if start_dt.date() <= fs.date() <= end_dt.date():
+                                # Nếu ngày lễ hội này xa hơn ngày hiện tại -> Cần nhảy
+                                if curr_date.date() < fs.date():
+                                    # Nếu chưa có target hoặc target này sớm hơn target trước đó -> Chọn cái sớm nhất
+                                    if target_jump_date is None or fs.date() < target_jump_date.date():
+                                        target_jump_date = fs
+                                break 
+                        except: continue
+        
+        # 2. Thực hiện nhảy cóc nếu tìm thấy target
+        if target_jump_date:
+            print(f"[Time Warp] Jumping from {curr_date.date()} to {target_jump_date.date()}")
+            # Cập nhật curr_date thành ngày bắt đầu lễ hội (giữ giờ cũ hoặc reset về sáng)
+            curr_date = datetime.combine(target_jump_date.date(), datetime.min.time())
+
+        # 3. Thiết lập giờ xuất phát (6h sáng)
         day_start_dt = datetime.combine(curr_date.date(), datetime.min.time()).replace(hour=WAKE_UP_HOUR, minute=0)
         
         # Lấy thời tiết tại tâm cụm
@@ -1167,19 +1244,18 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         timeline.extend(events)
 
         # C. SMART TRANSIT: QUYẾT ĐỊNH DI CHUYỂN CUỐI NGÀY
-        
+              
         is_last_day = (idx == len(day_clusters) - 1)
         next_start_loc = last_location # Mặc định: Sáng mai dậy ở chỗ cũ
         
         if is_last_day:
-            # === NGÀY CUỐI: VỀ NHÀ (Start Point ban đầu) ===
+            # === NGÀY CUỐI: VỀ NHÀ ===
             d_home, t_home, g_home, m_home = get_route_with_cache(last_location, start_location, route_cache)
-            
-            # Chỉ vẽ nếu khoảng cách về > 1km
             if d_home > 1:
                 arr_home = day_end_time + timedelta(minutes=t_home)
-                is_flight = isinstance(m_home, str) and m_home.startswith('plane')
-                nm = "Bay về điểm kết thúc" if is_flight else "Về điểm trả khách ban đầu"
+                
+                dest_name = start_point_name if start_point_name else "điểm trả khách"
+                nm = "Bay về điểm kết thúc" if "plane" in str(m_home) else f"Về {dest_name}"
                 
                 timeline.append({
                     "day": logical_day_number, 
@@ -1189,82 +1265,122 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                     "name": nm, 
                     "detail": f"{d_home} km (Kết thúc hành trình)"
                 })
-                
                 if g_home:
-                    path_home = [[p[1], p[0]] for p in g_home['coordinates']]
-                    routes.append({
-                        "path": path_home, 
-                        "type": "flight" if is_flight else "road", 
-                        "is_return": True # Màu đen nét đứt
-                    })
+                    routes.append({"path": [[p[1], p[0]] for p in g_home['coordinates']], "type": "flight" if is_flight else "road", "is_return": True})
                 
                 stats['distance_km'] += d_home
                 stats['travel_minutes'] += t_home
-                # Cập nhật thời gian kết thúc thật sự
                 day_end_time = arr_home
 
         else:
-            # === NGÀY GIỮA: KIỂM TRA NGÀY MAI Ở ĐÂU? ===
+            # === NGÀY GIỮA: KIỂM TRA KHOẢNG CÁCH THỜI GIAN (GAP CHECK) ===
             next_cluster = day_clusters[idx+1]
-            next_center = next_cluster['center'] # Tâm điểm ngày mai
+            next_center = next_cluster['center']
             
-            # Tính khoảng cách từ điểm cuối hôm nay -> Tâm điểm ngày mai
-            d_next, t_next, g_next, m_next = get_route_with_cache(last_location, next_center, route_cache)
+            # 1. Tính toán ngày bắt đầu thực sự của chặng tiếp theo
+            next_event_date = None
+            for attr in next_cluster['attractions']:
+                if attr.type == 'festival':
+                    fes = Festival.query.get(attr.id)
+                    if fes and fes.time_start:
+                        check_years = range(start_dt.year, end_dt.year + 1)
+                        for y in check_years:
+                            try:
+                                fs = fes.time_start.replace(year=y)
+                                if start_dt.date() <= fs.date() <= end_dt.date():
+                                    if day_end_time.date() < fs.date():
+                                        if next_event_date is None or fs.date() < next_event_date.date():
+                                            next_event_date = fs
+                                    break
+                            except: continue
             
-            #  Nếu xa hơn 50km -> Đề xuất di chuyển ngay tối nay
-            if d_next > 50:
-                is_flight = isinstance(m_next, str) and m_next.startswith('plane')
-                move_name = "Bay đến điểm tiếp theo" if is_flight else "Di chuyển đến thành phố tiếp theo"
-                
-                # Thời gian di chuyển (Đi đêm: Sau khi tham quan xong + 60p ăn tối/nghỉ)
-                depart_transit = day_end_time + timedelta(minutes=60) 
-                
-                timeline.append({
-                    "day": logical_day_number, 
-                    "date": depart_transit.strftime("%d/%m/%Y"), 
-                    "time": format_time_vn(depart_transit),
-                    "type": "TRAVEL", 
-                    "name": move_name, 
-                    "detail": f"{d_next} km (Di chuyển đêm để sáng mai kịp lịch trình)"
-                })
-                
-                # Vẽ đường di chuyển này vào map NGÀY HÔM NAY
-                if g_next:
-                    path_next = [[p[1], p[0]] for p in g_next['coordinates']]
-                    routes.append({
-                        "path": path_next, 
-                        "type": "flight" if is_flight else "road"
+            # Nếu không phải lễ hội, giả định là ngày hôm sau
+            if next_event_date is None:
+                next_event_date = day_end_time + timedelta(days=1)
+
+            gap_days = (next_event_date.date() - day_end_time.date()).days
+
+            # 2. LOGIC QUYẾT ĐỊNH
+            # NẾU GAP > 3 NGÀY: Về nhà nghỉ ngơi
+            if gap_days > 3:
+                d_back, t_back, g_back, m_back = get_route_with_cache(last_location, start_location, route_cache)
+                is_flight = False
+                if d_back > 10: # Chỉ di chuyển nếu đang ở xa nhà
+                    is_flight = isinstance(m_back, str) and m_back.startswith('plane')
+                    nm = "Bay về điểm xuất phát (Chờ sự kiện tiếp theo)" if is_flight else "Di chuyển về điểm xuất phát"
+                    
+                    # Di chuyển về
+                    arrive_home = day_end_time + timedelta(minutes=t_back)
+                    timeline.append({
+                        "day": logical_day_number, "date": arrive_home.strftime("%d/%m/%Y"), "time": format_time_vn(arrive_home),
+                        "type": "TRAVEL", "name": nm, "detail": f"{d_back} km (Sự kiện tiếp theo còn {gap_days} ngày nữa)"
                     })
+                    if g_back:
+                        routes.append({"path": [[p[1], p[0]] for p in g_back['coordinates']], "type": "flight" if is_flight else "road", "is_return": True})
+                    
+                    stats['distance_km'] += d_back
+                    stats['travel_minutes'] += t_back
+                    day_end_time = arrive_home
                 
-                stats['distance_km'] += d_next
-                stats['travel_minutes'] += t_next
-                
-                # CẬP NHẬT CHO NGÀY MAI
-                next_start_loc = next_center # Ngày mai thức dậy ở tâm cụm mới
-
-                # Lấy tên điểm tham quan đầu tiên của ngày mai làm tên khu vực
-                if next_cluster["attractions"]:
-                    # Lấy điểm đầu tiên trong danh sách để làm đại diện
-                    first_dest = next_cluster["attractions"][0]
-                    overnight_place_name = f"khu vực gần {first_dest.name}"
-                else:
-                    overnight_place_name = "khu vực tham quan tiếp theo"
-                
-                # Cập nhật thời gian kết thúc ngày (sau khi di chuyển xong)
-                day_end_time = depart_transit + timedelta(minutes=t_next)
-                
-            else:
-                # Nếu gần (< 50km): Ngủ lại quanh đây
+                # Thêm Event nghỉ ngơi dài ngày
                 timeline.append({
-                    "day": logical_day_number, 
-                    "date": day_end_time.strftime("%d/%m/%Y"), 
-                    "time": format_time_vn(day_end_time),
-                    "type": "INFO", "name": "Nghỉ ngơi tại khách sạn", 
-                    "detail": "Nạp năng lượng cho hành trình ngày mai"
+                    "day": logical_day_number, "date": day_end_time.strftime("%d/%m/%Y"), "time": format_time_vn(day_end_time),
+                    "type": "INFO", "name": f"Nghỉ ngơi tại nhà ({gap_days} ngày)",
+                    "detail": f"Tự do hoạt động cá nhân đến ngày {next_event_date.strftime('%d/%m/%Y')} tiếp tục hành trình"
                 })
-                next_start_loc = last_location 
-                overnight_place_name = "khách sạn khu vực hiện tại"
+                
+                # [QUAN TRỌNG] Thiết lập vị trí khởi hành ngày mai là TỪ NHÀ
+                next_start_loc = start_location
+                overnight_place_name = "điểm xuất phát (sau thời gian nghỉ)"
 
+            # NẾU GAP <= 3 NGÀY: Giữ logic cũ (Di chuyển đến điểm tiếp theo nếu xa)
+            else:
+                d_next, t_next, g_next, m_next = get_route_with_cache(last_location, next_center, route_cache)
+                is_flight = False
+                dest_location_name = "khu vực tiếp theo"
+                if d_next > 50:
+                    is_flight = isinstance(m_next, str) and m_next.startswith('plane')
+                    # Trích tên tỉnh/thành phố 
+                    dest_location_name = "tỉnh/thành phố tiếp theo" # Mặc định
+                if next_cluster["attractions"]:
+                    # Lấy địa điểm đầu tiên của ngày mai để làm mốc
+                    first_dest_tomorrow = next_cluster["attractions"][0]
+                    if getattr(first_dest_tomorrow, 'location', None):
+                        try:
+                            # Tách chuỗi bằng dấu phẩy và lấy phần tử cuối
+                            parts = first_dest_tomorrow.location.split(',')
+                            if parts:
+                                dest_location_name = parts[-1].strip()
+                        except:
+                            pass
+                    move_name = f"Bay đến {dest_location_name}" if is_flight else f"Di chuyển đến {dest_location_name}"
+                    depart_transit = day_end_time + timedelta(minutes=60) 
+                    
+                    timeline.append({
+                        "day": logical_day_number, "date": depart_transit.strftime("%d/%m/%Y"), "time": format_time_vn(depart_transit),
+                        "type": "TRAVEL", "name": move_name, "detail": f"{d_next} km (Di chuyển đêm)"
+                    })
+                    
+                    if g_next:
+                        routes.append({"path": [[p[1], p[0]] for p in g_next['coordinates']], "type": "flight" if is_flight else "road"})
+                    
+                    stats['distance_km'] += d_next
+                    stats['travel_minutes'] += t_next
+                    next_start_loc = next_center 
+                    
+                    if next_cluster["attractions"]:
+                        overnight_place_name = f"khu vực gần {next_cluster['attractions'][0].name}"
+                    else:
+                        overnight_place_name = "khu vực tham quan tiếp theo"
+                    
+                    day_end_time = depart_transit + timedelta(minutes=t_next)
+                else:
+                    timeline.append({
+                        "day": logical_day_number, "date": day_end_time.strftime("%d/%m/%Y"), "time": format_time_vn(day_end_time),
+                        "type": "INFO", "name": "Nghỉ ngơi tại khách sạn", "detail": "Nạp năng lượng cho ngày mai"
+                    })
+                    next_start_loc = last_location 
+                    overnight_place_name = "khách sạn khu vực hiện tại"
 
         # Tổng kết số liệu ngày
         daily_routes_map[logical_day_number] = routes

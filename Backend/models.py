@@ -16,6 +16,81 @@ tour_attractions = db.Table('tour_attractions',
     db.Column('attraction_id', db.Integer, db.ForeignKey('attraction.id'), primary_key=True)
 )
 
+# Bảng liên kết Nhiều-Nhiều: TourPackage <-> Attraction
+package_attractions = db.Table('package_attractions',
+    db.Column('package_id', db.Integer, db.ForeignKey('tour_package.id'), primary_key=True),
+    db.Column('attraction_id', db.Integer, db.ForeignKey('attraction.id'), primary_key=True)
+)
+
+# ======================================================================
+# ===                                                                ===
+# ===                    Thong tin goi Tour Chu de                   ===
+# ===                                                                ===
+# ======================================================================
+class TourPackage(db.Model):
+    __tablename__ = 'tour_package'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False)
+    location = db.Column(db.String(150), nullable=True)
+    brief_description = db.Column(db.String(500), nullable=True) 
+    
+    theme_description = db.Column(db.Text, nullable=True) 
+    detail_description = db.Column(db.JSON, nullable=True) # Cột cho JSON có cấu trúc
+    cover_image_url = db.Column(db.String(500), nullable=True)
+    
+    estimated_duration_days = db.Column(db.Integer, default=1)
+    
+    # Mối quan hệ M2M: Liên kết với các Attraction
+    attractions = db.relationship('Attraction', secondary=package_attractions, 
+                                  backref='packages', lazy='dynamic')
+    
+    # Số ngày gợi ý cho gói tour
+    estimated_duration_days = db.Column(db.Integer, default=1) 
+
+    def to_json(self):
+        # Lấy danh sách các địa điểm trong gói
+        attraction_list = [attr.to_json_brief() for attr in self.attractions.all()]
+        attraction_ids = [attr.id for attr in self.attractions.all()]
+        
+        # Tính toán Rating trung bình
+        total_rating = sum(attr.average_rating for attr in self.attractions.all() if attr.average_rating is not None)
+        avg_rating = total_rating / len(attraction_list) if attraction_list else 0.0
+
+        return {
+            "id": self.id,
+            "name": self.name,
+            "briefDescription": self.brief_description,
+            "themeDescription": self.theme_description,
+            "detailDescription": self.detail_description, 
+            "coverImageUrl": self.cover_image_url,
+            "location": self.location,
+            "attractionCount": len(attraction_list),
+            "attractions": attraction_list,
+            "attractionIds": attraction_ids,
+            "averageRating": round(avg_rating, 1),
+            "estimatedDurationDays": self.estimated_duration_days,
+            "isPackage": True
+        }
+
+    def to_json_brief(self):
+        attractions = self.attractions.all()
+        total_rating = sum(attr.average_rating for attr in attractions if attr.average_rating)
+        count = len(attractions)
+        avg_rating = total_rating / count if count > 0 else 0.0
+
+        return {
+            "id": self.id,
+            "name": self.name,
+            "briefDescription": self.brief_description, 
+            "coverImageUrl": self.cover_image_url,
+            "location": self.location, 
+            "attractionIds": [attr.id for attr in attractions],
+            "attractionCount": count,
+            "estimatedDurationDays": self.estimated_duration_days,
+            "averageRating": round(avg_rating, 1), 
+            "isPackage": True
+        }
+
 # ======================================================================
 # ===                                                                ===
 # ===                    Thong tin nguoi dung                        ===
@@ -138,8 +213,11 @@ class Attraction(db.Model):
             "imageUrl": self.image_url,
             "type": self.type,
             "spotType": self.spot_type if hasattr(self, "spot_type") else None,
-            "datetimeStart": "12/1",  # Mặc định mở cửa quanh năm
-            "datetimeEnd": "31/12"
+            "datetimeStart": "12/1", 
+            "datetimeEnd": "31/12",
+
+            "lat": self.lat, 
+            "lon": self.lon
         }
 
 class Festival(Attraction):

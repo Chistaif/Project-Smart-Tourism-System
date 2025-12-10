@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from lunardate import LunarDate
 
-from models import db, User, Festival, CulturalSpot, Attraction, Tag, Review
+from models import db, User, Festival, CulturalSpot, Attraction, Tag, Review, TourPackage
 from service.attraction_service import update_attraction_rating_service
 
 def parse_datetime(date_str):
@@ -64,6 +64,10 @@ def parse_datetime(date_str):
         print(f"Warning: Lỗi xử lý ngày '{date_str}': {e}")
         return None
     
+def find_attraction_id_by_name(name):
+    """Tìm ID của Attraction dựa trên tên (trả về số)"""
+    attr = Attraction.query.filter_by(name=name).first()
+    return attr.id if attr else None
 
 def import_demo_data(json_path="demo_data.json"):
     """
@@ -201,6 +205,10 @@ def import_demo_data(json_path="demo_data.json"):
                 if tag:
                     new_attr.tags.append(tag)
 
+        # Commit tại đây để đảm bảo tất cả Attractions đã có ID
+        db.session.commit()
+        print("Đã thêm toàn bộ Attractions và Users vào session.")
+
         # --- 5. Nạp Reviews ---
         # (Chúng ta nạp review SAU KHI đã nạp User và Attraction)
         for r_data in data.get("reviews", []):
@@ -240,9 +248,50 @@ def import_demo_data(json_path="demo_data.json"):
         for att in all_attractions:
             # Gọi hàm service mới, nhưng KHÔNG commit
             update_attraction_rating_service(att.id, commit_now=False)
+        
+        # --- 6. Nạp Tour Packages ---
+        for pkg_data in data.get("themeTours", []):
+            # Lấy list of IDs, sử dụng hàm tra cứu nếu ID là string
+            attraction_ids = []
+            for attr_identifier in pkg_data.get("attractionIds", []):
+                # Nếu là string thì nó là TÊN
+                if isinstance(attr_identifier, str):
+                    attr_id = find_attraction_id_by_name(attr_identifier)
+                    if attr_id:
+                        attraction_ids.append(attr_id)
+                # Nếu là số dùng trực tiếp
+                elif isinstance(attr_identifier, int):
+                    attraction_ids.append(attr_identifier)
             
-        # --- 6. Commit --- (Đổi số thứ tự)
-        # Sau khi thêm tất cả, commit một lần duy nhất
+            if not attraction_ids:
+                print(f"Warning: Gói tour '{pkg_data.get('name')}' không có địa điểm hợp lệ.")
+                continue
+
+            # Lấy các đối tượng Attraction
+            attractions_in_package = Attraction.query.filter(Attraction.id.in_(attraction_ids)).all()
+            brief_desc = pkg_data.get("briefDescription") or pkg_data.get("description")
+            new_package = TourPackage(             
+                name = pkg_data.get("name"),
+                location = pkg_data.get("location"),
+                brief_description = brief_desc,
+                
+                theme_description = brief_desc,
+                detail_description = pkg_data.get("detailDescription"),
+                cover_image_url = pkg_data.get("cover_image_url"),
+                
+                estimated_duration_days = pkg_data.get("estimated_duration_days", 1),
+                
+                attractions = attractions_in_package
+            )
+            db.session.add(new_package)
+
+        # --- 7. Commit & Cập nhật Ratings ---
+        db.session.flush()
+
+        all_attractions = Attraction.query.all()
+        for att in all_attractions:
+            update_attraction_rating_service(att.id, commit_now=False)
+        
         db.session.commit()
         print("Import demo data (mới) hoàn tất!")
 

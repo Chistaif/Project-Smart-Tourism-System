@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { Routes, Route } from 'react-router-dom';
 import Navigation from './layout/Navigation';
 import ChatAssistant from './layout/ChatBox';
 import Footer from './layout/Footer';
@@ -12,14 +11,16 @@ import ItineraryPage from './pages/ItineraryPage';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
 import UserPage from './pages/User';
-
 import AttractionDetail from './pages/AttractionDetail';
+import TourPackageDetail from './pages/TourPackageDetail';
 import { authAPI } from './utils/api';
 
 import test1 from './asset/box1.jpg';
 import test2 from './asset/box2.jpg';
 import test3 from './asset/box3.jpg';
 import homeImg from './asset/home_1.jpg';
+
+import ScrollToTop from "./components/ScrollToTop";
 
 const initialImages = [homeImg, test1, test2, test3];
 
@@ -112,7 +113,12 @@ function App() {
   };
 
   return (
-    <Router>
+
+
+    <div id="page-wrapper">
+      
+      <ScrollToTop/>
+
       <div className="App" style={{ backgroundImage: currentBackground }}>
         
         <Navigation 
@@ -122,7 +128,7 @@ function App() {
           user={user}
           onLogout={handleLogout}
         />
-
+    
         {/* POPUP */}
         {isOpen && (
           <div className="popup-overlay" onClick={closePopup}>
@@ -465,13 +471,14 @@ function App() {
             </div>
           </div>
         )}
-
+     
         {/* ROUTES */}
         <Routes>
           <Route path="/" element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} />
           <Route path="/service" element={<Service currentUser={user} />} />
           <Route path="/itinerary" element={<ItineraryPage />} />
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
+          <Route path="/package/:packageId" element={<TourPackageDetail />} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />
@@ -487,7 +494,7 @@ function App() {
         <Footer />
 
       </div>
-    </Router>
+    </div>
   );
 }
 
