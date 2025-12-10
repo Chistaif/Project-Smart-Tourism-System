@@ -7,20 +7,22 @@ export default function Navigation({ openPopup, openLogin, openSignup, user, onL
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  // ⭐ HÀM RELOAD TRANG KHI CLICK LẠI CHÍNH NÓ
+  const handleNavClick = (path) => {
+    if (location.pathname === path) {
+      window.location.reload();     // reload lại trang đang đứng
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
 
-      // Nếu đang ở đầu trang, luôn hiển thị navbar
       if (currentY < 10) {
         setShowNavbar(true);
-      } 
-      // Nếu cuộn xuống và đã cuộn quá 50px → ẩn navbar
-      else if (currentY > lastScrollY && currentY > 50) {
+      } else if (currentY > lastScrollY && currentY > 50) {
         setShowNavbar(false);
-      } 
-      // Nếu cuộn lên → hiện navbar
-      else if (currentY < lastScrollY) {
+      } else if (currentY < lastScrollY) {
         setShowNavbar(true);
       }
 
@@ -33,7 +35,6 @@ export default function Navigation({ openPopup, openLogin, openSignup, user, onL
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollY]);
-
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
@@ -52,15 +53,47 @@ export default function Navigation({ openPopup, openLogin, openSignup, user, onL
       <div className="logo">Culture Compass</div>
 
       <nav>
-        <Link to="/" className={isActive("/")}>Home</Link>
-        <Link to="/service" className={isActive("/service")}>Service</Link>
-        <Link to="/blogs" className={isActive("/blogs")}>Blogs</Link>
-        <Link to="/user" className={isActive("/user")}>User</Link>
+        {/* ⭐ THÊM onClick để reload nếu đang đứng cùng path */}
+        <Link 
+          to="/" 
+          className={isActive("/")} 
+          onClick={() => handleNavClick("/")}
+        >
+          Home
+        </Link>
+
+        <Link 
+          to="/service" 
+          className={isActive("/service")} 
+          onClick={() => handleNavClick("/service")}
+        >
+          Service
+        </Link>
+
+        <Link 
+          to="/blogs" 
+          className={isActive("/blogs")} 
+          onClick={() => handleNavClick("/blogs")}
+        >
+          Blogs
+        </Link>
+
+        <Link 
+          to="/user" 
+          className={isActive("/user")} 
+          onClick={() => handleNavClick("/user")}
+        >
+          User
+        </Link>
       </nav>
 
       {user ? (
         <div className="user-info">
-          <Link to="/user" className="user-link">
+          <Link 
+            to="/user" 
+            className="user-link"
+            onClick={() => handleNavClick("/user")}
+          >
             <div className="user-avatar">{getInitials(user.username)}</div>
             <div className="user-details">
               <span>{user.username}</span>
