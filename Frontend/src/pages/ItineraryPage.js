@@ -4,6 +4,7 @@ import MapComponent from '../layout/MapComponent';
 import { tourAPI } from '../utils/api';
 import './ItineraryPage.css';
 
+import MapLoader from '../components/MapLoader';
 import Popup from '../components/Popup';
 
 export default function ItineraryPage() {
@@ -492,14 +493,9 @@ export default function ItineraryPage() {
     // 5. RENDER UI
     // ==========================================
 
-    if (loading) return (
-        <div className="itinerary-loading">
-            <div style={{ textAlign: 'center' }}>
-                <h2 style={{ color: '#fff' }}>⏳ Đang thiết kế hành trình...</h2>
-                <p style={{ color: '#94a3b8' }}>Hệ thống đang tính toán lộ trình tối ưu nhất cho bạn</p>
-            </div>
-        </div>
-    );
+    if (loading) {
+        return <MapLoader message="Đang thiết kế hành trình..." />;
+    }
 
     if (error) return (
         <div className="itinerary-loading" style={{ flexDirection: 'column' }}>

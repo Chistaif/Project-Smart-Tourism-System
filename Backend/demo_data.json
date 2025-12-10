@@ -112,8 +112,16 @@
             "rating": 4.9,
             "visitDuration": 720,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764220317/vov_san_khau_dem_khai_man_festival_hue_2022_ukfc2j.webp",
-            "tags": ["Lễ hội", "Văn hóa", "Di sản", "Cung đình", "Huế", "Nghệ thuật quốc tế", "Ẩm thực"],
-            "datetimeStart": "01/06", 
+            "tags": [
+                "Lễ hội",
+                "Văn hóa",
+                "Di sản",
+                "Cung đình",
+                "Huế",
+                "Nghệ thuật quốc tế",
+                "Ẩm thực"
+            ],
+            "datetimeStart": "01/06",
             "datetimeEnd": "09/06",
             "idealTime": "1"
         },
@@ -162,10 +170,17 @@
             "rating": 4.8,
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764220507/le-hoi-phao-hoa-quoc-te-da-nang-diff-2025-tat-tan-tat-nhung-dieu-ban-can-biet-01_enq9zk.jpg",
-            "tags": ["Lễ hội", "Pháo hoa", "Sự kiện", "Đà Nẵng", "Quốc tế", "Nghệ thuật"],
-            "datetimeStart": "08/06", 
+            "tags": [
+                "Lễ hội",
+                "Pháo hoa",
+                "Sự kiện",
+                "Đà Nẵng",
+                "Quốc tế",
+                "Nghệ thuật"
+            ],
+            "datetimeStart": "08/06",
             "datetimeEnd": "13/07",
-            "idealTime": "2" 
+            "idealTime": "2"
         },
         {
             "name": "Hội Lim Bắc Ninh",
@@ -213,8 +228,15 @@
             "rating": 4.8,
             "visitDuration": 240,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909920/hoi-lim-e1453543168215_zpjwhc.jpg",
-            "tags": ["Lễ hội", "Văn hóa", "Quan họ", "Bắc Ninh", "Di sản", "Tâm linh"],
-            "datetimeStart": "01/03", 
+            "tags": [
+                "Lễ hội",
+                "Văn hóa",
+                "Quan họ",
+                "Bắc Ninh",
+                "Di sản",
+                "Tâm linh"
+            ],
+            "datetimeStart": "01/03",
             "datetimeEnd": "03/03",
             "idealTime": "0"
         },
@@ -380,8 +402,15 @@
             "rating": 4.9,
             "visitDuration": 720,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764223292/kho-me-1-1585842188628566903511-640x425_ezcf0p.jpg",
-            "tags": ["Lễ hội", "Văn hóa Khmer", "Tết cổ truyền", "Miền Tây", "Sóc Trăng", "Tâm linh"],
-            "datetimeStart": "13/04", 
+            "tags": [
+                "Lễ hội",
+                "Văn hóa Khmer",
+                "Tết cổ truyền",
+                "Miền Tây",
+                "Sóc Trăng",
+                "Tâm linh"
+            ],
+            "datetimeStart": "13/04",
             "datetimeEnd": "15/04",
             "idealTime": "0"
         },
@@ -828,11 +857,18 @@
             "lat": 16.39907699282009,
             "lon": 107.5902311226692,
             "rating": 4.6,
-            "visitDuration": 90, 
+            "visitDuration": 90,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510972/AL18g_TDCajw64CZuBZIWg1Ed4y4pY2Bgh3P-mdFAHO9lfwBBv80zgw4qjTXKroHP_Yo5uyyj38m2UA_s1200_cesy05.jpg",
-            "tags": ["Di tích", "Cung đình", "Kiến trúc", "Huế", "Lăng tẩm", "Lịch sử"],
+            "tags": [
+                "Di tích",
+                "Cung đình",
+                "Kiến trúc",
+                "Huế",
+                "Lăng tẩm",
+                "Lịch sử"
+            ],
             "spotType": "Di tích",
-            "ticketPrice": 150000.0, 
+            "ticketPrice": 150000.0,
             "openHours": "07:00 AM - 05:30 PM",
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
@@ -884,7 +920,15 @@
             "rating": 4.8,
             "visitDuration": 480,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764296986/codohue_kddi0y.jpg",
-            "tags": ["Di tích", "Văn hóa", "Di sản UNESCO", "Lịch sử", "Kiến trúc Cung đình", "Huế", "Triều Nguyễn"],
+            "tags": [
+                "Di tích",
+                "Văn hóa",
+                "Di sản UNESCO",
+                "Lịch sử",
+                "Kiến trúc Cung đình",
+                "Huế",
+                "Triều Nguyễn"
+            ],
             "spotType": "Di tích",
             "ticketPrice": 200000.0,
             "openHours": "Mùa hè: 6:30 AM - 6:00 PM; Mùa đông: 7:00 AM - 5:30 PM",
@@ -938,9 +982,16 @@
             "rating": 4.7,
             "visitDuration": 150,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1763909680/thanh_dia_my_son_01-2_yqcymq.jpg",
-            "tags": ["Di tích", "Văn hóa Chăm", "Ấn Độ giáo", "Di sản UNESCO", "Quảng Nam", "Kiến trúc"],
+            "tags": [
+                "Di tích",
+                "Văn hóa Chăm",
+                "Ấn Độ giáo",
+                "Di sản UNESCO",
+                "Quảng Nam",
+                "Kiến trúc"
+            ],
             "spotType": "Di tích",
-            "ticketPrice": 150000.0, 
+            "ticketPrice": 150000.0,
             "openHours": "06:30 AM - 05:30 PM",
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
@@ -991,9 +1042,16 @@
             "rating": 4.9,
             "visitDuration": 480,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764297924/231-gia_lai-huytinhphoto_40gmail_ekv2os.jpg",
-            "tags": ["Văn hóa", "Di sản UNESCO", "Tâm linh", "Âm nhạc", "Tây Nguyên", "Dân tộc thiểu số"],
+            "tags": [
+                "Văn hóa",
+                "Di sản UNESCO",
+                "Tâm linh",
+                "Âm nhạc",
+                "Tây Nguyên",
+                "Dân tộc thiểu số"
+            ],
             "spotType": "Văn hóa",
-            "ticketPrice": 0.0, 
+            "ticketPrice": 0.0,
             "openHours": "00:00 AM - 12:00 PM",
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
@@ -1036,7 +1094,13 @@
             "rating": 4.7,
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764510771/bao-tang-dan-toc-hoc-viet-nam-1-1108_cpqr1z.jpg",
-            "tags": ["Bảo tàng", "Văn hóa", "Giáo dục", "Dân tộc", "Kiến trúc"],
+            "tags": [
+                "Bảo tàng",
+                "Văn hóa",
+                "Giáo dục",
+                "Dân tộc",
+                "Kiến trúc"
+            ],
             "spotType": "Bảo tàng",
             "ticketPrice": 40000.0,
             "openHours": "08:30 AM - 05:30 PM",
@@ -1088,7 +1152,6 @@
                 "Gia đình"
             ],
             "spotType": "Làng nghề",
-
             "ticketPrice": 0.0,
             "openHours": "08:00 AM - 06:00 PM",
             "datetimeStart": "01/01",
@@ -1132,7 +1195,13 @@
             "rating": 4.8,
             "visitDuration": 60,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511123/ThienMuPagoda_ksvw72.jpg",
-            "tags": ["Đền/Chùa", "Tâm linh", "Phật giáo", "Huế", "Sông Hương"],
+            "tags": [
+                "Đền/Chùa",
+                "Tâm linh",
+                "Phật giáo",
+                "Huế",
+                "Sông Hương"
+            ],
             "spotType": "Đền/Chùa",
             "ticketPrice": 0.0,
             "openHours": "07:00 AM - 06:00 PM",
@@ -1177,7 +1246,13 @@
             "rating": 4.9,
             "visitDuration": 240,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511221/hoi-an-quang-nam-vntrip-1_r7ibf3.jpg",
-            "tags": ["Di sản UNESCO", "Lãng mạn", "Kiến trúc", "Di sản Văn hóa", "Cổ kính"],
+            "tags": [
+                "Di sản UNESCO",
+                "Lãng mạn",
+                "Kiến trúc",
+                "Di sản Văn hóa",
+                "Cổ kính"
+            ],
             "spotType": "Di tích",
             "ticketPrice": 80000.0,
             "openHours": "07:00 AM - 09:30 PM",
@@ -1425,7 +1500,12 @@
             "rating": 4.7,
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764511772/_i65b89a7f2299e_ejzdhb.jpg",
-            "tags": ["Lịch sử", "Di sản UNESCO", "Hà Nội", "Khảo cổ"],
+            "tags": [
+                "Lịch sử",
+                "Di sản UNESCO",
+                "Hà Nội",
+                "Khảo cổ"
+            ],
             "spotType": "Di tích",
             "ticketPrice": 30000.0,
             "openHours": "08:00 AM - 05:00 PM",
@@ -1440,29 +1520,29 @@
             "detailDescription": {
                 "mainTitle": "Đại tự hoành tráng giữa núi non",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Các kỷ lục ấn tượng",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911131/656d8c5d-772f-405f-ab0e-085791bf7fd9-crop_ezapct.jpg",
-                    "content": "Chùa Bái Đính nổi tiếng với các kỷ lục như: Tượng Phật bằng đồng dát vàng lớn nhất châu Á, Hành lang La Hán dài nhất châu Á, và Tháp xá lợi Phật cao nhất châu Á."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Kiến trúc và Cảnh quan",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911058/dji202305271836270152d-copy-1754879156500217025436_qvw39t.jpg",
-                    "content": "Quần thể gồm khu chùa cổ linh thiêng và khu chùa mới uy nghi. Điểm nhấn là Bảo tháp 13 tầng, nơi du khách có thể phóng tầm mắt ngắm toàn cảnh non nước Ninh Bình."
-                },
-                {
-                    "type": "list",
-                    "title": "Thông tin tham quan",
-                    "items": [
-                    "Di chuyển: Nên sử dụng xe điện vì khuôn viên rất rộng.",
-                    "Trang phục: Cần kín đáo, lịch sự.",
-                    "Thời điểm: Đẹp nhất vào mùa xuân (tháng 1-3 âm lịch) có lễ hội."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Các kỷ lục ấn tượng",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911131/656d8c5d-772f-405f-ab0e-085791bf7fd9-crop_ezapct.jpg",
+                        "content": "Chùa Bái Đính nổi tiếng với các kỷ lục như: Tượng Phật bằng đồng dát vàng lớn nhất châu Á, Hành lang La Hán dài nhất châu Á, và Tháp xá lợi Phật cao nhất châu Á."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Kiến trúc và Cảnh quan",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911058/dji202305271836270152d-copy-1754879156500217025436_qvw39t.jpg",
+                        "content": "Quần thể gồm khu chùa cổ linh thiêng và khu chùa mới uy nghi. Điểm nhấn là Bảo tháp 13 tầng, nơi du khách có thể phóng tầm mắt ngắm toàn cảnh non nước Ninh Bình."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin tham quan",
+                        "items": [
+                            "Di chuyển: Nên sử dụng xe điện vì khuôn viên rất rộng.",
+                            "Trang phục: Cần kín đáo, lịch sự.",
+                            "Thời điểm: Đẹp nhất vào mùa xuân (tháng 1-3 âm lịch) có lễ hội."
+                        ]
+                    }
                 ]
             },
             "lat": 20.2766,
@@ -1470,40 +1550,45 @@
             "rating": 4.8,
             "visitDuration": 240,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911216/780_crop_chua-bai-dinh-trang-an-1_w1izuo.jpg",
-            "tags": ["Tâm linh", "Phật giáo", "Kỷ lục", "Ninh Bình"],
+            "tags": [
+                "Tâm linh",
+                "Phật giáo",
+                "Kỷ lục",
+                "Ninh Bình"
+            ],
             "spotType": "Đền/Chùa",
             "ticketPrice": 0.0,
             "openHours": "06:00 AM - 10:00 PM"
-            },
-            {
+        },
+        {
             "name": "Chùa Trấn Quốc",
             "location": "Tây Hồ, Hà Nội",
             "briefDescription": "Ngôi chùa cổ nhất Hà Nội với lịch sử hơn 1500 năm, nằm trên một hòn đảo nhỏ xinh đẹp phía Đông Hồ Tây.",
             "detailDescription": {
                 "mainTitle": "Đóa sen nở giữa Hồ Tây",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Lịch sử và Kiến trúc",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911924/sacred-brick-and-serene-form-the-11-storey-stupa-stands-as-a-beacon-of-spiritual-balance_a8t870.jpg",
-                    "content": "Được xây dựng từ thời Lý Nam Đế (thế kỷ thứ 6), chùa mang đậm dấu ấn kiến trúc Phật giáo Bắc Tông. Nổi bật nhất là Bảo tháp Lục độ đài sen màu đỏ sẫm uy nghiêm."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Cây Bồ Đề linh thiêng",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764912002/base64-16779955390852018379942_vr35wc.png",
-                    "content": "Trong sân chùa có cây Bồ Đề lớn được chiết từ cây Đạo Thụ ở Ấn Độ (nơi Phật Thích Ca thành đạo), là quà tặng của Tổng thống Ấn Độ năm 1959."
-                },
-                {
-                    "type": "list",
-                    "title": "Lưu ý",
-                    "items": [
-                    "Không gian: Chùa khá nhỏ, nên đi nhẹ nói khẽ.",
-                    "Hoàng hôn: Là địa điểm ngắm hoàng hôn đẹp bậc nhất Hà Nội."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Lịch sử và Kiến trúc",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911924/sacred-brick-and-serene-form-the-11-storey-stupa-stands-as-a-beacon-of-spiritual-balance_a8t870.jpg",
+                        "content": "Được xây dựng từ thời Lý Nam Đế (thế kỷ thứ 6), chùa mang đậm dấu ấn kiến trúc Phật giáo Bắc Tông. Nổi bật nhất là Bảo tháp Lục độ đài sen màu đỏ sẫm uy nghiêm."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Cây Bồ Đề linh thiêng",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764912002/base64-16779955390852018379942_vr35wc.png",
+                        "content": "Trong sân chùa có cây Bồ Đề lớn được chiết từ cây Đạo Thụ ở Ấn Độ (nơi Phật Thích Ca thành đạo), là quà tặng của Tổng thống Ấn Độ năm 1959."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Không gian: Chùa khá nhỏ, nên đi nhẹ nói khẽ.",
+                            "Hoàng hôn: Là địa điểm ngắm hoàng hôn đẹp bậc nhất Hà Nội."
+                        ]
+                    }
                 ]
             },
             "lat": 21.0478,
@@ -1511,41 +1596,46 @@
             "rating": 4.6,
             "visitDuration": 60,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764911818/step-into-the-spiritual-heart-of-hanoi-with-tran-quoc-pagoda-a-site-of-deep-devotion_gdsbn7.jpg",
-            "tags": ["Tâm linh", "Hà Nội", "Hồ Tây", "Cổ kính"],
+            "tags": [
+                "Tâm linh",
+                "Hà Nội",
+                "Hồ Tây",
+                "Cổ kính"
+            ],
             "spotType": "Đền/Chùa",
             "ticketPrice": 0.0,
             "openHours": "08:00 AM - 04:00 PM"
-            },
-            {
+        },
+        {
             "name": "Bảo tàng Mỹ thuật Việt Nam",
             "location": "Ba Đình, Hà Nội",
             "briefDescription": "Kho tàng nghệ thuật tạo hình của Việt Nam từ thời tiền sử đến hiện đại, đặt trong tòa nhà kiến trúc Pháp cổ điển tuyệt đẹp.",
             "detailDescription": {
                 "mainTitle": "Dòng chảy mỹ thuật Việt",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Bảo vật Quốc gia",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764915044/400a098a957be58593d9094e100fbf0c887682b51167f65eab9195ffede7d1aa_oipy3h.jpg",
-                    "content": "Nơi đây lưu giữ các bảo vật như tượng Phật bà Quan Âm nghìn mắt nghìn tay (chùa Bút Tháp), các tác phẩm sơn mài kinh điển của danh họa Nguyễn Gia Trí, Tô Ngọc Vân."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Kiến trúc giao thoa",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764915265/1l68qllr-bao-tang-my-thuat-viet-nam-05_cvramo.jpg",
-                    "content": "Bản thân tòa nhà bảo tàng là một tác phẩm nghệ thuật, kết hợp giữa kiến trúc biệt thự Pháp và các chi tiết trang trí mái đình làng Việt Nam."
-                },
-                {
-                    "type": "list",
-                    "title": "Thông tin",
-                    "items": [
-                    "Giá vé: 40.000 VNĐ/người lớn.",
-                    "Trải nghiệm: Có không gian trải nghiệm in tranh Đông Hồ cho trẻ em.",
-                    "Vị trí: Đối diện Văn Miếu Quốc Tử Giám."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Bảo vật Quốc gia",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764915044/400a098a957be58593d9094e100fbf0c887682b51167f65eab9195ffede7d1aa_oipy3h.jpg",
+                        "content": "Nơi đây lưu giữ các bảo vật như tượng Phật bà Quan Âm nghìn mắt nghìn tay (chùa Bút Tháp), các tác phẩm sơn mài kinh điển của danh họa Nguyễn Gia Trí, Tô Ngọc Vân."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Kiến trúc giao thoa",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764915265/1l68qllr-bao-tang-my-thuat-viet-nam-05_cvramo.jpg",
+                        "content": "Bản thân tòa nhà bảo tàng là một tác phẩm nghệ thuật, kết hợp giữa kiến trúc biệt thự Pháp và các chi tiết trang trí mái đình làng Việt Nam."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Giá vé: 40.000 VNĐ/người lớn.",
+                            "Trải nghiệm: Có không gian trải nghiệm in tranh Đông Hồ cho trẻ em.",
+                            "Vị trí: Đối diện Văn Miếu Quốc Tử Giám."
+                        ]
+                    }
                 ]
             },
             "lat": 21.0305,
@@ -1553,41 +1643,46 @@
             "rating": 4.7,
             "visitDuration": 120,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764914921/banner-web5.a0cee2ed_cfeglj.jpg",
-            "tags": ["Nghệ thuật", "Hội họa", "Kiến trúc", "Hà Nội"],
+            "tags": [
+                "Nghệ thuật",
+                "Hội họa",
+                "Kiến trúc",
+                "Hà Nội"
+            ],
             "spotType": "Bảo tàng",
             "ticketPrice": 40000.0,
             "openHours": "08:30 AM - 05:00 PM"
-            },
-            {
+        },
+        {
             "name": "Bảo tàng Thế giới Cà phê",
             "location": "Buôn Ma Thuột, Đắk Lắk",
             "briefDescription": "Bảo tàng chuyên đề về cà phê với kiến trúc cách điệu nhà dài Tây Nguyên, là biểu tượng mới của thủ phủ cà phê.",
             "detailDescription": {
                 "mainTitle": "Hành trình của hạt cà phê",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Kiến trúc độc bản",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916193/V%C3%A9B%E1%BA%A3oT%C3%A0ngTh%E1%BA%BFGi%E1%BB%9BiC%C3%A0Ph%C3%AA_w8oth2.webp",
-                    "content": "Công trình gồm 5 khối nhà uốn lượn, lấy cảm hứng từ hình ảnh nhà dài của người Ê Đê và mái nhà rông, sử dụng vật liệu đá bazan địa phương tạo cảm giác gần gũi."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Trưng bày và Tương tác",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916283/V%C3%A9B%E1%BA%A3oT%C3%A0ngTh%E1%BA%BFGi%E1%BB%9BiC%C3%A0Ph%C3%AA_1_wffnjj.webp",
-                    "content": "Trưng bày hơn 10.000 hiện vật về lịch sử cà phê thế giới. Không gian mở cho phép du khách sờ, ngửi và nếm thử các loại cà phê đặc biệt."
-                },
-                {
-                    "type": "list",
-                    "title": "Gợi ý",
-                    "items": [
-                    "Check-in: Rất nhiều góc chụp ảnh hiện đại và ấn tượng.",
-                    "Mua sắm: Có khu vực bán quà lưu niệm và cà phê chất lượng cao.",
-                    "Giá vé: 75.000 - 150.000 VNĐ tùy triển lãm."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc độc bản",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916193/V%C3%A9B%E1%BA%A3oT%C3%A0ngTh%E1%BA%BFGi%E1%BB%9BiC%C3%A0Ph%C3%AA_w8oth2.webp",
+                        "content": "Công trình gồm 5 khối nhà uốn lượn, lấy cảm hứng từ hình ảnh nhà dài của người Ê Đê và mái nhà rông, sử dụng vật liệu đá bazan địa phương tạo cảm giác gần gũi."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Trưng bày và Tương tác",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916283/V%C3%A9B%E1%BA%A3oT%C3%A0ngTh%E1%BA%BFGi%E1%BB%9BiC%C3%A0Ph%C3%AA_1_wffnjj.webp",
+                        "content": "Trưng bày hơn 10.000 hiện vật về lịch sử cà phê thế giới. Không gian mở cho phép du khách sờ, ngửi và nếm thử các loại cà phê đặc biệt."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Gợi ý",
+                        "items": [
+                            "Check-in: Rất nhiều góc chụp ảnh hiện đại và ấn tượng.",
+                            "Mua sắm: Có khu vực bán quà lưu niệm và cà phê chất lượng cao.",
+                            "Giá vé: 75.000 - 150.000 VNĐ tùy triển lãm."
+                        ]
+                    }
                 ]
             },
             "lat": 12.6936,
@@ -1595,41 +1690,46 @@
             "rating": 4.5,
             "visitDuration": 90,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764915343/yusw1hsuuxbog10c0kwx_hu4nem.webp",
-            "tags": ["Hiện đại", "Cà phê", "Check-in", "Tây Nguyên"],
+            "tags": [
+                "Hiện đại",
+                "Cà phê",
+                "Check-in",
+                "Tây Nguyên"
+            ],
             "spotType": "Bảo tàng",
             "ticketPrice": 75000.0,
             "openHours": "08:00 AM - 06:00 PM"
-            },
-            {
+        },
+        {
             "name": "Làng lụa Vạn Phúc",
             "location": "Hà Đông, Hà Nội",
             "briefDescription": "Làng nghề dệt lụa tơ tằm nổi tiếng nhất Việt Nam với lịch sử hơn 1000 năm, nơi lưu giữ tinh hoa 'Lụa Hà Đông'.",
             "detailDescription": {
                 "mainTitle": "Sắc lụa nghìn năm",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Quy trình dệt lụa",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916376/5__van_phuc_minh_quyetresize_q0gb6h.jpg",
-                    "content": "Du khách có thể tham quan các xưởng dệt, tận mắt chứng kiến quy trình từ ươm tơ, kéo kén đến khi tiếng thoi đưa dệt nên những tấm lụa mềm mại, mát lạnh."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Phố lụa và Con đường ô",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916410/e598d0e7-lang-lua-van-phuc-8_qx9xev.jpg",
-                    "content": "Cổng làng cổ kính dẫn vào con phố chính trưng bày hàng nghìn sản phẩm lụa rực rỡ. Điểm nhấn là con đường được trang trí bởi hàng trăm chiếc ô (dù) nhiều màu sắc trên cao."
-                },
-                {
-                    "type": "list",
-                    "title": "Kinh nghiệm",
-                    "items": [
-                    "Mua sắm: Sản phẩm đa dạng từ áo dài, khăn quàng đến túi xách.",
-                    "Phân biệt: Nên hỏi kỹ người bán để phân biệt lụa tơ tằm 100% và lụa pha.",
-                    "Ăn uống: Thưởng thức kem hoặc chè ven sông Nhuệ."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Quy trình dệt lụa",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916376/5__van_phuc_minh_quyetresize_q0gb6h.jpg",
+                        "content": "Du khách có thể tham quan các xưởng dệt, tận mắt chứng kiến quy trình từ ươm tơ, kéo kén đến khi tiếng thoi đưa dệt nên những tấm lụa mềm mại, mát lạnh."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Phố lụa và Con đường ô",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916410/e598d0e7-lang-lua-van-phuc-8_qx9xev.jpg",
+                        "content": "Cổng làng cổ kính dẫn vào con phố chính trưng bày hàng nghìn sản phẩm lụa rực rỡ. Điểm nhấn là con đường được trang trí bởi hàng trăm chiếc ô (dù) nhiều màu sắc trên cao."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Kinh nghiệm",
+                        "items": [
+                            "Mua sắm: Sản phẩm đa dạng từ áo dài, khăn quàng đến túi xách.",
+                            "Phân biệt: Nên hỏi kỹ người bán để phân biệt lụa tơ tằm 100% và lụa pha.",
+                            "Ăn uống: Thưởng thức kem hoặc chè ven sông Nhuệ."
+                        ]
+                    }
                 ]
             },
             "lat": 20.9786,
@@ -1637,41 +1737,46 @@
             "rating": 4.4,
             "visitDuration": 120,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916327/vietgoing_wpp2106119383_bh7iit.webp",
-            "tags": ["Làng nghề", "Mua sắm", "Truyền thống", "Hà Nội"],
+            "tags": [
+                "Làng nghề",
+                "Mua sắm",
+                "Truyền thống",
+                "Hà Nội"
+            ],
             "spotType": "Làng nghề",
             "ticketPrice": 0.0,
             "openHours": "08:00 AM - 09:00 PM"
-            },
-            {
+        },
+        {
             "name": "Làng gốm Thanh Hà",
             "location": "Hội An, Quảng Nam",
             "briefDescription": "Làng gốm đỏ nằm bên dòng sông Thu Bồn, nơi lưu giữ kỹ thuật chuốt gốm bằng tay và nung bằng lò củi truyền thống.",
             "detailDescription": {
                 "mainTitle": "Hồn đất nung xứ Quảng",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Công viên đất nung",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916741/thanh-ha-terracotta-park-banner_czc25r.jpg",
-                    "content": "Điểm nhấn là Công viên đất nung (Thanh Ha Terracotta Park) - bảo tàng gốm độc đáo trưng bày các mô hình kỳ quan thế giới thu nhỏ làm hoàn toàn bằng gốm."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Trải nghiệm làm gốm",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916741/images1560417_gom_th_izps31.jpg",
-                    "content": "Khác với Bát Tràng, gốm Thanh Hà chủ yếu là gốm đỏ không men. Du khách được nghệ nhân hướng dẫn chuốt gốm trên bàn xoay và được tặng một con tò he gốm làm kỷ niệm."
-                },
-                {
-                    "type": "list",
-                    "title": "Thông tin",
-                    "items": [
-                    "Vị trí: Cách phố cổ Hội An khoảng 3km về phía Tây.",
-                    "Vé tham quan: 35.000 VNĐ (đã bao gồm quà lưu niệm).",
-                    "Sản phẩm: Nổi tiếng với đèn gốm trang trí và nồi đất."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Công viên đất nung",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916741/thanh-ha-terracotta-park-banner_czc25r.jpg",
+                        "content": "Điểm nhấn là Công viên đất nung (Thanh Ha Terracotta Park) - bảo tàng gốm độc đáo trưng bày các mô hình kỳ quan thế giới thu nhỏ làm hoàn toàn bằng gốm."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Trải nghiệm làm gốm",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916741/images1560417_gom_th_izps31.jpg",
+                        "content": "Khác với Bát Tràng, gốm Thanh Hà chủ yếu là gốm đỏ không men. Du khách được nghệ nhân hướng dẫn chuốt gốm trên bàn xoay và được tặng một con tò he gốm làm kỷ niệm."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Vị trí: Cách phố cổ Hội An khoảng 3km về phía Tây.",
+                            "Vé tham quan: 35.000 VNĐ (đã bao gồm quà lưu niệm).",
+                            "Sản phẩm: Nổi tiếng với đèn gốm trang trí và nồi đất."
+                        ]
+                    }
                 ]
             },
             "lat": 15.8778,
@@ -1679,41 +1784,46 @@
             "rating": 4.5,
             "visitDuration": 90,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916742/le-hoi-lang-gom-thanh-ha-1_xwx6vm.jpg",
-            "tags": ["Làng nghề", "Hội An", "Sáng tạo", "Gia đình"],
+            "tags": [
+                "Làng nghề",
+                "Hội An",
+                "Sáng tạo",
+                "Gia đình"
+            ],
             "spotType": "Làng nghề",
             "ticketPrice": 35000.0,
             "openHours": "08:00 AM - 05:30 PM"
-            },
-            {
+        },
+        {
             "name": "Văn Miếu - Quốc Tử Giám",
             "location": "Đống Đa, Hà Nội",
             "briefDescription": "Trường đại học đầu tiên của Việt Nam, biểu tượng của nền giáo dục Nho học và truyền thống hiếu học của dân tộc.",
             "detailDescription": {
                 "mainTitle": "Biểu tượng trí tuệ Việt",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Khuê Văn Các và Bia Tiến Sĩ",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916895/nhipsonghanoi.hanoimoi.com.vn-uploads-images-phananh-2021-08-19-_kvc_xtbtxl.jpg",
-                    "content": "Khuê Văn Các là biểu tượng của Hà Nội. Khu vườn bia Tiến sĩ (Di sản tư liệu thế giới) với 82 tấm bia đá khắc tên những người đỗ đạt, đặt trên lưng rùa đá."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Đại Bái Đường và Nhà Thái Học",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916893/van-mieu-quoc-tu-giam-14_utiwid.jpg",
-                    "content": "Nơi thờ Khổng Tử và các bậc hiền triết. Khu nhà Thái Học phía sau là nơi tôn vinh Chu Văn An và trưng bày về lịch sử giáo dục thi cử xưa."
-                },
-                {
-                    "type": "list",
-                    "title": "Lưu ý",
-                    "items": [
-                    "Cầu may: Sĩ tử thường đến đây cầu may mắn trước các kỳ thi.",
-                    "Quy tắc: Không sờ đầu rùa để bảo vệ di tích.",
-                    "Vé tham quan: 30.000 VNĐ."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Khuê Văn Các và Bia Tiến Sĩ",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916895/nhipsonghanoi.hanoimoi.com.vn-uploads-images-phananh-2021-08-19-_kvc_xtbtxl.jpg",
+                        "content": "Khuê Văn Các là biểu tượng của Hà Nội. Khu vườn bia Tiến sĩ (Di sản tư liệu thế giới) với 82 tấm bia đá khắc tên những người đỗ đạt, đặt trên lưng rùa đá."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Đại Bái Đường và Nhà Thái Học",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916893/van-mieu-quoc-tu-giam-14_utiwid.jpg",
+                        "content": "Nơi thờ Khổng Tử và các bậc hiền triết. Khu nhà Thái Học phía sau là nơi tôn vinh Chu Văn An và trưng bày về lịch sử giáo dục thi cử xưa."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý",
+                        "items": [
+                            "Cầu may: Sĩ tử thường đến đây cầu may mắn trước các kỳ thi.",
+                            "Quy tắc: Không sờ đầu rùa để bảo vệ di tích.",
+                            "Vé tham quan: 30.000 VNĐ."
+                        ]
+                    }
                 ]
             },
             "lat": 21.0293,
@@ -1721,41 +1831,46 @@
             "rating": 4.8,
             "visitDuration": 120,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764916892/van-mieu-mon-van-mieu-quoc-tu-giam_1752765402_qwfc8f.jpg",
-            "tags": ["Văn hóa", "Lịch sử", "Giáo dục", "Hà Nội"],
+            "tags": [
+                "Văn hóa",
+                "Lịch sử",
+                "Giáo dục",
+                "Hà Nội"
+            ],
             "spotType": "Văn Hóa",
             "ticketPrice": 30000.0,
             "openHours": "08:00 AM - 05:00 PM"
-            },
-            {
+        },
+        {
             "name": "Dinh Độc Lập",
             "location": "Quận 1, TP. Hồ Chí Minh",
             "briefDescription": "Di tích lịch sử Quốc gia đặc biệt, nơi đánh dấu sự kiện thống nhất đất nước vào ngày 30/4/1975.",
             "detailDescription": {
                 "mainTitle": "Chứng nhân lịch sử Sài Gòn",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Kiến trúc phong thủy",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917016/z6516648694973-259df00d1deba791e372e54b802daf3f-1744946004-1744947493_uaat46.webp",
-                    "content": "Được thiết kế bởi KTS Ngô Viết Thụ, dinh có bố cục hình chữ 'Cát' (Tốt lành), kết hợp hài hòa giữa kiến trúc hiện đại và triết lý phương Đông (rèm hoa đá hình đốt tre)."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Nội thất và Hầm chỉ huy",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917015/20A04027-11_jvakqy.jpg",
-                    "content": "Du khách được tham quan phòng khánh tiết, phòng làm việc của Tổng thống, và đặc biệt là hệ thống hầm ngầm kiên cố với các thiết bị thông tin liên lạc thời chiến."
-                },
-                {
-                    "type": "list",
-                    "title": "Thông tin",
-                    "items": [
-                    "Vị trí: Trung tâm Quận 1, gần Nhà thờ Đức Bà.",
-                    "Trang phục: Lịch sự, không mặc áo sát nách/quần ngắn.",
-                    "Giá vé: 40.000 - 65.000 VNĐ."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Kiến trúc phong thủy",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917016/z6516648694973-259df00d1deba791e372e54b802daf3f-1744946004-1744947493_uaat46.webp",
+                        "content": "Được thiết kế bởi KTS Ngô Viết Thụ, dinh có bố cục hình chữ 'Cát' (Tốt lành), kết hợp hài hòa giữa kiến trúc hiện đại và triết lý phương Đông (rèm hoa đá hình đốt tre)."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Nội thất và Hầm chỉ huy",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917015/20A04027-11_jvakqy.jpg",
+                        "content": "Du khách được tham quan phòng khánh tiết, phòng làm việc của Tổng thống, và đặc biệt là hệ thống hầm ngầm kiên cố với các thiết bị thông tin liên lạc thời chiến."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin",
+                        "items": [
+                            "Vị trí: Trung tâm Quận 1, gần Nhà thờ Đức Bà.",
+                            "Trang phục: Lịch sự, không mặc áo sát nách/quần ngắn.",
+                            "Giá vé: 40.000 - 65.000 VNĐ."
+                        ]
+                    }
                 ]
             },
             "lat": 10.7769,
@@ -1763,41 +1878,46 @@
             "rating": 4.6,
             "visitDuration": 120,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917018/Dinh_%C4%90%E1%BB%99c_L%E1%BA%ADp_v%C3%A0o_n%C3%A0m_2024_rjpkre.jpg",
-            "tags": ["Lịch sử", "Kiến trúc", "TP.HCM", "Chiến tranh"],
+            "tags": [
+                "Lịch sử",
+                "Kiến trúc",
+                "TP.HCM",
+                "Chiến tranh"
+            ],
             "spotType": "Văn Hóa",
             "ticketPrice": 40000.0,
             "openHours": "08:00 AM - 04:30 PM"
-            },
-            {
+        },
+        {
             "name": "Cố đô Hoa Lư",
             "location": "Hoa Lư, Ninh Bình",
             "briefDescription": "Kinh đô đầu tiên của nhà nước phong kiến tập quyền Việt Nam, gắn liền với ba triều đại Đinh, Tiền Lê và Lý.",
             "detailDescription": {
                 "mainTitle": "Hào khí kinh đô đá",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Đền Vua Đinh và Vua Lê",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917313/ninhbinh_codohoalu_gni80v.jpg",
-                    "content": "Hai ngôi đền cổ kính nằm cách nhau 500m, được xây dựng theo kiểu 'nội công ngoại quốc' mô phỏng kiến trúc kinh đô xưa. Nổi bật là Long Sàng bằng đá nguyên khối tạc rất tinh xảo."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Địa thế quân sự",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917312/1-16_ayqizt.jpg",
-                    "content": "Hoa Lư được gọi là 'kinh đô đá' vì tận dụng triệt để địa hình núi non hiểm trở làm tường thành tự nhiên để phòng thủ chống giặc ngoại xâm."
-                },
-                {
-                    "type": "list",
-                    "title": "Hoạt động",
-                    "items": [
-                    "Lễ hội: Lễ hội Trường Yên (tháng 3 âm lịch) có diễn trò tập trận cờ lau.",
-                    "Leo núi: Leo núi Mã Yên viếng lăng vua Đinh để ngắm toàn cảnh cố đô.",
-                    "Giá vé: 20.000 VNĐ."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Đền Vua Đinh và Vua Lê",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917313/ninhbinh_codohoalu_gni80v.jpg",
+                        "content": "Hai ngôi đền cổ kính nằm cách nhau 500m, được xây dựng theo kiểu 'nội công ngoại quốc' mô phỏng kiến trúc kinh đô xưa. Nổi bật là Long Sàng bằng đá nguyên khối tạc rất tinh xảo."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Địa thế quân sự",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917312/1-16_ayqizt.jpg",
+                        "content": "Hoa Lư được gọi là 'kinh đô đá' vì tận dụng triệt để địa hình núi non hiểm trở làm tường thành tự nhiên để phòng thủ chống giặc ngoại xâm."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Hoạt động",
+                        "items": [
+                            "Lễ hội: Lễ hội Trường Yên (tháng 3 âm lịch) có diễn trò tập trận cờ lau.",
+                            "Leo núi: Leo núi Mã Yên viếng lăng vua Đinh để ngắm toàn cảnh cố đô.",
+                            "Giá vé: 20.000 VNĐ."
+                        ]
+                    }
                 ]
             },
             "lat": 20.2847,
@@ -1805,41 +1925,46 @@
             "rating": 4.5,
             "visitDuration": 120,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917314/dong-am-tien-duoc-menh-danh-la-tuyet-tinh-coc-cua-co-do-hoa-lu_ee7mk8.jpg",
-            "tags": ["Lịch sử", "Văn hóa", "Ninh Bình", "Di tích"],
+            "tags": [
+                "Lịch sử",
+                "Văn hóa",
+                "Ninh Bình",
+                "Di tích"
+            ],
             "spotType": "Văn Hóa",
             "ticketPrice": 20000.0,
             "openHours": "07:00 AM - 05:00 PM"
-            },
-            {
+        },
+        {
             "name": "Quần thể danh thắng Tràng An",
             "location": "Ninh Bình",
             "briefDescription": "Di sản hỗn hợp Văn hóa và Thiên nhiên duy nhất tại Việt Nam được UNESCO công nhận, được ví như 'Vịnh Hạ Long trên cạn'.",
             "detailDescription": {
                 "mainTitle": "Tuyệt tác non nước hữu tình",
                 "sections": [
-                {
-                    "type": "heading",
-                    "level": 1,
-                    "title": "I. Hành trình xuyên thủy",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917417/Muaxuantamcoc_fwf2su.jpg",
-                    "content": "Du khách ngồi thuyền nan chèo tay, len lỏi qua các hang động xuyên thủy kỳ bí và ngắm nhìn hệ thống núi đá vôi dựng đứng soi bóng xuống làn nước trong xanh nhìn thấy đáy."
-                },
-                {
-                    "type": "heading",
-                    "level": 2,
-                    "title": "II. Giá trị văn hóa tâm linh",
-                    "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917416/hanh-cung-vu-lam-lins-vietnam-01_szmqhg.jpg",
-                    "content": "Trong hành trình, thuyền sẽ ghé thăm các điểm tâm linh như Đền Trình, Đền Trần và Hành cung Vũ Lâm - nơi các vua Trần từng tu hành và lãnh đạo kháng chiến chống Nguyên Mông."
-                },
-                {
-                    "type": "list",
-                    "title": "Lưu ý quan trọng",
-                    "items": [
-                    "Thời gian: Chuyến đi kéo dài khoảng 3 tiếng, nên mang mũ nón.",
-                    "Tuyến tham quan: Có 3 tuyến thuyền khác nhau, tuyến 2 và 3 thường được yêu thích nhất.",
-                    "Giá vé: 250.000 VNĐ/người (đã bao gồm thuyền)."
-                    ]
-                }
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Hành trình xuyên thủy",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917417/Muaxuantamcoc_fwf2su.jpg",
+                        "content": "Du khách ngồi thuyền nan chèo tay, len lỏi qua các hang động xuyên thủy kỳ bí và ngắm nhìn hệ thống núi đá vôi dựng đứng soi bóng xuống làn nước trong xanh nhìn thấy đáy."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Giá trị văn hóa tâm linh",
+                        "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917416/hanh-cung-vu-lam-lins-vietnam-01_szmqhg.jpg",
+                        "content": "Trong hành trình, thuyền sẽ ghé thăm các điểm tâm linh như Đền Trình, Đền Trần và Hành cung Vũ Lâm - nơi các vua Trần từng tu hành và lãnh đạo kháng chiến chống Nguyên Mông."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Lưu ý quan trọng",
+                        "items": [
+                            "Thời gian: Chuyến đi kéo dài khoảng 3 tiếng, nên mang mũ nón.",
+                            "Tuyến tham quan: Có 3 tuyến thuyền khác nhau, tuyến 2 và 3 thường được yêu thích nhất.",
+                            "Giá vé: 250.000 VNĐ/người (đã bao gồm thuyền)."
+                        ]
+                    }
                 ]
             },
             "lat": 20.2541,
@@ -1847,14 +1972,121 @@
             "rating": 4.9,
             "visitDuration": 180,
             "imageUrl": "https://res.cloudinary.com/dmuxwuk4q/image/upload/v1764917419/camnhi-185529115549-mua-nao-trang-an-tam-coc-1688982682716253485498_eedyir.jpg",
-            "tags": ["Di sản UNESCO", "Thiên nhiên", "Văn hóa", "Thuyền"],
+            "tags": [
+                "Di sản UNESCO",
+                "Thiên nhiên",
+                "Văn hóa",
+                "Thuyền"
+            ],
             "spotType": "Văn Hóa",
             "ticketPrice": 250000.0,
             "openHours": "07:00 AM - 04:00 PM",
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
-            "idealTime": 1 
-            }
+            "idealTime": 1
+        },
+        {
+            "name": "Nhà thờ Đức Bà Sài Gòn",
+            "location": "Quận 1, TP. Hồ Chí Minh",
+            "briefDescription": "Một trong những công trình kiến trúc độc đáo và cổ kính nhất tại TP. Hồ Chí Minh, được xây dựng từ thời Pháp thuộc.",
+            "detailDescription": {
+                "mainTitle": "Vẻ đẹp vượt thời gian của kiến trúc Pháp",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Nguồn gốc và Kiến trúc",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765334153/ducba1_tweskv.jpg",
+                        "content": "Nhà thờ được xây dựng từ năm 1880 đến 1883 dưới thời Pháp thuộc, mang phong cách kiến trúc Roman và Gothic. Toàn bộ vật liệu xây dựng, từ xi măng, sắt thép đến ngói lợp, đều được nhập khẩu trực tiếp từ Pháp, đặc biệt là gạch đỏ từ Marseille tạo nên màu sắc đặc trưng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Biểu tượng và Vị trí",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765334166/ducba2_xjgzgs.jpg",
+                        "content": "Nhà thờ nổi bật với hai tháp chuông cao 57 mét, mỗi tháp có 6 quả chuông đồng lớn. Phía trước nhà thờ là quảng trường Công xã Paris với tượng Đức Mẹ Hòa Bình. Đây là nơi chụp ảnh biểu tượng và địa điểm tụ họp chính của người dân thành phố."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Thông tin tham quan",
+                        "items": [
+                            "Hiện tại, Nhà thờ đang được trùng tu nên du khách chỉ có thể chiêm ngưỡng bên ngoài (thường kéo dài đến 2027).",
+                            "Thời gian tốt nhất để tham quan kiến trúc: Buổi sáng sớm hoặc hoàng hôn.",
+                            "Vị trí: Nằm ngay đối diện Bưu điện Thành phố, tạo thành một cụm di tích lịch sử - kiến trúc."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.7797,
+            "lon": 106.7007,
+            "rating": 4.5,
+            "visitDuration": 30,
+            "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331638/nhathoducba_eip0pj.jpg",
+            "tags": [
+                "Kiến trúc Pháp",
+                "Di tích",
+                "Lịch sử",
+                "Tôn giáo",
+                "Biểu tượng"
+            ],
+            "spotType": "Di tích",
+            "ticketPrice": 0.0,
+            "openHours": "08:00 AM - 05:00 PM",
+            "datetimeStart": "01/01",
+            "datetimeEnd": "31/12",
+            "idealTime": "2"
+        },
+        {
+            "name": "Bưu điện Trung tâm Thành phố",
+            "location": "Quận 1, TP. Hồ Chí Minh",
+            "briefDescription": "Công trình kiến trúc Pháp cổ kính nổi tiếng, với mái vòm tráng lệ và không gian gợi nhớ thời kỳ Sài Gòn xưa, vẫn hoạt động đến ngày nay.",
+            "detailDescription": {
+                "mainTitle": "Vẻ đẹp hoài cổ của kiến trúc Eiffel",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Lịch sử và Kiến trúc Pháp",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333993/buudienkientrucphap_e1dk2r.jpg",
+                        "content": "Công trình được xây dựng từ cuối thế kỷ 19, với bản thiết kế thường được cho là của kiến trúc sư lừng danh Gustave Eiffel (hoặc văn phòng thiết kế của ông). Nội thất nổi bật với mái vòm bán nguyệt lớn bằng kính, tạo nên không gian tráng lệ và thoáng đãng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Điểm nhấn Hoài niệm",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333996/trungbaybuudien_jo2lxr.jpg",
+                        "content": "Bên trong bưu điện trưng bày hai tấm bản đồ lịch sử khổng lồ: một bản đồ các tuyến điện tín quốc tế và một bản đồ Sài Gòn những năm đầu thế kỷ 20. Du khách cũng có thể chiêm ngưỡng các quầy điện thoại công cộng cổ điển được phục chế."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Trải nghiệm Bưu chính",
+                        "items": [
+                            "Đây vẫn là một bưu điện đang hoạt động. Du khách có thể mua và gửi bưu thiếp, thư từ tới bạn bè trên toàn thế giới.",
+                            "Vị trí: Ngay đối diện Nhà thờ Đức Bà, tạo thành một cụm di tích kiến trúc Pháp lý tưởng để tham quan trong một buổi sáng.",
+                            "Thời gian tham quan nhanh chóng, lý tưởng để chèn vào giữa các điểm chính."
+                        ]
+                    }
+                ]
+            },
+            "lat": 10.7797,
+            "lon": 106.7008,
+            "rating": 4.4,
+            "visitDuration": 45,
+            "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333999/buudientrungtam_fcot8a.jpg",
+            "tags": [
+                "Kiến trúc Pháp",
+                "Di tích",
+                "Lịch sử",
+                "Biểu tượng",
+                "Bưu chính"
+            ],
+            "spotType": "Di tích",
+            "ticketPrice": 0.0,
+            "openHours": "08:00 AM - 05:00 PM",
+            "datetimeStart": "01/01",
+            "datetimeEnd": "31/12",
+            "idealTime": "2"
+        }
     ],
     "attraction": [
         {
@@ -1957,7 +2189,7 @@
             "lat": 21.81615131849328,
             "lon": 104.1282751272433,
             "rating": 4.9,
-            "visitDuration": 1800, 
+            "visitDuration": 1800,
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
             "idealTime": "1",
@@ -2132,7 +2364,7 @@
             "lat": 15.962854375514988,
             "lon": 108.50439035149584,
             "rating": 4.8,
-            "visitDuration": 360, 
+            "visitDuration": 360,
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
             "idealTime": "0",
@@ -2190,7 +2422,7 @@
             "lat": 15.381650030560433,
             "lon": 109.12023394552948,
             "rating": 4.7,
-            "visitDuration": 720, 
+            "visitDuration": 720,
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
             "idealTime": "1",
@@ -2247,7 +2479,7 @@
             "lat": 11.838363743031927,
             "lon": 109.2320635576687,
             "rating": 4.5,
-            "visitDuration": 600, 
+            "visitDuration": 600,
             "datetimeStart": "01/01",
             "datetimeEnd": "31/12",
             "idealTime": "1",
@@ -3275,6 +3507,434 @@
                 "Thiên nhiên"
             ],
             "spotType": "Thiên nhiên"
+        },
+        {
+            "name": "Chợ đêm Đà Lạt",
+            "location": "Phường 1, TP. Đà Lạt, Lâm Đồng",
+            "briefDescription": "Thiên đường ẩm thực và mua sắm về đêm, nổi tiếng với không khí se lạnh và các món ăn vặt ấm nóng đặc trưng của phố núi.",
+            "detailDescription": {
+                "mainTitle": "Nơi hội tụ tinh hoa ẩm thực đường phố và hơi thở phố núi",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Không khí và Giờ vàng",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333427/chodemdalat_okrbhb.jpg",
+                        "content": "Chợ đêm Đà Lạt nằm ngay trung tâm thành phố, nơi sự nhộn nhịp bắt đầu ngay sau khi mặt trời lặn. Không khí se lạnh đặc trưng khiến khu chợ trở nên ấm cúng và đầy mời gọi. Đây là nơi lý tưởng để cảm nhận nhịp sống về đêm của người dân Đà Lạt."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Thiên đường Ẩm thực Ấm nóng",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333426/amthucchodemdalat_ib01kl.jpg",
+                        "content": "Ẩm thực là linh hồn của chợ đêm. Các món ăn nổi tiếng như bánh tráng nướng (được ví như 'pizza Đà Lạt'), sữa đậu nành nóng, khoai lang nướng, và các loại xiên nướng cay nồng mang lại trải nghiệm ấm cúng, xua tan cái lạnh phố núi. Đừng quên thử kem bơ và các loại mứt hoa quả."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Mua sắm và Lưu niệm",
+                        "items": [
+                            "Sản phẩm: Các loại đồ len, áo ấm, khăn choàng, và tất cả các sản phẩm dệt kim cần thiết cho thời tiết se lạnh.",
+                            "Đặc sản: Dâu tây tươi, hồng giòn, và các loại mứt hoa quả sấy khô độc đáo của vùng.",
+                            "Lưu ý: Mặc cả là cần thiết khi mua sắm tại chợ đêm."
+                        ]
+                    }
+                ]
+            },
+            "lat": 11.9404,
+            "lon": 108.4419,
+            "rating": 4.3,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765330923/e9ea0595-cho-dem-da-lat-2127174_sjj9j2.jpg",
+            "tags": [
+                "Ẩm thực",
+                "Chợ đêm",
+                "Văn hóa",
+                "Phố núi",
+                "Hoạt động"
+            ],
+            "spotType": "Hoạt động/Chợ",
+            "ticketPrice": 0.0,
+            "openHours": "06:00 PM - 11:00 PM",
+            "datetimeStart": "01/01",
+            "datetimeEnd": "31/12",
+            "idealTime": "3"
+        },
+        {
+            "name": "Phố ẩm thực Tạ Hiện (Hà Nội)",
+            "location": "Phố Tạ Hiện, Quận Hoàn Kiếm, Hà Nội",
+            "briefDescription": "Tuyển phố ngắn nổi tiếng với văn hóa bia hơi và ẩm thực đường phố, là điểm hẹn sôi động nhất của giới trẻ và khách du lịch tại Hà Nội về đêm.",
+            "detailDescription": {
+                "mainTitle": "Nơi Bia Hơi và Hơi Thở Phố Cổ Giao Thoa",
+                "sections": [
+                    {
+                        "type": "heading",
+                        "level": 1,
+                        "title": "I. Văn hóa Bia Hơi",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333226/vanhoabiahoi_faiep4.jpg",
+                        "content": "Tạ Hiện là biểu tượng của văn hóa bia hơi Hà Nội. Du khách ngồi trên những chiếc ghế nhựa thấp ven đường, thưởng thức bia tươi giá rẻ và cảm nhận sự thân thiện, náo nhiệt của phố cổ về đêm. Không gian mở này tạo nên một trải nghiệm giao tiếp độc đáo, không phân biệt ngôn ngữ hay văn hóa."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Ẩm thực Đồng hành cùng Bia",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333226/amthuctahien_tbxjcx.jpg",
+                        "content": "Các món ăn nhẹ tại đây được thiết kế hoàn hảo để đi kèm với bia hơi. Nổi bật nhất là Nem chua rán giòn tan, Phô mai que, khoai tây chiên, và các món ăn vặt truyền thống khác. Hương vị đậm đà và sự tiện lợi làm nên sức hấp dẫn của ẩm thực Tạ Hiện."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Trải nghiệm Phố đêm",
+                        "items": [
+                            "Thời gian lý tưởng: Sau 9 giờ tối, khi phố cấm xe và người đi bộ bắt đầu đổ về.",
+                            "Không gian: Sự giao thoa giữa kiến trúc rêu phong của Phố cổ và nhịp sống hiện đại, trẻ trung.",
+                            "Lưu ý: Mặc dù là phố ẩm thực, nhưng trải nghiệm chính là cảm nhận không khí cộng đồng sôi động và đa văn hóa."
+                        ]
+                    }
+                ]
+            },
+            "lat": 21.0315,
+            "lon": 105.8524,
+            "rating": 4.2,
+            "visitDuration": 90,
+            "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765330774/pho-ta-hien-ha-noi_lhw8ux.jpg",
+            "tags": [
+                "Ẩm thực",
+                "Phố cổ",
+                "Bia hơi",
+                "Hoạt động đêm",
+                "Văn hóa"
+            ],
+            "spotType": "Hoạt động/Ẩm thực",
+            "ticketPrice": 0.0,
+            "openHours": "06:00 PM - 12:00 AM",
+            "datetimeStart": "01/01",
+            "datetimeEnd": "31/12",
+            "idealTime": "3"
+        }
+    ],
+    "themeTours": [
+        {
+            "id": "TOUR001",
+            "name": "Hành Trình Di Sản Miền Trung",
+            "briefDescription": "Khám phá các di sản văn hóa thế giới được UNESCO công nhận tại Việt Nam. Trải nghiệm lịch sử và kiến trúc cổ kính.",
+            "themeDescription": "Khám phá các di sản văn hóa thế giới được UNESCO công nhận tại Việt Nam. Trải nghiệm lịch sử và kiến trúc cổ kính.",
+            "cover_image_url": "https://res.cloudinary.com/doifkfvbz/image/upload/v1765337759/Hoi-An-22_rdlxsc.jpg",
+            "estimated_duration_days": 3,
+            "attractionIds": [
+                "Quần thể Di tích Cố đô Huế",
+                "Thánh địa Mỹ Sơn",
+                "Phố cổ Hội An"
+            ],
+            "detailDescription": {
+                "mainTitle": "Khám Phá Di Sản Văn Hóa Thế Giới",
+                "sections": [
+                    {
+                        "type": "paragraph",
+                        "title": "Giới thiệu chung",
+                        "content": "Ý nghĩa cốt lõi của gói tour này nằm ở việc kết nối ba Di sản Văn hóa Thế giới được UNESCO công nhận: Cố đô Huế, Phố cổ Hội An và Thánh địa Mỹ Sơn."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "I. Cố Đô Huế: Dấu Ấn Triều Nguyễn",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765332836/codohue_e5eypw.jpg",
+                        "content": "Tại Cố đô Huế, bạn không chỉ thấy những bức tường thành và cung điện mà còn cảm nhận được sự tĩnh lặng, uy nghiêm của một vương triều đã lùi vào quá khứ. Đó là sự giao thoa hoàn hảo giữa kiến trúc cung đình và triết lý sống hài hòa với thiên nhiên"
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Phố Cổ Hội An: Thương Cảng Hồi Sinh",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765332839/phocohoian_x21ues.jpg",
+                        "content": "Phố cổ Hội An lại mang đến cảm giác ấm áp, hoài niệm. Nơi đây không chỉ là kiến trúc mà còn là hơi thở của một thương cảng quốc tế sầm uất từ thế kỷ 16, nơi văn hóa Việt, Nhật và Trung Hoa hòa quyện trong ánh đèn lồng lung linh."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "III. Thánh Địa Mỹ Sơn: Vị Thần Chăm",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765332840/thanhdiamyson_zesupe.webp",
+                        "content": "Thánh địa Mỹ Sơn mang đến một trải nghiệm thần bí và đầy suy tư. Giữa thung lũng xanh, những đền tháp đổ nát kể về một nền văn minh đã từng rực rỡ, thách thức sự tàn phá của thời gian."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Kết nối Hiện tại và Quá khứ",
+                        "items": [
+                            "Cảm nhận sự Kiên cường: Hiểu được cách người Việt gìn giữ và bảo tồn những di sản đã trải qua nhiều thăng trầm lịch sử và chiến tranh.",
+                            "Trải nghiệm sự Đa dạng: Chứng kiến sự đa dạng tuyệt vời trong kiến trúc, tôn giáo, và phong tục qua các thời kỳ lịch sử khác nhau, từ Đại Việt đến Champa.",
+                            "Hòa mình vào Nét đẹp Địa phương: Ghé thăm các điểm như Làng hương Thủy Xuân, mang lại trải nghiệm thủ công địa phương, tạo ra sự cân bằng cảm xúc giữa sự vĩ đại của di tích và sự bình dị của đời sống truyền thống."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "TOUR002",
+            "name": "Sắc Màu Làng Nghề Truyền Thống",
+            "location": "Hà Nội, Thừa Thiên Huế",
+            "briefDescription": "Tour khám phá các làng nghề thủ công nổi tiếng, nơi bạn có thể tự tay trải nghiệm và hiểu thêm về văn hóa truyền thống của người Việt.",
+            "themeDescription": "Tour khám phá các làng nghề thủ công nổi tiếng, nơi bạn có thể tự tay trải nghiệm và hiểu thêm về văn hóa truyền thống của người Việt.",
+            "cover_image_url": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765336989/langnghe_gncsme.jpg",
+            "estimated_duration_days": 2,
+            "attractionIds": [
+                "Làng gốm Bát Tràng",
+                "Làng lụa Vạn Phúc",
+                "Làng hương Thủy Xuân"
+            ],
+            "detailDescription": {
+                "mainTitle": "Chạm Vào Hồn Việt: Hành Trình Của Đôi Bàn Tay Vàng",
+                "sections": [
+                    {
+                        "type": "paragraph",
+                        "title": "Lời dẫn cảm xúc",
+                        "content": "Gói tour này là một hành trình cảm xúc, nơi ta chạm vào hơi thở rêu phong của truyền thống, lắng nghe câu chuyện về những đôi bàn tay vàng lặng lẽ giữ lửa nghề. Đó là sự kết nối sâu sắc với văn hóa, giúp bạn cảm nhận được linh hồn của từng sản phẩm thủ công Việt Nam."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "I. Bát Tràng: Tinh Hoa Đất và Lửa",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331898/battrang_dneont.jpg",
+                        "content": "Về với Bát Tràng là về với tinh hoa của đất và lửa. Tại đây, bạn sẽ cảm nhận sự mềm mại, dẻo dai của đất sét dưới bàn tay mình, chứng kiến phép màu biến nguyên liệu thô thành những tuyệt tác gốm sứ chứa đựng hồn cốt Việt Nam. Mỗi nét vẽ, mỗi đường cong đều là một câu chuyện lịch sử."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Vạn Phúc: Cảm Nhận Sự Mềm Mại Của Tơ Lụa",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331904/vanphuc_aacyda.jpg",
+                        "content": "Bước chân vào Vạn Phúc, bạn sẽ đắm mình trong thế giới của lụa tơ, nơi tiếng thoi dệt vang lên như nhịp đập của thời gian. Hãy cảm nhận sự mềm mại, mát rượi của từng sợi lụa cao cấp, vốn là biểu tượng của vẻ đẹp dịu dàng và quý phái của phụ nữ Việt qua bao thế hệ."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "III. Thủy Xuân: Nơi Kết Nối Tâm Hồn Cố Đô",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331902/thuyxuan_jnqokn.jpg",
+                        "content": "Làng hương Thủy Xuân không chỉ là nơi làm nghề, mà còn là không gian tĩnh lặng của tâm hồn. Những bó chân hương rực rỡ như những đóa hoa, không chỉ là sản phẩm thủ công mà còn là biểu tượng của lòng thành kính. Hương thơm trầm lắng sẽ đưa ta vào không gian tâm linh sâu sắc, đậm chất Huế."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Bạn sẽ mang về điều gì?",
+                        "items": [
+                            "Sự trân trọng đối với những nghề truyền thống đang được gìn giữ qua thăng trầm lịch sử.",
+                            "Cảm hứng sáng tạo từ những kỹ thuật thủ công tinh xảo của các nghệ nhân Việt Nam.",
+                            "Một sản phẩm tự tay làm ra (như gốm) hoặc một món quà lụa, hương thơm mang đầy ý nghĩa văn hóa."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "TOUR003",
+            "name": "Hành Trình Về Sài Gòn Xưa",
+            "location": "TP. Hồ Chí Minh",
+            "briefDescription": "Khám phá các di tích lịch sử và kiến trúc tiêu biểu của TP. Hồ Chí Minh, nơi lưu giữ ký ức về thời chiến và các công trình mang tính biểu tượng.",
+            "themeDescription": "Khám phá các di tích lịch sử và kiến trúc tiêu biểu của TP. Hồ Chí Minh, nơi lưu giữ ký ức về thời chiến và các công trình mang tính biểu tượng.",
+            "cover_image_url": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765333999/buudientrungtam_fcot8a.jpg",
+            "estimated_duration_days": 2,
+            "attractionIds": [
+                "Bảo tàng Chứng tích Chiến tranh",
+                "Dinh Độc Lập",
+                "Nhà thờ Đức Bà",
+                "Bưu điện Thành phố"
+            ],
+            "detailDescription": {
+                "mainTitle": "Sài Gòn - Hồi Ức Về Quá Khứ và Vẻ Đẹp Hồi Sinh",
+                "sections": [
+                    {
+                        "type": "paragraph",
+                        "title": "Lời dẫn cảm xúc",
+                        "content": "Đây là hành trình tìm về những ký ức không phai mờ của Sài Gòn - TP. Hồ Chí Minh, nơi sự uy nghiêm của lịch sử chiến tranh hòa cùng vẻ đẹp lãng mạn, kiều diễm của kiến trúc Pháp cổ. Mỗi bước chân là một lát cắt thời gian, giúp bạn hiểu về sự kiên cường và lòng tự hào của thành phố mang tên Bác."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "I. Bảo Tàng Chứng Tích: Sự Lắng Đọng Của Lịch Sử",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331633/baotangchungtich_uxuyjn.jpg",
+                        "content": "Bảo tàng là không gian thiêng liêng, nơi ta đối diện với những chứng tích chiến tranh tàn khốc, cảm nhận sự mất mát và lòng kiên cường vô hạn của dân tộc. Đây là trải nghiệm cần thiết để hiểu rõ giá trị của hòa bình hiện tại."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Dinh Độc Lập: Biểu Tượng Của Thống Nhất",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331637/dinhdoclap_cm8ufy.webp",
+                        "content": "Công trình kiến trúc độc đáo này là chứng nhân lịch sử quan trọng, nơi kết thúc cuộc chiến và đánh dấu sự thống nhất đất nước. Khám phá các tầng hầm, phòng họp và kiến trúc công phu để cảm nhận không khí chính trị căng thẳng của những thập niên 60."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "III. Nhà Thờ Đức Bà và Bưu Điện Thành Phố: Vẻ Đẹp Vĩnh Cửu",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331638/nhathoducba_eip0pj.jpg",
+                        "content": "Giữa trung tâm thành phố, hai công trình kiến trúc Pháp thế kỷ 19 này mang lại sự tương phản tuyệt vời. Nhà thờ Đức Bà uy nghiêm, tĩnh lặng, còn Bưu điện Thành phố lại mang vẻ đẹp lãng mạn, cổ điển. Cảm nhận nhịp sống hối hả của thành phố hòa cùng nét trầm mặc của các công trình lịch sử."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Bạn sẽ cảm nhận được điều gì?",
+                        "items": [
+                            "Sự trân trọng hòa bình sau khi chứng kiến những hậu quả lịch sử.",
+                            "Vẻ đẹp kiến trúc Đông – Tây hòa quyện, thể hiện qua các vật liệu xây dựng và phong cách thiết kế.",
+                            "Lòng tự hào về sự hồi sinh và phát triển không ngừng của TP. Hồ Chí Minh."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "TOUR004",
+            "name": "Sắc Màu Lễ Hội Việt",
+            "location": "Đà Nẵng, Đồng bằng Sông Cửu Long, Phú Thọ",
+            "briefDescription": "Tour theo mùa tập trung vào các sự kiện văn hóa và lễ hội lớn. Đây là cơ hội để trải nghiệm không khí sôi động và truyền thống của người Việt.",
+            "themeDescription": "Tour theo mùa tập trung vào các sự kiện văn hóa và lễ hội lớn. Đây là cơ hội để trải nghiệm không khí sôi động và truyền thống của người Việt.",
+            "cover_image_url": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331452/okombok_rhdtse.jpg",
+            "estimated_duration_days": 3,
+            "attractionIds": [
+                "Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF)",
+                "Lễ hội Ok Om Bok",
+                "Lễ hội Đền Hùng"
+            ],
+            "detailDescription": {
+                "mainTitle": "Hành Trình Xuyên Việt Theo Nhịp Điệu Lễ Hội",
+                "sections": [
+                    {
+                        "type": "paragraph",
+                        "title": "Lời dẫn cảm xúc",
+                        "content": "Tour này là hành trình xuyên Việt theo nhịp điệu của lịch sử và truyền thống, nơi bạn đắm mình vào không khí sôi động nhất của các lễ hội lớn. Đây là cơ hội quý giá để chứng kiến và cảm nhận trực tiếp sức sống văn hóa mãnh liệt, sự đa dạng vùng miền và lòng tự hào dân tộc."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "I. DIFF: Pháo Hoa Rực Sáng Bầu Trời Đà Nẵng",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331454/xemphaohoatrentaurongsonghan-8706_pqiy7q.jpg",
+                        "content": "Trải nghiệm không khí cuồng nhiệt bên bờ sông Hàn khi chiêm ngưỡng bầu trời Đà Nẵng rực sáng với màn trình diễn pháo hoa đẳng cấp quốc tế. Đây là sự kiện giao thoa giữa văn hóa Việt và nghệ thuật ánh sáng hiện đại của thế giới, mang đến cảm xúc choáng ngợp và tự hào."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Ok Om Bok: Linh Hồn Sông Nước Miền Tây",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331452/okombok_rhdtse.jpg",
+                        "content": "Về với Miền Tây mùa trăng tròn, bạn sẽ tham gia vào lễ hội cúng trăng độc đáo của người Khmer. Trải nghiệm đua ghe Ngo kịch tính, cảm nhận tinh thần đoàn kết, sự gắn bó mật thiết với văn hóa sông nước và tín ngưỡng tôn thờ Thần Mặt Trăng."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "III. Lễ Hội Đền Hùng: Hành Hương Về Đất Tổ",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331310/lehoidenhung_ljtf1w.webp",
+                        "content": "Hành hương về Đất Tổ, nơi cội nguồn dân tộc. Tham gia nghi lễ trang nghiêm, cảm nhận sự kết nối sâu sắc với lịch sử nghìn đời và lòng biết ơn vô hạn đối với các vị Vua Hùng. Đây là cột mốc tâm linh không thể bỏ qua của người Việt."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Bạn sẽ mang về điều gì sau hành trình?",
+                        "items": [
+                            "Sự phấn khích và ấn tượng mạnh mẽ từ các sự kiện hoành tráng (DIFF).",
+                            "Hiểu sâu về tín ngưỡng và văn hóa đa dạng (Khmer, Kinh) qua các nghi thức cổ truyền.",
+                            "Cảm nhận sâu sắc về lòng tự hào và tinh thần dân tộc khi hành hương về cội nguồn."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "TOUR005",
+            "name": "Thiên Nhiên Kỳ Vĩ & Mạo Hiểm",
+            "location": "Quảng Ninh, Quảng Bình, Bình Thuận",
+            "briefDescription": "Hành trình chinh phục những kỳ quan thiên nhiên được UNESCO công nhận, từ núi đá vôi trên biển đến hang động bí ẩn sâu trong lòng đất.",
+            "themeDescription": "Hành trình chinh phục những kỳ quan thiên nhiên được UNESCO công nhận, từ núi đá vôi trên biển đến hang động bí ẩn sâu trong lòng đất.",
+            "cover_image_url": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331195/vinhhalong_syc1db.jpg",
+            "estimated_duration_days": 4,
+            "attractionIds": [
+                "Vịnh Hạ Long",
+                "Vườn Quốc gia Phong Nha – Kẻ Bàng",
+                "Mũi Né"
+            ],
+            "detailDescription": {
+                "mainTitle": "Chinh Phục Kỳ Quan: Hành Trình Khám Phá Cảm Giác Mạnh",
+                "sections": [
+                    {
+                        "type": "paragraph",
+                        "title": "Lời dẫn cảm xúc",
+                        "content": "Đây là lời mời gọi dành cho những tâm hồn khao khát khám phá và chinh phục. Hãy để mình trở nên nhỏ bé trước sự hùng vĩ của tạo hóa, bước chân vào những khu rừng nguyên sinh và những hang động chưa từng được chạm tới."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "I. Vịnh Hạ Long: Nơi Rồng đáp",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331195/vinhhalong_syc1db.jpg",
+                        "content": "Chiêm ngưỡng hàng ngàn đảo đá vôi kỳ vĩ nổi lên giữa làn nước xanh ngọc. Trải nghiệm chèo kayak len lỏi qua các hang động và ngắm hoàng hôn trên du thuyền. Vịnh Hạ Long không chỉ là di sản mà còn là một tác phẩm điêu khắc của thiên nhiên."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Phong Nha-Kẻ Bàng: Thế Giới Dưới Lòng Đất",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331195/phongnhakebang_mzqa7c.jpg",
+                        "content": "Khám phá Vườn Quốc gia Phong Nha-Kẻ Bàng, nơi tập trung hệ thống hang động lớn nhất và đẹp nhất thế giới. Trải nghiệm thám hiểm hang động, cảm nhận sự tĩnh lặng tuyệt đối và bí ẩn của hành trình dưới lòng đất."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "III. Đồi Cát Mũi Né: Sa Mạc Giữa Biển Khơi",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331193/doi-cat-bay_ulguag.jpg",
+                        "content": "Trải nghiệm cảm giác mạnh khi trượt ván trên những đồi cát mênh mông, thay đổi hình dạng theo gió. Sự tương phản giữa sa mạc cát và bờ biển xanh biếc tạo nên một khung cảnh siêu thực, đầy cảm hứng."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Cảm hứng Khám phá",
+                        "items": [
+                            "Sự tĩnh lặng tuyệt đối của thiên nhiên hoang sơ, giúp tái tạo năng lượng.",
+                            "Thử thách bản thân với các hoạt động mạo hiểm như thám hiểm hang động hoặc trượt cát.",
+                            "Lòng trân trọng vẻ đẹp và sự đa dạng địa chất của Việt Nam."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "TOUR006",
+            "name": "Góc Phố Ẩm Thực Đường Phố",
+            "location": "Hà Nội, TP. Hồ Chí Minh, Đà Lạt",
+            "briefDescription": "Hành trình vị giác qua ba miền đất nước, khám phá văn hóa ẩm thực đường phố, các khu chợ đêm sôi động và những món ăn đặc sắc.",
+            "themeDescription": "Hành trình vị giác qua ba miền đất nước, khám phá văn hóa ẩm thực đường phố, các khu chợ đêm sôi động và những món ăn đặc sắc.",
+            "cover_image_url": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765330774/pho-ta-hien-ha-noi_lhw8ux.jpg",
+            "estimated_duration_days": 2,
+            "attractionIds": [
+                "Chợ Bến Thành",
+                "Chợ đêm Đà Lạt",
+                "Phố ẩm thực Tạ Hiện (Hà Nội)"
+            ],
+            "detailDescription": {
+                "mainTitle": "Khám Phá Việt Nam Qua Vị Giác và Mùi Hương",
+                "sections": [
+                    {
+                        "type": "paragraph",
+                        "title": "Lời dẫn cảm xúc",
+                        "content": "Tour này là lời mời gọi dành cho những tín đồ ẩm thực. Hãy để vị giác dẫn lối bạn qua những con phố nhỏ, những khu chợ đêm rực rỡ và cảm nhận hơi thở, sự náo nhiệt của đời sống địa phương. Ẩm thực chính là cách kể chuyện chân thật nhất về văn hóa Việt."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "I. TP. Hồ Chí Minh: Sự Náo Nhiệt Của Chợ Bến Thành",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765331011/THUMB-SAKOS-6_sw7vwv.jpg",
+                        "content": "Chợ Bến Thành không chỉ là một trung tâm thương mại mà còn là thiên đường ẩm thực đường phố miền Nam. Tại đây, bạn sẽ bị choáng ngợp bởi sự đa dạng của các món ăn, từ bún riêu, bánh xèo đến các loại chè. Cảm nhận sự thân thiện và nồng nhiệt của người dân Sài Gòn."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "II. Đà Lạt: Hương Vị Núi Rừng Đêm Đông",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765330923/e9ea0595-cho-dem-da-lat-2127174_sjj9j2.jpg",
+                        "content": "Khám phá Chợ đêm Đà Lạt, nơi không khí se lạnh hòa quyện với mùi thơm của bánh tráng nướng, sữa đậu nành nóng và các món ăn vặt đặc trưng của phố núi. Đây là trải nghiệm lãng mạn và ấm cúng, khác biệt hoàn toàn với phố thị miền xuôi."
+                    },
+                    {
+                        "type": "heading",
+                        "level": 2,
+                        "title": "III. Hà Nội: Tinh Hoa Phố Cổ",
+                        "imageUrl": "https://res.cloudinary.com/djfwdr0oa/image/upload/v1765330774/pho-ta-hien-ha-noi_lhw8ux.jpg",
+                        "content": "Đắm mình vào Phố ẩm thực Tạ Hiện (Hà Nội), nơi bia hơi và các món nhậu đường phố trở thành nét văn hóa đặc trưng. Ngồi trên chiếc ghế nhựa thấp, thưởng thức phở, nem chua rán và cảm nhận sự cổ kính, vội vã nhưng vẫn duyên dáng của Hà Nội 36 phố phường."
+                    },
+                    {
+                        "type": "list",
+                        "title": "Trải nghiệm Giác quan",
+                        "items": [
+                            "Thưởng thức tinh hoa ẩm thực ba miền chỉ trong một chuyến đi ngắn.",
+                            "Cảm nhận sự đa dạng không khí: từ sự nồng nhiệt của Sài Gòn đến sự se lạnh của Đà Lạt.",
+                            "Kết nối với người dân địa phương thông qua văn hóa ăn uống vỉa hè giản dị."
+                        ]
+                    }
+                ]
+            }
         }
     ],
     "reviews": [

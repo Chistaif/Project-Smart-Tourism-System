@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
 import Navigation from './layout/Navigation';
 import ChatAssistant from './layout/ChatBox';
 import Footer from './layout/Footer';
@@ -12,8 +11,8 @@ import ItineraryPage from './pages/ItineraryPage';
 import Blogs from './pages/Blogs';
 import BlogDetail from './pages/BlogDetail';
 import UserPage from './pages/User';
-
 import AttractionDetail from './pages/AttractionDetail';
+import TourPackageDetail from './pages/TourPackageDetail';
 import { authAPI } from './utils/api';
 
 import test1 from './asset/box1.jpg';
@@ -472,6 +471,7 @@ function App() {
           <Route path="/service" element={<Service currentUser={user} />} />
           <Route path="/itinerary" element={<ItineraryPage />} />
           <Route path="/attractions/:id" element={<AttractionDetail currentUser={user} openLogin={() => openPopup('login')}/>} />
+          <Route path="/package/:packageId" element={<TourPackageDetail />} />
           <Route path="/blogs" element={<Blogs currentUser={user} />} />
           <Route path="/user" element={<UserPage currentUser={user} onLogout={handleLogout} />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />

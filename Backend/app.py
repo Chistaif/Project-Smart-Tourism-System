@@ -47,6 +47,10 @@ from service.user_service import (
     get_user_favorites_service,
     get_user_reviews_service
 )
+from service.tour_package_service import (
+    get_all_packages_service,
+    get_package_detail_service
+)
 from user.email_utils import init_mail
 from user.auth_service import (
     signup_service, 
@@ -195,6 +199,21 @@ def search():
 
         except Exception as e:
             pass
+
+    attraction_ids_str = request.args.get("attractionIds")
+    if attraction_ids_str:
+        try:
+            # Chuyển chuỗi "1,2,3" thành list [1, 2, 3]
+            ids = [int(x) for x in attraction_ids_str.split(',') if x.strip().isdigit()]
+            
+            if ids:
+                # Query trực tiếp các Attraction theo ID
+                attractions = Attraction.query.filter(Attraction.id.in_(ids)).all()
+                # Trả về dữ liệu chi tiết (để Frontend có lat, lon, image...)
+                data = [a.to_json() for a in attractions] 
+                return jsonify({"success": True, "data": data}), 200
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 400
 
     type_list_str = request.args.get("typeList", "")
     if type_list_str:
@@ -538,6 +557,57 @@ def save_tour():
         db.session.rollback()
         print(f"Error in save_tour: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
+
+# Tour Package API Routes
+@app.route('/api/tour-packages', methods=['GET'])
+@limiter.limit("500 per day")
+def get_all_tour_packages():
+    """
+    GET /api/tour-packages: Lấy danh sách tóm tắt tất cả các gói tour
+    """
+    try:
+        packages = get_all_packages_service()
+        return jsonify({
+            'success': True,
+            'data': packages
+        }), 200
+    except Exception as e:
+        print(f"Error in get_all_tour_packages: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Lỗi máy chủ khi tải danh sách gói tour'
+        }), 500
+
+@app.route('/api/tour-packages/<int:package_id>', methods=['GET'])
+@limiter.limit("100 per hour")
+def get_tour_package_detail(package_id):
+    """
+    GET /api/tour-packages/<id>: Lấy chi tiết một gói tour cụ thể
+    """
+    try:
+        package_detail = get_package_detail_service(package_id)
+        return jsonify({
+            'success': True,
+            'data': package_detail
+        }), 200
+    except LookupError as e:
+        # Xử lý trường hợp không tìm thấy (404 Not Found)
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 404
+    except ValueError as e:
+        # Xử lý input không hợp lệ (400 Bad Request)
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 400
+    except Exception as e:
+        print(f"Error in get_tour_package_detail for ID {package_id}: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Lỗi máy chủ khi tải chi tiết gói tour'
+        }), 500
 
 # ===========================================================================
 # ===                                                                     ===

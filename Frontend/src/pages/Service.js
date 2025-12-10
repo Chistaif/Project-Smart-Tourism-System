@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { attractionsAPI } from '../utils/api';
+import { attractionsAPI, tourPackageAPI } from '../utils/api';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './Service.css';
@@ -49,7 +49,7 @@ export default function Service({ currentUser }) {
     const [endDate, setEndDate] = useState(savedState?.endDate || '');
     const [selectedTypes, setSelectedTypes] = useState(savedState?.selectedTypes || initialSelectedTypes);
     const [selectedAttractions, setSelectedAttractions] = useState(savedState?.selectedAttractions || []);
-
+    const [tourPackages, setTourPackages] = useState([]);
     const [customInput, setCustomInput] = useState('');
     const [showStartMenu, setShowStartMenu] = useState(false);
     const [isTypingLocation, setIsTypingLocation] = useState(false);
@@ -75,7 +75,7 @@ export default function Service({ currentUser }) {
         if (!customInput || customInput.trim().length < 3) return;
 
         const timerId = setTimeout(async () => {
-            console.log("🔍 Đang tự động tìm kiếm cho:", customInput);
+            console.log("Đang tự động tìm kiếm cho:", customInput);
             try {
                 const response = await fetch(
                     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(customInput)}&limit=1&addressdetails=1&countrycodes=vn`
@@ -98,7 +98,48 @@ export default function Service({ currentUser }) {
         return () => clearTimeout(timerId);
     }, [customInput]);
 
+    // 1. Lưu vị trí cuộn khi rời khỏi trang
+    useEffect(() => {
+        return () => {
+            // Khi người dùng rời trang, lưu vị trí Y hiện tại
+            const scrollY = window.scrollY;
+            sessionStorage.setItem('service_scroll_pos', scrollY.toString());
+        };
+    }, []);
+
+    // 2. Khôi phục vị trí cuộn sau khi dữ liệu đã tải xong
+    useEffect(() => {
+        if (!loading && tourPackages.length > 0) {
+            const savedScroll = sessionStorage.getItem('service_scroll_pos');
+            
+            if (savedScroll) {
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(savedScroll));
+                }, 100);
+            }
+        }
+    }, [loading, tourPackages]);
+
     // --- FETCH DATA ---
+    const fetchInitialData = useCallback(async () => {
+        try {
+            setLoading(true);
+
+            // 1. Fetch tất cả các gói tour đã định nghĩa
+            const packageResponse = await tourPackageAPI.getAll();
+            setTourPackages(packageResponse.data || []);
+
+            // 2. Fetch dữ liệu chung
+            const attractionResponse = await attractionsAPI.search({ userId: currentUser?.user_id });
+            setData(attractionResponse.data || []);
+
+        } catch (err) {
+            console.error("Lỗi tải dữ liệu khởi tạo:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [currentUser]);
+
     const fetchAttractions = useCallback(async (params = {}) => {
         try {
             setLoading(true);
@@ -125,20 +166,22 @@ export default function Service({ currentUser }) {
     }, [currentUser]);
 
     useEffect(() => {
-        fetchAttractions();
-    }, [currentUser, fetchAttractions]);
+        const isFilteringActive = selectedTypes.length > 0 || searchTerm.trim() !== '';
 
-    useEffect(() => {
-        fetchAttractions({
-            typeList: selectedTypes,
-            searchTerm
-        });
-    }, [selectedTypes, searchTerm, fetchAttractions]);
+        if (!isFilteringActive) {
+            fetchInitialData();
+        } else {
+            fetchAttractions({
+                typeList: selectedTypes,
+                searchTerm
+            });
+        }
+    }, [selectedTypes, searchTerm, currentUser, fetchAttractions, fetchInitialData]);
 
     const handleSearch = () => {
         const params = { searchTerm: searchTerm.trim() };
         fetchAttractions(params);
-    };
+    }
 
     // --- LOCATION LOGIC ---
     const handleGetCurrentLocation = () => {
@@ -286,7 +329,6 @@ export default function Service({ currentUser }) {
                     festivalEnd.setFullYear(tripYear + 1);
                 }
             }
-            // ----------------------------------------
 
             // Kiểm tra 1: Ngày đi có trễ hơn ngày kết thúc lễ hội (của đợt phù hợp nhất) không?
             if (startDateObj && startDateObj > festivalEnd) {
@@ -337,7 +379,6 @@ export default function Service({ currentUser }) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const todayStr = formatDateLocal(today);
-        const currentYear = today.getFullYear();
 
         let currentStart = startDate;
         if (!currentStart) {
@@ -351,23 +392,20 @@ export default function Service({ currentUser }) {
 
         attractions.forEach(attr => {
             const isYearRound = attr.datetimeStart === "12/1" && attr.datetimeEnd === "31/12";
-
-            if (!isYearRound) {
+            if (!isYearRound && attr.datetimeStart && attr.datetimeEnd) {
                 hasEvent = true;
                 let start = parseDateString(attr.datetimeStart);
                 let end = parseDateString(attr.datetimeEnd);
 
                 if (start && end) {
-                    const startYear = currentStart ? new Date(currentStart).getFullYear() : currentYear;
-
+                    const startYear = currentStart ? new Date(currentStart).getFullYear() : today.getFullYear();
                     if (startYear > end.getFullYear()) {
                         start.setFullYear(startYear);
                         end.setFullYear(startYear);
                     } else if (end < today) {
-                        start.setFullYear(currentYear + 1);
-                        end.setFullYear(currentYear + 1);
+                        start.setFullYear(startYear + 1);
+                        end.setFullYear(startYear + 1);
                     }
-
                     if (!minEventStart || start < minEventStart) minEventStart = start;
                     if (!maxEventEnd || end > maxEventEnd) maxEventEnd = end;
                 }
@@ -378,30 +416,85 @@ export default function Service({ currentUser }) {
             setStartDate(formatDateLocal(minEventStart));
             setEndDate(formatDateLocal(maxEventEnd));
         } else {
-            if (!startDate) setStartDate(todayStr);
-            if (!endDate) {
-                const startObj = startDate ? new Date(startDate) : new Date(today);
-                const defaultEnd = new Date(startObj);
-                defaultEnd.setDate(defaultEnd.getDate() + 2);
-                setEndDate(formatDateLocal(defaultEnd));
-            }
+            const daysToAdd = Math.max(1, attractions.length);
+
+            const startObj = startDate ? new Date(startDate) : new Date(today);
+            const newEndObj = new Date(startObj);
+
+            newEndObj.setDate(newEndObj.getDate() + daysToAdd);
+
+            setEndDate(formatDateLocal(newEndObj));
         }
     };
 
-    const handleToggleSelect = (item) => {
-        setSelectedAttractions(prev => {
-            const exists = prev.find(i => i.id === item.id);
-            let newSelection;
+    const handleToggleSelect = async (item) => {
+        const isTourPackage = item.isPackage;
 
-            if (exists) {
-                newSelection = prev.filter(i => i.id !== item.id);
-            } else {
-                newSelection = [...prev, item];
+        // 1. Xác định danh sách ID cần kiểm tra
+        const packageAttractionIds = isTourPackage ? (item.attractionIds || []) : [item.id];
+
+        // 2. Kiểm tra trạng thái hiện tại dựa trên logic "ALL"
+        const isFullySelected = packageAttractionIds.every(id =>
+            selectedAttractions.some(p => p.id === id)
+        );
+
+        // --- TRƯỜNG HỢP 1: ĐÃ CHỌN HẾT -> HỦY CHỌN ---
+        if (isFullySelected) {
+            setSelectedAttractions(prev => {
+                // Xóa tất cả các ID liên quan khỏi danh sách
+                const newSelection = prev.filter(p => !packageAttractionIds.includes(p.id));
+                updateDatesBasedOnAllAttractions(newSelection);
+                return newSelection;
+            });
+            return;
+        }
+
+        // --- TRƯỜNG HỢP 2: CHƯA CHỌN HOẶC CHỌN THIẾU -> CHỌN THÊM ---
+
+        // A. Nếu là Gói Tour
+        if (isTourPackage) {
+            setLoading(true);
+            try {
+                const idsParam = packageAttractionIds.join(',');
+
+                const response = await attractionsAPI.search({ attractionIds: idsParam });
+
+                if (response.success && response.data) {
+                    const fetchedAttractions = response.data.map(attr => ({
+                        id: attr.id,
+                        name: attr.name,
+                        lat: attr.lat,
+                        lon: attr.lon,
+                        imageUrl: attr.imageUrl || attr.image_url,
+                        averageRating: attr.averageRating
+                    }));
+
+                    setSelectedAttractions(prev => {
+                        // Tránh trùng lặp
+                        const currentIds = new Set(prev.map(p => p.id));
+
+                        // Chỉ thêm những cái chưa có
+                        const toAdd = fetchedAttractions.filter(attr => !currentIds.has(attr.id));
+
+                        const finalSelection = [...prev, ...toAdd];
+                        updateDatesBasedOnAllAttractions(finalSelection);
+                        return finalSelection;
+                    });
+                }
+            } catch (error) {
+                showPopup("Lỗi khi tải chi tiết gói tour.");
+            } finally {
+                setLoading(false);
             }
-
-            updateDatesBasedOnAllAttractions(newSelection);
-            return newSelection;
-        });
+        }
+        // B. Nếu là Địa điểm đơn lẻ
+        else {
+            setSelectedAttractions(prev => {
+                const newSelection = [...prev, item];
+                updateDatesBasedOnAllAttractions(newSelection);
+                return newSelection;
+            });
+        }
     };
 
     const handleTypeToggle = (val) => {
@@ -429,16 +522,36 @@ export default function Service({ currentUser }) {
     const renderCardStars = (rating) => {
         const score = rating || 0;
         const roundedScore = Math.round(score);
+
         return (
-            <div className="dest-rating">
-                <span style={{ color: '#fff', marginRight: '2px' }}>{score > 0 ? score.toFixed(1) : "N/A"}</span>
-                <span>{'★'.repeat(roundedScore)}</span>
-                <span style={{ opacity: 0.3 }}>{'★'.repeat(5 - roundedScore)}</span>
+            <div className="dest-rating" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#fff', fontWeight: '600', fontSize: '0.9rem' }}>
+                    {score > 0 ? score.toFixed(1) : "Chưa có"}
+                </span>
+
+                <span style={{ color: '#FFD700', fontSize: '1rem' }}>
+                    {'★'.repeat(roundedScore)}
+                </span>
+
+                <span style={{ color: '#fff', opacity: 0.3, fontSize: '1rem' }}>
+                    {'★'.repeat(5 - roundedScore)}
+                </span>
             </div>
         );
     };
 
-    const isSelected = (id) => selectedAttractions.find(i => i.id === id);
+    const isSelected = (item) => {
+        // Nếu là Attraction đơn lẻ
+        if (!item.isPackage) {
+            return selectedAttractions.some(p => p.id === item.id);
+        }
+
+        // Nếu là Gói Tour
+        const idsToCheck = item.attractionIds || [];
+        if (idsToCheck.length === 0) return false;
+
+        return idsToCheck.every(id => selectedAttractions.some(p => p.id === id));
+    };
 
     const isFiltering = useMemo(() => {
         return selectedTypes.length > 0 || searchTerm.trim() !== '';
@@ -447,33 +560,44 @@ export default function Service({ currentUser }) {
     const mustVisitPlaces = useMemo(() => data.slice(0, 10), [data]);
     const suitableSuggestions = useMemo(() => data.slice(10), [data]);
 
-    const renderAttractionCard = (item) => (
-        <div key={item.id} className="dest-card">
-            <div
-                className={`card-select-btn ${isSelected(item.id) ? 'active' : ''}`}
-                onClick={(e) => { e.stopPropagation(); handleToggleSelect(item); }}
-                title={isSelected(item.id) ? "Bỏ chọn" : "Thêm vào lịch trình"}
-            >
-                {isSelected(item.id) ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                )}
-            </div>
-            <div className="card-nav-action" onClick={() => navigate(`/attractions/${item.id}`)}>
-                <img src={item.imageUrl || item.image_url} alt={item.name} className="dest-img" />
-                <div className="dest-overlay">
-                    <div className="dest-name">{item.name}</div>
-                    {renderCardStars(item.averageRating || item.average_rating)}
+    const renderAttractionCard = (item) => {
+        const isPackage = item.isPackage;
+        const imageSrc = item.coverImageUrl || item.imageUrl || item.image_url;
+        const navigationPath = isPackage ? `/package/${item.id}` : `/attractions/${item.id}`;
+
+        return (
+            <div key={item.id} className="dest-card">
+                <div
+                    className={`card-select-btn ${isSelected(item) ? 'active' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); handleToggleSelect(item); }}
+                    title={isSelected(item) ? "Bỏ chọn" : "Thêm vào lịch trình"}
+                >
+                    {isSelected(item) ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    )}
+                </div>
+                <div className="card-nav-action" onClick={() => navigate(navigationPath)}>
+                    <img src={imageSrc} alt={item.name} className="dest-img" />
+                    <div className="dest-overlay">
+                        {isPackage && (
+                            <span className="package-tag">
+                                {item.attractionIds ? item.attractionIds.length : 0} địa điểm
+                            </span>
+                        )}
+                        <div className="dest-name">{item.name}</div>
+                        {renderCardStars(item.averageRating || item.average_rating)}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     return (
         <div className="service-page">
@@ -538,6 +662,12 @@ export default function Service({ currentUser }) {
                                 placeholder="Bạn muốn đi đâu?"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearch();
+                                    }
+                                }}
                             />
                             <button className="search-action-btn" onClick={handleSearch}>Tìm kiếm</button>
                         </div>
@@ -659,21 +789,26 @@ export default function Service({ currentUser }) {
                         </>
                     ) : (
                         <>
-                            <h2 className="section-title">Các địa điểm không thể bỏ qua</h2>
+                            {tourPackages.length > 0 && (
+                                <>
+                                    <h2 className="section-title">TOUR THEO CHỦ ĐỀ</h2>
+                                    <div className="slider-container">
+                                        {tourPackages.map(item => renderAttractionCard(item))}
+                                    </div>
+                                </>
+                            )}
+                            <h2 className="section-title" style={{ marginTop: '40px' }}>CÁC ĐỊA ĐIỂM KHÔNG THỂ BỎ QUA</h2>
                             <div className="slider-container">
                                 {mustVisitPlaces.map(item => renderAttractionCard(item))}
                             </div>
-
-                            <h2 className="section-title" style={{ marginTop: '40px' }}>Các gợi ý phù hợp</h2>
-                            <div className="slider-container">
-                                {suitableSuggestions.length > 0 ? (
-                                    suitableSuggestions.map(item => renderAttractionCard(item))
-                                ) : (
-                                    <p style={{ color: '#94a3b8', paddingLeft: '10px', fontStyle: 'italic' }}>
-                                        Không có gợi ý phù hợp nào khác.
-                                    </p>
-                                )}
-                            </div>
+                            {suitableSuggestions.length > 0 && (
+                                <>
+                                    <h2 className="section-title" style={{ marginTop: '40px' }}>CÁC GỢI Ý PHÙ HỢP KHÁC</h2>
+                                    <div className="slider-container">
+                                        {suitableSuggestions.map(item => renderAttractionCard(item))}
+                                    </div>
+                                </>
+                            )}
                         </>
                     )}
                 </main>
