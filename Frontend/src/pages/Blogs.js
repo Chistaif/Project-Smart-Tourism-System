@@ -3,6 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { blogsAPI } from '../utils/api';
 import './Blogs.css';
 
+// Parse image_urls which can be an array or a JSON string
+const parseImageUrls = (imageUrls) => {
+  if (!imageUrls) return [];
+  if (Array.isArray(imageUrls)) return imageUrls;
+  try {
+    const parsed = JSON.parse(imageUrls);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
 export default function Blogs({ currentUser }) {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
@@ -112,13 +124,12 @@ export default function Blogs({ currentUser }) {
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
       formDataToSend.append('content', formData.content);
+      formDataToSend.append('user_id', formData.user_id);
       
-      // Backend expects 'images' field with files
-      if (formData.images.length > 0) {
-        for (let i = 0; i < formData.images.length; i++) {
-          formDataToSend.append('images', formData.images[i]);
-        }
-      }
+      // Gửi nhiều ảnh theo field "images" (backend cũng chấp nhận 1 ảnh)
+      formData.images.forEach((file) => {
+        formDataToSend.append('images', file);
+      });
 
       const response = await blogsAPI.create(formDataToSend);
       if (response.success) {
@@ -284,7 +295,8 @@ export default function Blogs({ currentUser }) {
         {blogs.length > 0 ? (
           blogs.map(blog => (
             (() => {
-              const coverImage = (blog.image_urls && blog.image_urls[0]) || blog.image_url || null;
+              const images = parseImageUrls(blog.image_urls);
+              const coverImage = images[0] || blog.image_url || null;
               return (
             <div 
               key={blog.blog_id} 
@@ -307,6 +319,16 @@ export default function Blogs({ currentUser }) {
               {coverImage && (
                 <div className="blog-image">
                   <img src={coverImage} alt={blog.title} />
+                </div>
+              )}
+              {images.length > 1 && (
+                <div className="blog-image-thumbs">
+                  {images.slice(1, 4).map((img, idx) => (
+                    <img key={idx} src={img} alt={`${blog.title} ${idx + 2}`} />
+                  ))}
+                  {images.length > 4 && (
+                    <span className="thumb-more">+{images.length - 4}</span>
+                  )}
                 </div>
               )}
               <div className="blog-content">
