@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navigation from './layout/Navigation';
 import ChatAssistant from './layout/ChatBox';
 import Footer from './layout/Footer';
@@ -19,6 +19,8 @@ import test1 from './asset/box1.jpg';
 import test2 from './asset/box2.jpg';
 import test3 from './asset/box3.jpg';
 import homeImg from './asset/home_1.jpg';
+
+import ScrollToTop from "./components/ScrollToTop";
 
 const initialImages = [homeImg, test1, test2, test3];
 
@@ -111,7 +113,12 @@ function App() {
   };
 
   return (
-    <Router>
+
+
+    <div id="page-wrapper">
+      
+      <ScrollToTop/>
+
       <div className="App" style={{ backgroundImage: currentBackground }}>
         
         <Navigation 
@@ -121,7 +128,7 @@ function App() {
           user={user}
           onLogout={handleLogout}
         />
-
+    
         {/* POPUP */}
         {isOpen && (
           <div className="popup-overlay" onClick={closePopup}>
@@ -464,7 +471,7 @@ function App() {
             </div>
           </div>
         )}
-
+     
         {/* ROUTES */}
         <Routes>
           <Route path="/" element={<HomePage handleCardClick={handleCardClick} currentUser={user} images={images} swapImage={swapImage} />} />
@@ -487,7 +494,7 @@ function App() {
         <Footer />
 
       </div>
-    </Router>
+    </div>
   );
 }
 

@@ -99,26 +99,10 @@ export default function Service({ currentUser }) {
     }, [customInput]);
 
     // 1. Lưu vị trí cuộn khi rời khỏi trang
-    useEffect(() => {
-        return () => {
-            // Khi người dùng rời trang, lưu vị trí Y hiện tại
-            const scrollY = window.scrollY;
-            sessionStorage.setItem('service_scroll_pos', scrollY.toString());
-        };
-    }, []);
+    
 
     // 2. Khôi phục vị trí cuộn sau khi dữ liệu đã tải xong
-    useEffect(() => {
-        if (!loading && tourPackages.length > 0) {
-            const savedScroll = sessionStorage.getItem('service_scroll_pos');
-            
-            if (savedScroll) {
-                setTimeout(() => {
-                    window.scrollTo(0, parseInt(savedScroll));
-                }, 100);
-            }
-        }
-    }, [loading, tourPackages]);
+    
 
     // --- FETCH DATA ---
     const fetchInitialData = useCallback(async () => {
