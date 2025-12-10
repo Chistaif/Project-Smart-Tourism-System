@@ -93,6 +93,21 @@ export default function ChatAssistant({ user, openLogin }) {
     }
   };
 
+  // Format message content to keep new lines and basic markdown (bold)
+  const renderMessage = (text) => {
+    const escapeHtml = (raw) =>
+      raw
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+    const escaped = escapeHtml(text || '');
+    const withBold = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    const withBreaks = withBold.replace(/\r?\n/g, '<br />');
+
+    return { __html: withBreaks };
+  };
+
   return (
     <div className={`chat-widget ${isDetailRoute ? 'detail-page' : ''}`}>
       {/* Nút tròn góc màn hình */}
@@ -117,9 +132,11 @@ export default function ChatAssistant({ user, openLogin }) {
             <>
               <div className="chat-messages">
                 {messages.map((msg, idx) => (
-                  <div key={idx} className={`message ${msg.role}`}>
-                    {msg.text}
-                  </div>
+                  <div
+                    key={idx}
+                    className={`message ${msg.role}`}
+                    dangerouslySetInnerHTML={renderMessage(msg.text)}
+                  />
                 ))}
                 {loading && <div className="message model">Đang nhập...</div>}
                 <div ref={messagesEndRef} />

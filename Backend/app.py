@@ -59,7 +59,7 @@ from user.auth_service import (
     reset_password_service
 )
 from cloudinary_utils import upload_image_to_cloud
-from agent_utils import chat_with_tour_guide, generate_caption
+from agent_utils import build_ai_context, chat_with_tour_guide, generate_caption
 
 # Load environment variables
 load_dotenv()
@@ -991,27 +991,13 @@ def ai_chat():
         if not message:
             return jsonify({"success": False, "error": "Tin nhắn trống"}), 400
             
-        top_attractions = smart_recommendation_service(user_id=user_id, search_term=message, limit=10)
-       
-        context_lines = []
-        for a in top_attractions:
-            name = a.get('name')
-            desc = a.get('briefDescription')
-            score = a.get('recommendationScore', 0)
-            
-            # Chỉ đưa vào context những địa điểm thực sự liên quan (score > 0)
-            if score > 0:
-                context_lines.append(f"- {name}: {desc}")
-        
-        # Nếu không tìm thấy gì liên quan thì lấy 3 địa điểm nổi bật ngẫu nhiên
-        if not context_lines:
-             fallback_attrs = Attraction.query.limit(3).all()
-             for a in fallback_attrs:
-                 context_lines.append(f"- {a.name}: {a.brief_description}")
-
-        context_info = "Dữ liệu du lịch gợi ý:\n" + "\n".join(context_lines)
-        
-        reply = chat_with_tour_guide(message, context_data=f"Các địa điểm nổi bật: {context_info}")
+        context_info = build_ai_context(user_message=message, user_id=user_id, limit=8)
+        reply = chat_with_tour_guide(
+            message,
+            context_data=context_info,
+            chat_history=history,
+            user_id=user_id
+        )
         
         return jsonify({"success": True, "reply": reply}), 200
         # NOTE: Frontend phải append reply này vào history ở phía client

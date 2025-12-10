@@ -26,6 +26,7 @@ def get_user_interest_tags(user_id):
     return {t[0] for t in favorite_tags}
 
 def to_unaccent(text):
+    """Bỏ dấu để so sánh không phân biệt dấu."""
     return ''.join(c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')
 
 def calculate_score(attraction, interest_tags, search_keywords):
@@ -37,22 +38,35 @@ def calculate_score(attraction, interest_tags, search_keywords):
     4. Số review 1đ        0.1đ/bài
     """
     score = 0
+    keyword_matched = False
 
     attr_tags = {t.tag_name for t in attraction.tags}
 
     # --- Tiêu chí 1 ---
     if search_keywords:
-        # Kiểm tra xem tên/mô tả 
+        # Kiểm tra xem tên/mô tả/địa chỉ 
         query_lower = to_unaccent(search_keywords.lower())
-        if query_lower in to_unaccent(attraction.name.lower()):
+        name_lower = to_unaccent(attraction.name.lower())
+        desc_lower = to_unaccent((attraction.brief_description or "").lower())
+        loc_lower = to_unaccent((attraction.location or "").lower())
+
+        if query_lower in name_lower or name_lower in query_lower:
             score += 100  # Khớp tên -> ưu tiên cực cao
-        elif query_lower in to_unaccent(attraction.brief_description.lower()):
+            keyword_matched = True
+        elif query_lower in desc_lower:
             score += 50
+            keyword_matched = True
+        elif query_lower in loc_lower or loc_lower in query_lower:
+            score += 50
+            keyword_matched = True
             
         # Kiểm tra tag
         for tag in attr_tags:
-            if to_unaccent(tag.lower()) in query_lower:
+            normalized_tag = to_unaccent(tag.lower())
+            # Cho match hai chiều để bắt cả trường hợp tag ngắn hơn hoặc dài hơn từ khóa
+            if normalized_tag in query_lower or query_lower in normalized_tag:
                 score += 50 
+                keyword_matched = True
 
     # --- Tiêu chí 2 ---
     matched_interests = attr_tags.intersection(interest_tags)
@@ -66,11 +80,16 @@ def calculate_score(attraction, interest_tags, search_keywords):
     review_count = len(attraction.reviews)
     score += review_count * 0.1
 
+    # Nếu có search term nhưng không khớp tên/mô tả/tag thì loại bỏ (score = 0)
+    if search_keywords and not keyword_matched:
+        return 0
+
     return score
 
 province_map = {
     "TPHCM": "Thành phố Hồ Chí Minh",
     "SG": "Thành phố Hồ Chí Minh",
+    "HCM": "Thành phố Hồ Chí Minh",
     "HN": "Hà Nội",
     "ĐN": "Đà Nẵng",
     "HP": "Hải Phòng",
