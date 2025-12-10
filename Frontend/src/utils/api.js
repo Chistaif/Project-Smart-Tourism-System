@@ -268,23 +268,33 @@ export const blogsAPI = {
 
   // Tạo blog mới (với FormData để upload hình ảnh)
   create: (formData) => {
-    const url = `${API_BASE_URL}/blogs`;
+    // Use a custom fetch instead of apiRequest because we need to:
+    // 1. Not set Content-Type (FormData auto-sets it with boundary)
+    // 2. Pass FormData body directly
     const token = getToken("access_token");
+    const url = `${API_BASE_URL}/blogs`;
 
     const makeRequest = async (retry = true, overrideToken = token) => {
+      const headers = {};
+      if (overrideToken) {
+        headers.Authorization = `Bearer ${overrideToken}`;
+      }
+
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${overrideToken}`
-          //  KHÔNG thêm Content-Type vì FormData tự tạo boundary
-        },
+        headers, // FormData will auto-set Content-Type with boundary
         body: formData,
       });
 
       // Attempt refresh on 401 once
       if (response.status === 401 && retry) {
-        const newAccess = await refreshAccessToken();
-        return makeRequest(false, newAccess);
+        try {
+          const newAccess = await refreshAccessToken();
+          return makeRequest(false, newAccess);
+        } catch (e) {
+          console.error('Token refresh failed:', e);
+          throw e;
+        }
       }
 
       const contentType = response.headers.get("content-type");
