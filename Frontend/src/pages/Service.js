@@ -98,12 +98,6 @@ export default function Service({ currentUser }) {
         return () => clearTimeout(timerId);
     }, [customInput]);
 
-    // 1. Lưu vị trí cuộn khi rời khỏi trang
-    
-
-    // 2. Khôi phục vị trí cuộn sau khi dữ liệu đã tải xong
-    
-
     // --- FETCH DATA ---
     const fetchInitialData = useCallback(async () => {
         try {

@@ -18,6 +18,14 @@ const createColorIcon = (colorName) => {
   });
 };
 
+const vietnamFlagIcon = new L.Icon({
+  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/64px-Flag_of_Vietnam.svg.png',
+  iconSize: [30, 20],      // Kích thước cờ
+  iconAnchor: [15, 10],    // Điểm neo (giữa cờ)
+  popupAnchor: [0, -10],   // Điểm hiện popup
+  className: 'vn-flag-icon' // Class để CSS thêm nếu cần
+})
+
 // Component phụ để tự động Zoom bản đồ
 function ChangeView({ bounds }) {
   const map = useMap();
@@ -154,24 +162,27 @@ export default function MapComponent({
         {filteredLocations.map((loc, index) => {
             let iconColor = 'blue';
 
+            // Logic màu cũ
             if (loc.type === 'START') {
-                iconColor = 'black'; // Điểm xuất phát luôn màu đen
+                iconColor = 'black'; 
             } else {
-                // Điểm đến lấy màu theo ngày -> Khớp hoàn toàn với đường đi
                 iconColor = getColorForDay(loc.day);
             }
+
+            const useFlag = loc.showFlag === true || loc.type === 'SPECIAL_FLAG';
 
             return (
                 <Marker 
                     key={`loc-${index}`} 
                     position={[loc.lat, loc.lon]}
-                    icon={createColorIcon(iconColor)}
+                    icon={useFlag ? vietnamFlagIcon : createColorIcon(iconColor)}
                 >
                     <Popup>
                         <div style={{ textAlign: "center", minWidth: "150px" }}>
-                            <strong style={{ color: iconColor, display: "block", marginBottom: "5px" }}>
-                                {loc.type === 'START' ? 'ĐIỂM XUẤT PHÁT' : `NGÀY ${loc.day}`}
+                            <strong style={{ color: useFlag ? 'red' : iconColor, display: "block", marginBottom: "5px" }}>
+                                {useFlag ? 'ĐỊA ĐIỂM ĐẶC BIỆT' : (loc.type === 'START' ? 'ĐIỂM XUẤT PHÁT' : `NGÀY ${loc.day}`)}
                             </strong>
+                            
                             <div style={{fontWeight: 'bold', marginBottom: '5px'}}>{loc.name}</div>
                             
                             {loc.imageUrl && (

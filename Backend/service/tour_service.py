@@ -350,7 +350,7 @@ def is_attraction_available(attraction, current_time=None, start_datetime=None, 
     """
     Kiểm tra tình trạng mở cửa.
     - Trả về (True, "") nếu mở cửa.
-    - Trả về (False, float_hour) nếu chưa mở cửa (QUAN TRỌNG: Phải trả về số để tính toán).
+    - Trả về (False, float_hour) nếu chưa mở cửa.
     - Trả về (False, string) nếu đã đóng cửa hoặc lý do khác.
     """
     # 1. Check Festival
@@ -358,7 +358,7 @@ def is_attraction_available(attraction, current_time=None, start_datetime=None, 
         fes = Festival.query.get(attraction.id)
         if not fes or not fes.time_start: return False, "Thiếu thời gian"
         
-        # Logic check năm (Giữ nguyên như cũ)
+        # Logic check năm
         years = []
         if start_datetime and end_datetime:
             years = range(start_datetime.year, end_datetime.year + 1)
@@ -1333,7 +1333,7 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                 next_start_loc = start_location
                 overnight_place_name = "điểm xuất phát (sau thời gian nghỉ)"
 
-            # NẾU GAP <= 3 NGÀY: Giữ logic cũ (Di chuyển đến điểm tiếp theo nếu xa)
+            # NẾU GAP <= 3 NGÀY: Di chuyển đến điểm tiếp theo nếu xa
             else:
                 d_next, t_next, g_next, m_next = get_route_with_cache(last_location, next_center, route_cache)
                 is_flight = False

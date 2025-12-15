@@ -15,6 +15,27 @@ export default function ItineraryPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
+    const sovereigntyMarkers = [
+    {
+        id: 'hoang-sa',
+        name: 'Quần đảo Hoàng Sa (Việt Nam)',
+        lat: 16.5350,
+        lon: 111.6080,
+        type: 'SPECIAL_FLAG',
+        showFlag: true,
+        detail: 'Huyện đảo Hoàng Sa, Thành phố Đà Nẵng'
+    },
+    {
+        id: 'truong-sa',
+        name: 'Quần đảo Trường Sa (Việt Nam)',
+        lat: 8.6475,
+        lon: 111.9180,
+        type: 'SPECIAL_FLAG',
+        showFlag: true,
+        detail: 'Huyện đảo Trường Sa, Tỉnh Khánh Hòa'
+    }
+];
+
     // ==========================================
     // 1. STATE MANAGEMENT
     // ==========================================
@@ -464,9 +485,11 @@ export default function ItineraryPage() {
             }))
         : [];
 
-    const mapLocations = startLocationMarker
-        ? [startLocationMarker, ...visitLocations]
-        : visitLocations;
+    const mapLocations = [
+        ...sovereigntyMarkers,
+        ...(startLocationMarker ? [startLocationMarker] : []),
+        ...visitLocations
+    ];
 
     let detailedPath = [];
     if (tourResult && tourResult.routes) {
