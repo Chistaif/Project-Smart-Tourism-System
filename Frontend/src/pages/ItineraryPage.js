@@ -28,8 +28,8 @@ export default function ItineraryPage() {
     {
         id: 'truong-sa',
         name: 'Quần đảo Trường Sa (Việt Nam)',
-        lat: 8.6475,
-        lon: 111.9180,
+        lat: 9.6475,
+        lon: 113.5180,
         type: 'SPECIAL_FLAG',
         showFlag: true,
         detail: 'Huyện đảo Trường Sa, Tỉnh Khánh Hòa'
