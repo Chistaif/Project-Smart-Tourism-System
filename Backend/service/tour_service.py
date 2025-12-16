@@ -10,6 +10,7 @@ import numpy as np
 from sklearn.mixture import GaussianMixture
 from dotenv import load_dotenv
 import os
+import logging
 
 load_dotenv()
 GRAPHHOPPER_API_KEY = os.getenv('GRAPHHOPPER_API_KEY')
@@ -22,6 +23,14 @@ MAX_DAY_DURATION_MINUTES = 660 # 11 tiếng hoạt động/ngày
 GMM_RANDOM_STATE = 42
 IDEAL_TIME_DEFAULT = 1         
 IDEAL_TIME_ORDER = {0: 0, 1: 1, 2: 2}
+
+# --- CẤU HÌNH LOGGING ---
+logging.basicConfig(
+    level=logging.INFO, # Đổi thành DEBUG nếu muốn xem siêu chi tiết
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+logger = logging.getLogger(__name__)
 
 # Danh sách các sân bay lớn tại Việt Nam (Tên, Lat, Lon)
 VIETNAM_AIRPORTS = {
@@ -381,6 +390,9 @@ def is_attraction_available(attraction, current_time=None, start_datetime=None, 
                         is_match = True; break
             except: continue
             
+        if not is_match:
+             # LOG DEBUG
+             logger.debug(f"[Check] {attraction.name} bị loại vì chưa đến ngày diễn ra ({display_str})")
         return (True, "") if is_match else (False, f"Chưa diễn ra ({display_str})")
 
     # 2. Check CulturalSpot
@@ -398,6 +410,8 @@ def is_attraction_available(attraction, current_time=None, start_datetime=None, 
                 
                 # NẾU ĐẾN MUỘN: Trả về text thông báo
                 if curr_h > end_h: 
+                    # LOG INFO
+                    logger.info(f"[Check] {attraction.name} đã đóng cửa lúc {format_time_vn(current_time)} (Đóng: {spot.opening_hours})")
                     return False, f"Đã đóng cửa (Mở đến {spot.opening_hours})"
     
     return True, ""
@@ -804,6 +818,8 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
     Sinh timeline cho từng ngày.
     Thêm Post-Visit Meal Check để đảm bảo không bị 'đói' khi đi điểm phụ.
     """
+    logger.info(f"--- BẮT ĐẦU XÂY DỰNG NGÀY {day_number}: {len(day_attractions)} điểm ---")
+
     if not day_attractions:
         return [], {"distance_km": 0, "travel_minutes": 0, "visit_minutes": 0, "point_count": 0}, [], start_location, day_start_datetime
 
@@ -870,6 +886,8 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         # 2. XỬ LÝ ĐIỂM CHÍNH (MAIN TARGET)
         # ============================================================
         best_candidate = candidates[0]
+
+        logger.debug(f"Đang xét điểm ưu tiên: {best_candidate.name}")
         
         # Tính toán di chuyển
         dist, t_min, _, _ = get_route_with_cache(current_loc, (best_candidate.lat, best_candidate.lon), cache)
@@ -913,6 +931,8 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
             routes.append({"path": path, "type": "flight" if "plane" in str(mode) else "road"})
             day_distance += dist
             day_travel_minutes += t_min
+
+        logger.debug(f" -> Di chuyển: {dist}km trong {t_min}p tới {final_target.name}")
 
         # Tính giờ đến nơi
         arrival_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=t_min))
@@ -975,6 +995,8 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         
         # Cập nhật thời gian sau khi thăm xong A
         leave_A_time = round_to_nearest_10_minutes(arrival_time + timedelta(minutes=vis_dur))
+
+        logger.debug(f" -> Di chuyển: {dist}km trong {t_min}p tới {final_target.name}")
         
         # =========================
         # 3. POST-VISIT MEAL CHECK 
@@ -1017,6 +1039,7 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         
         # Nếu còn dư > 90 phút
         if time_left > 90 and is_safe_time:
+            logger.debug(f" -> Còn dư {time_left}p, đang tìm điểm phụ...")
             supp = find_supplementary_attraction(
                 current_loc=(final_target.lat, final_target.lon),
                 current_time=leave_A_time,
@@ -1028,7 +1051,7 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
             
             if supp:
                 cand_B = supp['attraction']
-                
+                logger.info(f" [BONUS] Chèn thành công điểm phụ: {cand_B.name} (Điểm match: {supp['score']})")
                 # Di chuyển A (hoặc Quán ăn) -> B
                 if supp['dist'] > 0.01:
                     is_flight_B = isinstance(supp['mode'], str) and supp['mode'].startswith('plane')
@@ -1062,7 +1085,8 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
                 current_time = round_to_nearest_10_minutes(leave_B)
                 current_loc = (cand_B.lat, cand_B.lon)
                 inserted_bonus = True
-
+            else:
+                logger.debug(" -> Không tìm thấy điểm phụ phù hợp.")
         # Nếu không chèn điểm phụ -> Cập nhật từ A (đã tính giờ ăn)
         if not inserted_bonus:
             current_time = leave_A_time
@@ -1087,6 +1111,9 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
     - Tối ưu hóa cụm (GMM + MST).
     - Smart Transit: Di chuyển đón đầu vào buổi tối nếu chặng sau quá xa.
     """
+    logger.info(f"====== REQUEST TẠO TOUR MỚI ======")
+    logger.info(f"Input: {len(attraction_ids)} điểm, Từ {start_datetime_str} đến {end_datetime_str}")
+
     # 1. Parse thời gian
     try:
         start_dt = datetime.strptime(start_datetime_str, "%d/%m/%Y %H:%M")
@@ -1104,18 +1131,29 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
     
     # 2. Lấy dữ liệu và Lọc sơ bộ
     raw_attrs = Attraction.query.filter(Attraction.id.in_(attraction_ids)).all()
+    clean_attrs = []
+    for a in raw_attrs:
+        # Chỉ lấy điểm có tọa độ hợp lệ
+        if -90 <= a.lat <= 90 and -180 <= a.lon <= 180:
+            clean_attrs.append(a)
+        else:
+            logger.error(f"[DATA ERROR] Bỏ qua địa điểm lỗi tọa độ: {a.name} (Lat={a.lat}, Lon={a.lon})")
     valid_attrs = []
     invalid_attrs = []
     
-    for a in raw_attrs:
+    for a in clean_attrs:
         is_ok, reason = is_attraction_available(a, start_datetime=start_dt, end_datetime=end_dt)
         if is_ok:
             valid_attrs.append(a)
         else:
-            rt = str(reason) if not isinstance(reason, (int, float)) else f"Giờ mở: {reason}h"
+            rt = str(reason)
+            logger.warning(f" [LOẠI BỎ] {a.name}: {rt}")
             invalid_attrs.append({"id": a.id, "name": a.name, "reason": rt})
 
+    logger.info(f"Sau khi lọc: {len(valid_attrs)} điểm hợp lệ / {len(clean_attrs)} tổng số")
+
     if not valid_attrs:
+        logger.error("Không còn điểm nào hợp lệ để tạo tour!")
         return {
             "timeline": [], "routes": {}, "dailySummaries": [], 
             "invalidAttractions": invalid_attrs,
@@ -1138,9 +1176,75 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
                 
                 festival_constraints.append({"attraction": attr, "day_offset": offset})
 
-    clusters, centers = cluster_attractions_with_gmm(
-        valid_attrs, start_location, max_days_allowed, route_cache, MAX_DAY_DURATION_MINUTES
-    )
+    # Kiểm tra khoảng cách cực đại giữa các điểm
+    max_dist = 0
+    if len(valid_attrs) > 1:
+        # Lấy điểm đầu và điểm cuối theo vĩ độ (đại diện Bắc-Nam)
+        sorted_by_lat = sorted(valid_attrs, key=lambda x: x.lat)
+        p1 = sorted_by_lat[0]
+        p2 = sorted_by_lat[-1]
+        max_dist = geodesic((p1.lat, p1.lon), (p2.lat, p2.lon)).km
+
+    logger.info(f"Khoảng cách xa nhất giữa các điểm: {max_dist:.2f} km")
+
+    if max_dist > 500:
+        logger.warning("Phát hiện các điểm cách xa nhau (>500km). Chuyển sang chế độ chia ngày theo Vùng miền.")
+        
+        # 1. Sắp xếp Bắc -> Nam
+        is_start_north = start_lat > 16 
+        sorted_attrs = sorted(valid_attrs, key=lambda x: x.lat, reverse=is_start_north)
+        
+        # 2. Gom cụm
+        clusters = []
+        current_cluster = [sorted_attrs[0]]
+        
+        for i in range(1, len(sorted_attrs)):
+            prev = current_cluster[-1]
+            curr = sorted_attrs[i]
+            dist = geodesic((prev.lat, prev.lon), (curr.lat, curr.lon)).km
+            
+            if dist < 200: 
+                current_cluster.append(curr)
+            else:
+                clusters.append(current_cluster)
+                current_cluster = [curr]
+                
+        if current_cluster:
+            clusters.append(current_cluster)
+
+        # 3. Tính Centers
+        centers = []
+        for i, cl in enumerate(clusters):
+            if cl:
+                # Tính trung bình
+                sum_lat = sum(a.lat for a in cl)
+                sum_lon = sum(a.lon for a in cl)
+                count = len(cl)
+                
+                avg_lat = sum_lat / count
+                avg_lon = sum_lon / count
+                
+                # In log để kiểm tra dữ liệu gốc
+                logger.error(f"[DEBUG CLUSTER {i+1}] Gồm các điểm: {[a.name for a in cl]}")
+                logger.error(f" -> Dữ liệu gốc: Lat={[a.lat for a in cl]}, Lon={[a.lon for a in cl]}")
+                logger.error(f" -> Trung bình tính được: Lat={avg_lat}, Lon={avg_lon}")
+
+                # [QUAN TRỌNG] Append đúng thứ tự (Lat, Lon)
+                centers.append((avg_lat / 180.0, avg_lon / 180.0))
+        
+        logger.info(f"Centers final list: {centers}")
+
+    else:
+        # Nếu gần nhau, dùng GMM như cũ
+        logger.info("Khoảng cách gần, sử dụng thuật toán GMM.")
+        clusters, centers = cluster_attractions_with_gmm(
+            valid_attrs, start_location, max_days_allowed, route_cache, MAX_DAY_DURATION_MINUTES
+        )
+
+    logger.info(f"Đã phân thành {len(clusters)} cụm (Ngày) bằng GMM.")
+    for i, c in enumerate(clusters):
+        names = [a.name for a in c]
+        logger.debug(f" - Cụm {i+1}: {names}")
 
     if not centers:
         centers = [[start_lat / 180.0, start_lon / 180.0, 0, 0, 0] for _ in clusters]
@@ -1206,7 +1310,7 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         
         # 2. Thực hiện nhảy cóc nếu tìm thấy target
         if target_jump_date:
-            print(f"[Time Warp] Jumping from {curr_date.date()} to {target_jump_date.date()}")
+            logger.warning(f"[TIME WARP] Nhảy thời gian từ {curr_date.date()} -> {target_jump_date.date()} để đón Lễ hội")
             # Cập nhật curr_date thành ngày bắt đầu lễ hội (giữ giờ cũ hoặc reset về sáng)
             curr_date = datetime.combine(target_jump_date.date(), datetime.min.time())
 
@@ -1409,6 +1513,8 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         # Tăng ngày (Logic: Ngày hôm sau là ngày tiếp theo trên lịch)
         curr_date = curr_date + timedelta(days=1)
 
+    logger.info(f"====== HOÀN TẤT TẠO TOUR: {round(total_distance, 2)}km, {logical_day_number} ngày ======")
+    
     return {
         "timeline": timeline,
         "mapHtml": "", # Legacy support
