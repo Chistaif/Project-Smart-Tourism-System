@@ -1251,6 +1251,8 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         if is_last_day:
             # === NGÀY CUỐI: VỀ NHÀ ===
             d_home, t_home, g_home, m_home = get_route_with_cache(last_location, start_location, route_cache)
+            is_flight = isinstance(m_home, str) and m_home.startswith('plane')
+            
             if d_home > 1:
                 arr_home = day_end_time + timedelta(minutes=t_home)
                 
