@@ -480,13 +480,27 @@ export default function Service({ currentUser }) {
     };
 
     const handleCreateTour = () => {
-        if (selectedAttractions.length === 0) return showPopup("Vui lòng chọn ít nhất 1 địa điểm!");
-        if (!startPoint.lat || !startPoint.lon) return showPopup("Vui lòng chọn điểm xuất phát hợp lệ!");
+        // 1. Kiểm tra rỗng
+        if (selectedAttractions.length === 0) {
+            return showPopup("Vui lòng chọn ít nhất 1 địa điểm!");
+        }
 
+        // 2. Kiểm tra giới hạn số lượng (<= 10)
+        if (selectedAttractions.length > 10) {
+            return showPopup(`Bạn đã chọn ${selectedAttractions.length} địa điểm.\nHệ thống giới hạn tối đa 10 điểm để đảm bảo chất lượng lịch trình tối ưu nhất.`);
+        }
+
+        // 3. Kiểm tra điểm xuất phát
+        if (!startPoint.lat || !startPoint.lon) {
+            return showPopup("Vui lòng chọn điểm xuất phát hợp lệ!");
+        }
+
+        // 4. Validate ngày tháng
         if (!validateDateConstraints(startDate, endDate, selectedAttractions)) {
             return;
         }
 
+        // 5. Chuyển trang (giữ nguyên)
         navigate('/itinerary', {
             state: {
                 selectedAttractions,

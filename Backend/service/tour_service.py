@@ -492,6 +492,9 @@ def find_supplementary_attraction(current_loc, current_time, visited_ids, main_a
         if finish_time > max_day_limit_time:
             continue
 
+        if finish_time.hour >= 17: 
+            continue
+
         # 5. Kiểm tra giờ đóng cửa cụ thể của địa điểm B
         # Hàm is_attraction_available chỉ check lúc đến, giờ check lúc về
         if cand.type == 'cultural_spot':
@@ -636,6 +639,36 @@ def cluster_attractions_with_gmm(attractions, start_location, max_days, cache, m
 
     return list(clusters.values()), gmm.means_.tolist()
 
+def post_process_clusters_capacity(clusters, max_items_per_day=3):
+    """
+    Hậu xử lý: Kiểm tra nếu cụm nào > 3 điểm thì tách ra.
+    Quy tắc:
+    1. Ưu tiên Lễ hội (Festival) lên đầu.
+    2. Cắt thành các chunk nhỏ (max 3 điểm).
+    3. Trả về danh sách cụm mới (số lượng cụm sẽ tăng lên = số ngày tăng lên).
+    """
+    new_clusters = []
+    
+    for cluster in clusters:
+        # Nếu cụm nhỏ, giữ nguyên
+        if len(cluster) <= max_items_per_day:
+            new_clusters.append(cluster)
+            continue
+            
+        # LOGIC TÁCH CỤM
+        # B1: Sắp xếp ưu tiên Lễ hội lên đầu
+        # key: False (0) đứng trước True (1), nên so sánh x.type != 'festival'
+        # Nếu cùng là festival hoặc cùng không phải, giữ nguyên thứ tự cũ (stable sort)
+        cluster.sort(key=lambda x: x.type != 'festival')
+        
+        # B2: Cắt thành các cụm nhỏ
+        # Ví dụ: 5 điểm -> [3 điểm, 2 điểm] -> Thành 2 ngày
+        chunks = [cluster[i:i + max_items_per_day] for i in range(0, len(cluster), max_items_per_day)]
+        
+        # B3: Thêm các cụm nhỏ vào danh sách kết quả
+        new_clusters.extend(chunks)
+        
+    return new_clusters 
 
 def find_mst_tour_order(attractions, start_location, cache):
     """
@@ -826,7 +859,10 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
     # Sắp xếp danh sách candidates ban đầu theo thứ tự MST
     candidates = sorted(
         day_attractions,
-        key=lambda attr: (order_index_map.get(attr.id, float('inf')), getattr(attr, 'ideal_time', 0))
+        key=lambda attr: (
+            -approximate_visit_duration(attr),        # Ưu tiên visitDuration lớn lên đầu (Buổi sáng)
+            order_index_map.get(attr.id, float('inf')) # Sau đó mới xét đến thuận tiện đường đi
+        )
     )
     
     visited_ids = set([a.id for a in day_attractions])
@@ -938,6 +974,11 @@ def build_day_itinerary(day_number, day_attractions, day_start_datetime, start_l
         arrival_time = round_to_nearest_10_minutes(current_time + timedelta(minutes=t_min))
 
         ok, val = is_attraction_available(final_target, arrival_time)
+        if not ok and not isinstance(val, (int, float)):
+            # Nếu đóng cửa (val là string báo lỗi) -> Bỏ qua ngay
+            logger.warning(f"SKIP {final_target.name}: {val}")
+            candidates.remove(final_target)
+            continue
         if not ok and isinstance(val, (int, float)):
             # Tính thời điểm mở cửa chính xác
             opens_at = arrival_time.replace(hour=int(val), minute=int((val-int(val))*60))
@@ -1114,6 +1155,15 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
     logger.info(f"====== REQUEST TẠO TOUR MỚI ======")
     logger.info(f"Input: {len(attraction_ids)} điểm, Từ {start_datetime_str} đến {end_datetime_str}")
 
+    if not (1 <= len(attraction_ids) <= 10):
+        error_msg = f"Số lượng địa điểm không hợp lệ ({len(attraction_ids)}). Vui lòng chọn từ 1 đến 10 điểm."
+        logger.warning(error_msg)
+        return {
+            "timeline": [], "routes": {}, "dailySummaries": [], 
+            "invalidAttractions": [{"id": -1, "name": "LỖI GIỚI HẠN", "reason": error_msg}],
+            "totalDays": 0, "totalDestinations": 0, "totalDistanceKm": 0
+        }
+    
     # 1. Parse thời gian
     try:
         start_dt = datetime.strptime(start_datetime_str, "%d/%m/%Y %H:%M")
@@ -1240,6 +1290,24 @@ def generate_smart_tour(attraction_ids, start_lat, start_lon, start_datetime_str
         clusters, centers = cluster_attractions_with_gmm(
             valid_attrs, start_location, max_days_allowed, route_cache, MAX_DAY_DURATION_MINUTES
         )
+
+    logger.info(f"Trước khi tách: {len(clusters)} cụm.")
+    
+    # 1. Gọi hàm tách cụm
+    clusters = post_process_clusters_capacity(clusters, max_items_per_day=3)
+    
+    logger.info(f"Sau khi tách (Limit 3): {len(clusters)} cụm (Số ngày dự kiến tăng).")
+
+    # 2. Tính lại Centers (Tâm cụm) 
+    centers = []
+    for cl in clusters:
+        if cl:
+            avg_lat = sum(a.lat for a in cl) / len(cl)
+            avg_lon = sum(a.lon for a in cl) / len(cl)
+
+            centers.append([avg_lat / 180.0, avg_lon / 180.0, 0, 0, 0])
+        else:
+            centers.append([start_lat / 180.0, start_lon / 180.0, 0, 0, 0])
 
     logger.info(f"Đã phân thành {len(clusters)} cụm (Ngày) bằng GMM.")
     for i, c in enumerate(clusters):
